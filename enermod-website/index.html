@@ -413,7 +413,7 @@ html:not(.js) .ba__handle,html:not(.js) .ba__range{display:none}
 .card__icon .o{stroke:var(--orange);stroke-width:4}
 .card__head .h3{padding:16px;align-self:center}
 .card ul{padding:20px 20px 8px}
-.card .stamp{position:absolute;right:-8px;bottom:-14px}
+.card .stamp{position:absolute;right:-8px;bottom:-14px;transform-origin:100% 50%}
 .card .tb__f{transition:background-color var(--t-ui)}
 @media (hover:hover) and (pointer:fine){.card:hover .tb__f{background:var(--orange)}}
 @media (max-width:599px){.card .stamp{right:12px}}
@@ -710,8 +710,8 @@ html.motion .ck:has(input:checked) svg path{stroke-dasharray:1;animation:dash 20
         <i></i><i></i><i></i><i></i>
         <div class="hero__photo">
           <img src="assets/tim-hero.webp" width="1600" height="1067" fetchpriority="high" decoding="async" alt="Tim Giebner, Gründer und Geschäftsführer von ENERMOD, vor modernen Wohngebäuden">
-          <span class="curtain a-curtain" aria-hidden="true"></span>
-          <span class="wipe-edge a-edge" aria-hidden="true"></span>
+          <span class="curtain a-curtain" style="--d:0ms" aria-hidden="true"></span>
+          <span class="wipe-edge a-edge" style="--d:0ms" aria-hidden="true"></span>
         </div>
       </div>
       <div class="tb nametag a-rise" style="--d:1500ms">
@@ -1123,8 +1123,8 @@ html.motion .ck:has(input:checked) svg path{stroke-dasharray:1;animation:dash 20
         <i></i><i></i><i></i><i></i>
         <div class="tim__photo">
           <img src="assets/tim-portrait.webp" width="1000" height="563" loading="lazy" decoding="async" alt="Tim Giebner, Gründer und Geschäftsführer von ENERMOD">
-          <span class="curtain a-curtain" aria-hidden="true"></span>
-          <span class="wipe-edge a-edge" aria-hidden="true"></span>
+          <span class="curtain a-curtain" style="--d:0ms" aria-hidden="true"></span>
+          <span class="wipe-edge a-edge" style="--d:0ms" aria-hidden="true"></span>
         </div>
       </div>
       <div class="tim__bars" aria-hidden="true">
