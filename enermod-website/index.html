@@ -177,7 +177,7 @@ ul,ol{margin:0;padding:0}
   .chain__line i::after{rotate:45deg}
   .chain__k{grid-column:2;padding:0}
   .chain__v{grid-column:2;padding:2px 0 0}
-  html.motion .chain__line b{animation-name:draw-y}
+  html:is(.motion,:not(.js)) .chain__line b{animation-name:draw-y}
 }
 
 /* ====================== Bewegung ====================== */
@@ -197,30 +197,39 @@ ul,ol{margin:0;padding:0}
 @keyframes wm-drop{from{translate:0 -110%}}
 @keyframes spin{from{rotate:540deg}}
 
-html.motion .a-rise{animation:rise var(--t-rise) var(--ease-out) both;animation-delay:calc(var(--d,0ms) + var(--i,0) * 70ms)}
-html.motion .a-fade{animation:fade 400ms ease-out both;animation-delay:calc(var(--d,0ms) + var(--i,0) * 70ms)}
-html.motion .a-mask{animation:mask 700ms var(--ease-out) both;animation-delay:var(--d,0ms)}
-html.motion .a-drawx{animation:draw-x var(--dur,var(--t-draw)) var(--ease-draw) both;animation-delay:calc(var(--d,0ms) + var(--i,0) * 70ms)}
-html.motion .a-drawy{animation:draw-y var(--dur,var(--t-draw)) var(--ease-draw) both;animation-delay:calc(var(--d,0ms) + var(--i,0) * 70ms)}
-html.motion .a-pop{animation:pop 160ms var(--ease-set) both;animation-delay:var(--d,0ms)}
-html.motion .a-set{animation:set 300ms var(--ease-set) both;animation-delay:calc(var(--d,0ms) + var(--i,0) * 200ms)}
-html.motion .a-dash{stroke-dasharray:1;animation:dash var(--dur,var(--t-draw)) var(--ease-draw) both;animation-delay:calc(var(--d,0ms) + var(--i,0) * 80ms)}
-html.motion .a-curtain{animation:curtain var(--t-wipe) var(--ease-draw) both;animation-delay:var(--d,0ms)}
-html.motion .a-edge{animation:edge var(--t-wipe) var(--ease-draw) both;animation-delay:var(--d,0ms)}
-html.motion .a-stamp{animation:stamp 380ms var(--ease-out) both;animation-delay:var(--d,0ms)}
-html.motion .a-jolt{animation:jolt 120ms ease-out backwards;animation-delay:var(--d,0ms)}
+html:is(.motion,:not(.js)) .a-rise{animation:rise var(--t-rise) var(--ease-out) both;animation-delay:calc(var(--d,0ms) + var(--i,0) * 70ms)}
+html:is(.motion,:not(.js)) .a-fade{animation:fade 400ms ease-out both;animation-delay:calc(var(--d,0ms) + var(--i,0) * 70ms)}
+html:is(.motion,:not(.js)) .a-mask{animation:mask 700ms var(--ease-out) both;animation-delay:var(--d,0ms)}
+html:is(.motion,:not(.js)) .a-drawx{animation:draw-x var(--dur,var(--t-draw)) var(--ease-draw) both;animation-delay:calc(var(--d,0ms) + var(--i,0) * 70ms)}
+html:is(.motion,:not(.js)) .a-drawy{animation:draw-y var(--dur,var(--t-draw)) var(--ease-draw) both;animation-delay:calc(var(--d,0ms) + var(--i,0) * 70ms)}
+html:is(.motion,:not(.js)) .a-pop{animation:pop 160ms var(--ease-set) both;animation-delay:var(--d,0ms)}
+html:is(.motion,:not(.js)) .a-set{animation:set 300ms var(--ease-set) both;animation-delay:calc(var(--d,0ms) + var(--i,0) * 200ms)}
+html:is(.motion,:not(.js)) .a-dash{stroke-dasharray:1;animation:dash var(--dur,var(--t-draw)) var(--ease-draw) both;animation-delay:calc(var(--d,0ms) + var(--i,0) * 80ms)}
+html:is(.motion,:not(.js)) .a-curtain{animation:curtain var(--t-wipe) var(--ease-draw) both;animation-delay:var(--d,0ms)}
+html:is(.motion,:not(.js)) .a-edge{animation:edge var(--t-wipe) var(--ease-draw) both;animation-delay:var(--d,0ms)}
+html:is(.motion,:not(.js)) .a-stamp{animation:stamp 380ms var(--ease-out) both;animation-delay:var(--d,0ms)}
+html:is(.motion,:not(.js)) .a-jolt{animation:jolt 120ms ease-out backwards;animation-delay:var(--d,0ms)}
 /* Frame-Trace eines Schriftfelds */
-html.motion .a-trace .tb__t{animation:draw-x 200ms cubic-bezier(.4,0,.6,1) both;animation-delay:calc(var(--d,0ms) + 0ms)}
-html.motion .a-trace .tb__r{animation:draw-y 200ms cubic-bezier(.4,0,.6,1) both;animation-delay:calc(var(--d,0ms) + 180ms)}
-html.motion .a-trace .tb__b{animation:draw-x 200ms cubic-bezier(.4,0,.6,1) both;animation-delay:calc(var(--d,0ms) + 360ms)}
-html.motion .a-trace .tb__l{animation:draw-y 200ms cubic-bezier(.4,0,.6,1) both;animation-delay:calc(var(--d,0ms) + 540ms)}
-html.motion .a-crop>i{animation:pop 180ms var(--ease-out) both;animation-delay:calc(var(--d,0ms) + var(--n,0) * 40ms)}
+html:is(.motion,:not(.js)) .a-trace .tb__t{animation:draw-x 200ms cubic-bezier(.4,0,.6,1) both;animation-delay:calc(var(--d,0ms) + 0ms)}
+html:is(.motion,:not(.js)) .a-trace .tb__r{animation:draw-y 200ms cubic-bezier(.4,0,.6,1) both;animation-delay:calc(var(--d,0ms) + 180ms)}
+html:is(.motion,:not(.js)) .a-trace .tb__b{animation:draw-x 200ms cubic-bezier(.4,0,.6,1) both;animation-delay:calc(var(--d,0ms) + 360ms)}
+html:is(.motion,:not(.js)) .a-trace .tb__l{animation:draw-y 200ms cubic-bezier(.4,0,.6,1) both;animation-delay:calc(var(--d,0ms) + 540ms)}
+html:is(.motion,:not(.js)) .a-crop>i{animation:pop 180ms var(--ease-out) both;animation-delay:calc(var(--d,0ms) + var(--n,0) * 40ms)}
 .a-crop>i:nth-of-type(2){--n:1}.a-crop>i:nth-of-type(3){--n:2}.a-crop>i:nth-of-type(4){--n:3}
 
 /* Wartet, bis der Abschnitt im Bild ist */
 html.motion [data-reveal]:not(.is-in) :is(.a-rise,.a-fade,.a-mask,.a-drawx,.a-drawy,.a-pop,.a-set,.a-dash,.a-curtain,.a-edge,.a-stamp,.a-jolt,.a-trace .tb__f,.a-crop>i,.wm .g,.tape-g,.spool),
 html.motion [data-reveal]:not(.is-in):is(.a-rise,.a-fade,.a-drawx,.a-dash,.a-set,.a-jolt){animation-play-state:paused}
 
+
+/* Ohne JavaScript: Abschnitte animieren über native CSS-Scroll-Timelines, der Hero über normale Keyframes */
+@media (prefers-reduced-motion:no-preference){
+  @supports (view-timeline-name:--rv) and (animation-range:entry 0% entry 100%){
+    html:not(.js) [data-reveal]{view-timeline:--rv block}
+    html:not(.js) :is([data-reveal] :is(.a-rise,.a-fade,.a-mask,.a-drawx,.a-drawy,.a-pop,.a-set,.a-dash,.a-curtain,.a-edge,.a-stamp,.a-jolt,.tb__f,.a-crop>i,.wm .g,.tape-g,.spool,.tape-l,.plan-svg .rl,.plan-svg .ly,.ticks,.pos,.bar__solid,.diary,.bar__hatch,.dim__line,.dim__t,.dim__label,.mile,.bracket,.br,.fx),[data-reveal]:is(.a-rise,.a-fade,.a-drawx,.a-dash,.a-set,.a-jolt)){
+      animation-timeline:--rv!important;animation-range:entry 5% entry 80%!important;animation-delay:0s!important}
+  }
+}
 /* ====================== Header ====================== */
 .top{position:sticky;top:0;z-index:50;height:var(--header-h);background:rgba(255,255,255,.92);-webkit-backdrop-filter:blur(10px);backdrop-filter:blur(10px);border-bottom:1px solid transparent;transition:border-color var(--t-ui)}
 .top.is-scrolled{border-bottom-color:var(--raster)}
@@ -259,16 +268,16 @@ html:not(.js) .nav{flex-wrap:wrap;gap:12px 24px}
 html:not(.js) .nav__links{flex-wrap:wrap;gap:4px 20px}
 
 /* Logo-Bau */
-html.motion .wm--build .decke,html.motion .wm--footer .decke{animation:draw-x calc(520ms * var(--wm-k,1)) var(--ease-draw) both}
-html.motion .wm--build .boden,html.motion .wm--footer .boden{animation:draw-x calc(520ms * var(--wm-k,1)) var(--ease-draw) calc(60ms * var(--wm-k,1)) both}
-html.motion :is(.wm--build,.wm--footer) :is(.g-E1,.g-E2,.g-R,.g-O,.g-D){animation:wm-rise calc(480ms * var(--wm-k,1)) var(--ease-out) both}
-html.motion :is(.wm--build,.wm--footer) .g-E1{animation-delay:calc(120ms * var(--wm-k,1))}
-html.motion :is(.wm--build,.wm--footer) .g-E2{animation-delay:calc(160ms * var(--wm-k,1))}
-html.motion :is(.wm--build,.wm--footer) .g-R{animation-delay:calc(200ms * var(--wm-k,1))}
-html.motion :is(.wm--build,.wm--footer) .g-O{animation-delay:calc(240ms * var(--wm-k,1))}
-html.motion :is(.wm--build,.wm--footer) .g-D{animation-delay:calc(280ms * var(--wm-k,1))}
-html.motion :is(.wm--build,.wm--footer) .g-n{animation:wm-rise calc(560ms * var(--wm-k,1)) var(--ease-set) calc(360ms * var(--wm-k,1)) both}
-html.motion :is(.wm--build,.wm--footer) .g-m{animation:wm-drop calc(560ms * var(--wm-k,1)) var(--ease-set) calc(420ms * var(--wm-k,1)) both}
+html:is(.motion,:not(.js)) .wm--build .decke,html:is(.motion,:not(.js)) .wm--footer .decke{animation:draw-x calc(520ms * var(--wm-k,1)) var(--ease-draw) both}
+html:is(.motion,:not(.js)) .wm--build .boden,html:is(.motion,:not(.js)) .wm--footer .boden{animation:draw-x calc(520ms * var(--wm-k,1)) var(--ease-draw) calc(60ms * var(--wm-k,1)) both}
+html:is(.motion,:not(.js)) :is(.wm--build,.wm--footer) :is(.g-E1,.g-E2,.g-R,.g-O,.g-D){animation:wm-rise calc(480ms * var(--wm-k,1)) var(--ease-out) both}
+html:is(.motion,:not(.js)) :is(.wm--build,.wm--footer) .g-E1{animation-delay:calc(120ms * var(--wm-k,1))}
+html:is(.motion,:not(.js)) :is(.wm--build,.wm--footer) .g-E2{animation-delay:calc(160ms * var(--wm-k,1))}
+html:is(.motion,:not(.js)) :is(.wm--build,.wm--footer) .g-R{animation-delay:calc(200ms * var(--wm-k,1))}
+html:is(.motion,:not(.js)) :is(.wm--build,.wm--footer) .g-O{animation-delay:calc(240ms * var(--wm-k,1))}
+html:is(.motion,:not(.js)) :is(.wm--build,.wm--footer) .g-D{animation-delay:calc(280ms * var(--wm-k,1))}
+html:is(.motion,:not(.js)) :is(.wm--build,.wm--footer) .g-n{animation:wm-rise calc(560ms * var(--wm-k,1)) var(--ease-set) calc(360ms * var(--wm-k,1)) both}
+html:is(.motion,:not(.js)) :is(.wm--build,.wm--footer) .g-m{animation:wm-drop calc(560ms * var(--wm-k,1)) var(--ease-set) calc(420ms * var(--wm-k,1)) both}
 
 /* Mobiles Menü */
 .menu{position:fixed;left:0;right:0;top:var(--header-h);bottom:0;z-index:49;background:var(--paper);overflow:auto;
@@ -299,7 +308,7 @@ html.menu-open{overflow:hidden}
 .hero__title .line>span{display:block}
 .hl{color:var(--orange);position:relative;white-space:nowrap}
 .hl::after{content:"";position:absolute;left:0;right:0;bottom:-.04em;height:6px;background:var(--orange);transform-origin:0 50%}
-html.motion .hl::after{animation:draw-x 350ms var(--ease-draw) 900ms both}
+html:is(.motion,:not(.js)) .hl::after{animation:draw-x 350ms var(--ease-draw) 900ms both}
 .hero__lead{max-width:46ch}
 .hero__cta{display:flex;flex-wrap:wrap;align-items:center;gap:12px 20px}
 .hero__media{grid-column:full-start/full-end;position:relative;min-width:0}
@@ -431,10 +440,10 @@ html:not(.js) .ba__hint{display:none}
 .after-link{margin-top:40px}
 
 /* ====================== Gewerke ====================== */
-.gw{display:grid;gap:40px;grid-template-columns:minmax(0,1fr)}.gw>*,.gw__list li{min-width:0}.gw__name{overflow-wrap:anywhere;hyphens:auto}
-@media (min-width:900px){.gw{grid-template-columns:minmax(0,5fr) minmax(0,7fr);column-gap:clamp(24px,4vw,64px);align-items:start}}
+.gw{display:grid;gap:32px;grid-template-columns:minmax(0,1fr)}.gw>*,.gw__list li{min-width:0}.gw__name{hyphens:manual}
+@media (min-width:900px){.gw{grid-template-columns:minmax(0,5fr) minmax(0,7fr);grid-template-rows:auto 1fr;grid-template-areas:"head sheet" "ctrl sheet";column-gap:clamp(24px,4vw,64px);row-gap:32px;align-items:start}.gw__head{grid-area:head}.gw__ctrl{grid-area:ctrl}.gw .sheet{grid-area:sheet}}
 .gw__list{list-style:none;display:grid;border-top:1px solid var(--raster)}
-.gw__btn{display:grid;grid-template-columns:1fr auto;align-items:center;gap:4px 16px;width:100%;min-height:56px;padding:10px 12px 10px 16px;text-align:left;background:transparent;border:0;border-bottom:1px solid var(--raster);cursor:pointer;position:relative;color:var(--graphit)}
+.gw__btn{-webkit-tap-highlight-color:transparent;display:grid;grid-template-columns:1fr auto;align-items:center;gap:4px 16px;width:100%;min-height:56px;padding:10px 12px 10px 16px;text-align:left;background:transparent;border:0;border-bottom:1px solid var(--raster);cursor:pointer;position:relative;color:var(--graphit)}
 .gw__btn::before{content:"";position:absolute;left:0;top:0;bottom:0;width:3px;background:var(--orange);transform-origin:50% 0;scale:1 0;transition:scale var(--t-ui) var(--ease-out)}
 .gw__btn:hover::before,.gw__btn[aria-pressed="true"]::before,.gw__btn:focus-visible::before{scale:1 1}
 .gw__btn:focus-visible{outline-offset:-3px}
@@ -444,7 +453,7 @@ html:not(.js) .ba__hint{display:none}
 .gw__btn:hover .gw__glyph,.gw__btn[aria-pressed="true"] .gw__glyph{stroke:var(--orange)}
 .gw__tag{font-family:var(--mono);font-size:10px;font-weight:500;letter-spacing:.08em;text-transform:uppercase;color:var(--orange-ink);border:1.5px solid var(--orange-ink);padding:2px 6px;border-radius:2px}
 .gw__all{margin-top:16px}
-@media (max-width:899px){.gw__list{grid-template-columns:1fr 1fr;column-gap:12px}.gw__list li:has([data-layer=strang]){grid-column:1/-1}.gw__sub{display:none}}
+@media (max-width:899px){.gw__list{grid-template-columns:1fr 1fr;column-gap:12px}.gw__list li:has([data-layer=strang]){grid-column:1/-1}.gw__sub,.gw__glyph{display:none}.gw__btn{grid-template-columns:1fr;min-height:52px;padding:8px 8px 8px 14px}.gw__name{font-size:1rem;line-height:1.25}}
 .sheet{padding:0;overflow:hidden}
 .sheet__draw{position:relative;padding:clamp(12px,2vw,24px)}
 .sheet__draw .mm{position:absolute;inset:0}
@@ -476,10 +485,10 @@ html:not(.js) .ba__hint{display:none}
 .sheet__strip>div+div{border-left:1px solid var(--raster)}
 .sheet__strip .mono{font-size:10px;color:var(--graphit-soft)}
 .sheet__strip strong{font-size:15px;font-weight:650}
-html.motion .plan-svg .walls path{stroke-dasharray:1}
-html.motion .plan-svg .rl{animation:fade 200ms ease-out 700ms both}
-html.motion .plan-svg .ly{animation:fade 500ms ease-out backwards;animation-delay:calc(900ms + var(--i) * 180ms)}
-html.motion .plan-svg .ly--strang{animation:set 300ms var(--ease-set) backwards;animation-delay:calc(900ms + var(--i) * 180ms);transform-box:fill-box;transform-origin:center}
+html:is(.motion,:not(.js)) .plan-svg .walls path{stroke-dasharray:1}
+html:is(.motion,:not(.js)) .plan-svg .rl{animation:fade 200ms ease-out 700ms both}
+html:is(.motion,:not(.js)) .plan-svg .ly{animation:fade 500ms ease-out backwards;animation-delay:calc(900ms + var(--i) * 180ms)}
+html:is(.motion,:not(.js)) .plan-svg .ly--strang{animation:set 300ms var(--ease-set) backwards;animation-delay:calc(900ms + var(--i) * 180ms);transform-box:fill-box;transform-origin:center}
 html.motion [data-reveal]:not(.is-in) .plan-svg :is(.rl,.ly){animation-play-state:paused}
 
 .strang{background:var(--bg);color:var(--fg);margin-top:24px;padding:clamp(24px,4vw,40px);display:grid;gap:32px;align-items:center}
@@ -493,8 +502,8 @@ html.motion [data-reveal]:not(.is-in) .plan-svg :is(.rl,.ly){animation-play-stat
 .strang__text{display:grid;gap:16px}
 .strang__text .label{color:var(--orange);margin-bottom:0}
 .strang .tlink{color:var(--kreide)}
-html.motion .strang .br{animation:dash 300ms var(--ease-draw) both, br-col 300ms linear both;animation-delay:calc(200ms + var(--i) * 240ms)}
-html.motion .strang .fx{animation:fade 200ms ease-out both;animation-delay:calc(400ms + var(--i) * 240ms)}
+html:is(.motion,:not(.js)) .strang .br{animation:dash 300ms var(--ease-draw) both, br-col 300ms linear both;animation-delay:calc(200ms + var(--i) * 240ms)}
+html:is(.motion,:not(.js)) .strang .fx{animation:fade 200ms ease-out both;animation-delay:calc(400ms + var(--i) * 240ms)}
 @keyframes br-col{from{stroke:var(--kreide)}}
 html.motion .strang[data-reveal]:not(.is-in) :is(.br,.fx){animation-play-state:paused}
 
@@ -543,16 +552,16 @@ html.motion .strang[data-reveal]:not(.is-in) :is(.br,.fx){animation-play-state:p
   .g-row--bau .g-track{min-height:96px}
 }
 @media (max-width:899px){.g-pre .pos{display:none}.g-step .g-track{display:none}.g-head{order:1;border-bottom:0;padding-bottom:0}.g-head .g-lab{display:none}.g-late{order:2}.g-step{order:0}}
-html.motion .gantt .ticks{animation:draw-y 600ms var(--ease-out) both}
-html.motion .gantt .pos{animation:set 300ms var(--ease-set) both;animation-delay:calc(300ms + var(--i) * 200ms)}
-html.motion .gantt .bar__solid{animation:draw-x 1000ms var(--ease-draw) 700ms both}
-html.motion .gantt .diary{animation:draw-x 1000ms var(--ease-draw) 900ms both}
-html.motion .gantt .bar__hatch{animation:fade 300ms ease-out 1700ms both}
-html.motion .gantt .dim .dim__line{animation:draw-x 500ms var(--ease-draw) 1800ms both}
-html.motion .gantt .dim :is(.dim__t,.dim__label){animation:fade 200ms ease-out 1800ms both}
-html.motion .gantt .dim .dim__t--e{animation-delay:2250ms}
-html.motion .gantt .mile{animation:set 250ms var(--ease-set) 2200ms both}
-html.motion .gantt .bracket{animation:fade 250ms ease-out 2300ms both}
+html:is(.motion,:not(.js)) .gantt .ticks{animation:draw-y 600ms var(--ease-out) both}
+html:is(.motion,:not(.js)) .gantt .pos{animation:set 300ms var(--ease-set) both;animation-delay:calc(300ms + var(--i) * 200ms)}
+html:is(.motion,:not(.js)) .gantt .bar__solid{animation:draw-x 1000ms var(--ease-draw) 700ms both}
+html:is(.motion,:not(.js)) .gantt .diary{animation:draw-x 1000ms var(--ease-draw) 900ms both}
+html:is(.motion,:not(.js)) .gantt .bar__hatch{animation:fade 300ms ease-out 1700ms both}
+html:is(.motion,:not(.js)) .gantt .dim .dim__line{animation:draw-x 500ms var(--ease-draw) 1800ms both}
+html:is(.motion,:not(.js)) .gantt .dim :is(.dim__t,.dim__label){animation:fade 200ms ease-out 1800ms both}
+html:is(.motion,:not(.js)) .gantt .dim .dim__t--e{animation-delay:2250ms}
+html:is(.motion,:not(.js)) .gantt .mile{animation:set 250ms var(--ease-set) 2200ms both}
+html:is(.motion,:not(.js)) .gantt .bracket{animation:fade 250ms ease-out 2300ms both}
 html.motion .gantt[data-reveal]:not(.is-in) :is(.ticks,.pos,.bar__solid,.diary,.bar__hatch,.dim__line,.dim__t,.dim__label,.mile,.bracket){animation-play-state:paused}
 
 /* ====================== Energieberatung ====================== */
@@ -569,9 +578,9 @@ html.motion .gantt[data-reveal]:not(.is-in) :is(.ticks,.pos,.bar__solid,.diary,.
 .eb__fig figcaption{color:var(--fg-soft);font-size:11px;text-transform:none;letter-spacing:.02em}
 .tape-g{transform-box:view-box;transform-origin:600px 70px}
 .spool{transform-box:view-box;transform-origin:650px 70px}
-html.motion .tape-g{animation:draw-x 1200ms var(--ease-out) both}
-html.motion .spool{animation:spin 1200ms var(--ease-out) both}
-html.motion .tape-l{animation:fade 300ms ease-out both;animation-delay:calc(150ms + var(--i) * 90ms)}
+html:is(.motion,:not(.js)) .tape-g{animation:draw-x 1200ms var(--ease-out) both}
+html:is(.motion,:not(.js)) .spool{animation:spin 1200ms var(--ease-out) both}
+html:is(.motion,:not(.js)) .tape-l{animation:fade 300ms ease-out both;animation-delay:calc(150ms + var(--i) * 90ms)}
 html.motion [data-reveal]:not(.is-in) .tape-l{animation-play-state:paused}
 
 /* ====================== Über uns ====================== */
@@ -904,20 +913,10 @@ html.motion .ck:has(input:checked) svg path{stroke-dasharray:1;animation:dash 20
 <section class="sec sec--estrich" id="gewerke" aria-labelledby="gw-title" data-navsec="leistungen">
   <div class="wrap">
     <div class="gw">
-      <div data-reveal>
+      <div class="gw__head" data-reveal>
         <p class="label a-fade">Gewerke</p>
         <h2 class="h2 a-rise" id="gw-title">Alle Gewerke. Ein Ansprechpartner.</h2>
         <p class="lead a-rise" style="--i:1;margin-top:20px">ENERMOD realisiert komplette Modernisierungspakete aus einer Hand. Für alle Gewerke und jeden Projektschritt haben Sie einen zentralen Ansprechpartner.</p>
-        <ul class="gw__list" style="margin-top:32px" id="gw-list">
-          <li class="a-rise" style="--i:2"><button class="gw__btn" type="button" aria-pressed="false" data-layer="elektrik"><span class="gw__name">Elektrik</span><span class="gw__sub">Erneuerung der Elektrik</span><svg class="gw__glyph" viewBox="0 0 40 12" aria-hidden="true"><path d="M0 6H40" stroke-dasharray="6 4"/></svg></button></li>
-          <li class="a-rise" style="--i:3"><button class="gw__btn" type="button" aria-pressed="false" data-layer="fenster"><span class="gw__name">Fenster und Türen</span><span class="gw__sub">Einbau moderner Fenster und Türen</span><svg class="gw__glyph" viewBox="0 0 40 12" aria-hidden="true"><path d="M0 2H40M0 6H40M0 10H40"/></svg></button></li>
-          <li class="a-rise" style="--i:4"><button class="gw__btn" type="button" aria-pressed="false" data-layer="maler"><span class="gw__name">Maler- und Fliesenarbeiten</span><svg class="gw__glyph" viewBox="0 0 40 12" aria-hidden="true"><path d="M1 1H39V11H1ZM10 1V11M20 1V11M30 1V11M1 6H39"/></svg></button></li>
-          <li class="a-rise" style="--i:5"><button class="gw__btn" type="button" aria-pressed="false" data-layer="boden"><span class="gw__name">Bodenbeläge</span><svg class="gw__glyph" viewBox="0 0 40 12" aria-hidden="true"><path d="M0 1H40M0 6H40M0 11H40M14 1V6M30 6V11"/></svg></button></li>
-          <li class="a-rise" style="--i:6"><button class="gw__btn" type="button" aria-pressed="false" data-layer="sanitaer"><span class="gw__name">Sanitär</span><span class="gw__sub">Umfassende Sanitärarbeiten</span><svg class="gw__glyph" viewBox="0 0 40 12" aria-hidden="true"><path d="M0 4H40M0 8H40"/></svg></button></li>
-          <li class="a-rise" style="--i:7"><button class="gw__btn" type="button" aria-pressed="false" data-layer="heizung"><span class="gw__name">Heizungstausch</span><span class="gw__sub">Gas- oder Ölheizung gegen moderne Anlage oder Wärmepumpe</span><svg class="gw__glyph" viewBox="0 0 40 12" aria-hidden="true"><path d="M2 2H38V10H2ZM10 2V10M18 2V10M26 2V10"/></svg></button></li>
-          <li class="a-rise" style="--i:8"><button class="gw__btn" type="button" aria-pressed="false" data-layer="strang"><span class="gw__name">Strangsanierung <span class="gw__tag">Schwerpunkt</span></span><svg class="gw__glyph" viewBox="0 0 40 12" aria-hidden="true" style="stroke:var(--orange)"><path d="M14 1H26V11H14ZM14 1L26 11M26 1L14 11"/></svg></button></li>
-        </ul>
-        <button class="btn btn--ghost gw__all a-rise" style="--i:9" type="button" id="gw-all">Alle Ebenen zeigen</button>
       </div>
 
       <div class="tb sheet a-trace" data-reveal>
@@ -982,6 +981,19 @@ html.motion .ck:has(input:checked) svg path{stroke-dasharray:1;animation:dash 20
           <div><span class="mono">Darstellung</span><strong>Grundriss schematisch</strong></div>
           <div><span class="mono">Ebene</span><strong id="gw-layer" aria-live="polite">Alle Gewerke</strong></div>
         </div>
+      </div>
+
+      <div class="gw__ctrl" data-reveal>
+        <ul class="gw__list" id="gw-list">
+          <li class="a-rise" style="--i:2"><button class="gw__btn" type="button" aria-pressed="false" data-layer="elektrik"><span class="gw__name">Elektrik</span><span class="gw__sub">Erneuerung der Elektrik</span><svg class="gw__glyph" viewBox="0 0 40 12" aria-hidden="true"><path d="M0 6H40" stroke-dasharray="6 4"/></svg></button></li>
+          <li class="a-rise" style="--i:3"><button class="gw__btn" type="button" aria-pressed="false" data-layer="fenster"><span class="gw__name">Fenster und Türen</span><span class="gw__sub">Einbau moderner Fenster und Türen</span><svg class="gw__glyph" viewBox="0 0 40 12" aria-hidden="true"><path d="M0 2H40M0 6H40M0 10H40"/></svg></button></li>
+          <li class="a-rise" style="--i:4"><button class="gw__btn" type="button" aria-pressed="false" data-layer="maler"><span class="gw__name">Maler- und Fliesen&shy;arbeiten</span><svg class="gw__glyph" viewBox="0 0 40 12" aria-hidden="true"><path d="M1 1H39V11H1ZM10 1V11M20 1V11M30 1V11M1 6H39"/></svg></button></li>
+          <li class="a-rise" style="--i:5"><button class="gw__btn" type="button" aria-pressed="false" data-layer="boden"><span class="gw__name">Bodenbeläge</span><svg class="gw__glyph" viewBox="0 0 40 12" aria-hidden="true"><path d="M0 1H40M0 6H40M0 11H40M14 1V6M30 6V11"/></svg></button></li>
+          <li class="a-rise" style="--i:6"><button class="gw__btn" type="button" aria-pressed="false" data-layer="sanitaer"><span class="gw__name">Sanitär</span><span class="gw__sub">Umfassende Sanitärarbeiten</span><svg class="gw__glyph" viewBox="0 0 40 12" aria-hidden="true"><path d="M0 4H40M0 8H40"/></svg></button></li>
+          <li class="a-rise" style="--i:7"><button class="gw__btn" type="button" aria-pressed="false" data-layer="heizung"><span class="gw__name">Heizungs&shy;tausch</span><span class="gw__sub">Gas- oder Ölheizung gegen moderne Anlage oder Wärmepumpe</span><svg class="gw__glyph" viewBox="0 0 40 12" aria-hidden="true"><path d="M2 2H38V10H2ZM10 2V10M18 2V10M26 2V10"/></svg></button></li>
+          <li class="a-rise" style="--i:8"><button class="gw__btn" type="button" aria-pressed="false" data-layer="strang"><span class="gw__name">Strang&shy;sanierung <span class="gw__tag">Schwerpunkt</span></span><svg class="gw__glyph" viewBox="0 0 40 12" aria-hidden="true" style="stroke:var(--orange)"><path d="M14 1H26V11H14ZM14 1L26 11M26 1L14 11"/></svg></button></li>
+        </ul>
+        <button class="btn btn--ghost gw__all a-rise" style="--i:9" type="button" id="gw-all">Alle Ebenen zeigen</button>
       </div>
     </div>
 
@@ -1414,7 +1426,7 @@ var story = (function(){
 (function(){
   var plan = $('#plan'); if (!plan) return;
   var btns = $$('.gw__btn'), out = $('#gw-layer'), all = $('#gw-all');
-  var names = {}; btns.forEach(function(b){ names[b.getAttribute('data-layer')] = b.querySelector('.gw__name').firstChild.textContent.trim(); });
+  var names = {}; btns.forEach(function(b){ names[b.getAttribute('data-layer')] = b.querySelector('.gw__name').firstChild.textContent.replace(/\u00AD/g, '').trim(); });
   var pressed = null;
   function show(key){
     plan.setAttribute('class', 'plan-svg' + (key ? ' has-active act-' + key : ''));
