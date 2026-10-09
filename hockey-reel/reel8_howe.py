@@ -33,6 +33,7 @@ CARD = ("howe_card.jpg", (0.0, 0.0, 1.0, 0.8))
 OLD = ("howe_old.jpg", (0.0, 0.0, 1.0, 0.75))
 CREDIT_CARD = "Photo: Chex trading card / public domain"
 CREDIT_OLD = "Photo: Arnie Lee / CC BY 3.0"
+OPENER_CLIP = ("6848071-hd_720_1280_25fps.mp4", 2.0)  # erwachsener Spieler beim Stickhandling
 
 
 def stick_icon(d, cx, cy, s, col=WHITE):
@@ -43,20 +44,19 @@ def stick_icon(d, cx, cy, s, col=WHITE):
     d.ellipse((cx - 30 * s, cy + 24 * s, cx - 12 * s, cy + 34 * s), fill=(20, 20, 24, 255))
 
 
-def drop_a_stick(frame, lt, y=1470):
+def drop_a_stick(frame, lt, y=1430):
+    """Zwei Zeilen: 'DROP A <Schläger>' und darunter 'IF YOU DIDN'T KNOW THIS'."""
     p = ease_out_back((lt - 1.1) / 0.3)
     if p <= 0:
         return
-    left = text_img("DROP A", 64, WHITE, "Black")
-    right = text_img("IF YOU DIDN'T KNOW THIS", 52, WHITE, "ExtraBold")
-    gap = 90
-    total = left.width + gap + right.width - 60
-    x = W / 2 - total / 2
+    left = text_img("DROP A", 70, WHITE, "Black")
+    icon_w = 90
+    x = W / 2 - (left.width - 72 + icon_w) / 2  # text_img hat ~36 px Rand je Seite
     paste_center(frame, left, x + left.width / 2, y, scale=p)
     d = ImageDraw.Draw(frame)
     bob = math.sin(lt * 7) * 6
-    stick_icon(d, x + left.width - 10 + gap / 2, y - 4 + bob, 1.05 * p, ICE)
-    paste_center(frame, right, x + left.width + gap - 30 + right.width / 2, y + 4, scale=p)
+    stick_icon(d, x + left.width - 36 + icon_w / 2, y - 4 + bob, 1.1 * p, ICE)
+    paste_center(frame, text_img("IF YOU DIDN'T KNOW THIS", 52, WHITE, "ExtraBold"), W / 2, y + 85, scale=p)
 
 
 def build(spans, total):
@@ -74,7 +74,7 @@ def build(spans, total):
 
 def draw(frame, kind, lt, dur):
     if kind == "opener":
-        r5.clip_bg(frame, ra.OPENER, lt, dur)
+        r5.clip_bg(frame, OPENER_CLIP, lt, dur)
         frame.alpha_composite(Image.new("RGBA", (W, H), (5, 10, 25, 90)))
         ra.slam(frame, "HE PLAYED PRO HOCKEY", 110, WHITE, W / 2, 980, lt, 0.0)
         ra.slam(frame, "AT 69", 260, ICE, W / 2, 1170, lt, 0.2)
