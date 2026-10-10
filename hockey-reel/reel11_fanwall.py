@@ -27,7 +27,7 @@ from reel10_studio import (W, H, BLUE, ORANGE, RED, WHITE, DIM, c01, e_io, e_out
                            layer, glow_onto, tracked, masked, light_sweep, odometer, draw_icon, chrome_cup)
 
 FPS = 30
-DUR = 14.0
+DUR = 15.0
 HERE = m.HERE
 NAMES = ["mrnobbbe"]                       # Kommentator(en) – Fan Wall
 COMMENT = ("mrnobbbe", "Do Brad Marchand")  # Kommentar für den Antwort-Sticker
@@ -337,24 +337,24 @@ def sc_credit(lt):
     L.alpha_composite(masked(head, (0, 650, W, 750)))
     name = layer()
     tracked(name, "@" + NAMES[0], W / 2, 830, 96, "Black", WHITE, 2,
-            per_letter=lambda i, n: (0, 0, e_out((lt - 0.3 - i * 0.04) / 0.25)))
-    light_sweep(name, c01((lt - 0.9) / 0.6))
+            per_letter=lambda i, n: (0, 0, e_out((lt - 0.2 - i * 0.03) / 0.25)))
+    light_sweep(name, c01((lt - 0.6) / 0.6))
     glow_onto(L, name, 30, 0.5)
-    lw = 520 * e_io((lt - 0.6) / 0.5)
+    lw = 520 * e_io((lt - 0.4) / 0.5)
     d.rectangle((W / 2 - lw / 2, 920, W / 2 + lw / 2, 923), fill=BLUE + (255,))
     cta = layer()
     tracked(cta, "WANT YOUR NAME ON THE WALL?", W / 2, 1040, 40, "ExtraBold", WHITE, 4,
-            per_letter=lambda i, n: (0, 0, e_out((lt - 1.0 - i * 0.015) / 0.3)))
+            per_letter=lambda i, n: (0, 0, e_out((lt - 0.55 - i * 0.012) / 0.25)))
     tracked(cta, "COMMENT YOUR PLAYER", W / 2, 1110, 52, "Black", ORANGE, 4,
-            per_letter=lambda i, n: (0, 0, e_out((lt - 1.3 - i * 0.02) / 0.3)))
+            per_letter=lambda i, n: (0, 0, e_out((lt - 0.8 - i * 0.015) / 0.25)))
     L.alpha_composite(cta)
-    if lt > 1.6:
+    if lt > 1.2:
         y = 1210 + abs(math.sin(lt * 6)) * 26
         d.polygon([(W / 2 - 40, y), (W / 2 + 40, y), (W / 2, y + 52)], fill=ORANGE + (255,))
     return L
 
 
-SCENES = [(5.6, 7.9, sc_name), (7.9, 10.0, sc_draft), (10.0, 12.2, sc_cups), (12.2, 14.5, sc_credit)]
+SCENES = [(5.6, 7.9, sc_name), (7.9, 10.0, sc_draft), (10.0, 12.2, sc_cups), (12.2, 15.5, sc_credit)]
 XF = 0.25
 
 
