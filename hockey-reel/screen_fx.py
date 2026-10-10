@@ -118,7 +118,7 @@ def transform_layer(im, sc=1.0, cx=SW / 2, cy=SH / 2, dx=0.0, dy=0.0):
 def glow(base, lay, radius=30, strength=1.0, keep=True):
     """Weiches Leuchten (Viertelauflösung, additiv-ähnlich per screen)."""
     w, h = lay.size
-    small = lay.resize((w // 4, h // 4), Image.BILINEAR).filter(ImageFilter.GaussianBlur(radius / 4))
+    small = lay.resize((w // 4, h // 4), Image.BILINEAR).filter(ImageFilter.GaussianBlur(float(radius) / 4))
     g = np.asarray(small.resize((w, h), Image.BILINEAR)).astype(np.float32)
     add = g[..., :3] * np.clip(g[..., 3:4] / 255 * strength, 0, 1)
     b = np.asarray(base).astype(np.float32)
