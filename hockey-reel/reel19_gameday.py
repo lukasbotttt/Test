@@ -6,7 +6,7 @@ Daten vom Plakat: EC Wallernhausen Pirates vs. Eisteufel Frankfurt, 24.10., 18:3
   3.0–3.5   "VS." mit Blitz
   3.5–5.5   Pirates-Wappen
   5.5–12.0  Duell-Karte: beide Logos, Blitz, 24.10. / 18:30 UHR / EISSPORTHALLE LAUTERBACH, ab 9 s "KOMMT VORBEI!"
-Logos: brand/gameday/*_cut.png (freigestellt aus dem Spielplakat). Renderer: puck3d_dark.py.
+Logos: brand/gameday/*_cut.png (offizielle Vereinslogos: eisteufel.de, Instagram @ecwallernhausen). Renderer: puck3d_dark.py.
 Aufruf: python3 reel19_gameday.py -> reel19_gameday.mp4 + reel19_post.jpg (4:5) + reel19_story.jpg
 """
 import math
@@ -29,7 +29,7 @@ DUR = 12.0
 HERE = R15.HERE
 WHITE = (250, 250, 252)
 RED = (235, 30, 42)
-GOLD = (245, 178, 34)
+GOLD = (250, 205, 30)
 P = np.array([130.0, 0.5, -60.0])                 # freies Eis im Mittelkreis (nicht auf der roten Linie)
 T_LAND = 0.42
 UP = np.array([0.0, 1.0, 0.0])
