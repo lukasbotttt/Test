@@ -12,8 +12,13 @@ import numpy as np
 import reel22_trapezoid as R
 
 SR = 44100
+TEMPO = 1.2                                   # Stimme etwas schneller (TikTok-Tempo, Tonhöhe bleibt)
+# Erkannte Pausen-Abschnitte -> Sätze ("back here." kommt als eigener Abschnitt)
+GROUPS = [[0], [1], [2, 3], [4], [5], [6], [7], [8], [9]]
 # Startzeit pro Satz (s) – passend zu den Einblendungen im Video
-STARTS = [0.12, 2.7, 3.5, 4.55, 7.75, 9.7, 11.35]
+#  Why is this… | It's called the trapezoid | Goalies can only… | Outside of it? | Two minutes. | Inside? | Legal. |
+#  Fans call it the Brodeur rule. | Should the NHL get rid of it?
+STARTS = [0.05, 2.1, 3.4, 5.3, 5.95, 7.7, 8.45, 9.7, 11.35]
 
 
 def read_wav(path):
@@ -48,21 +53,23 @@ def segments(vo, thr_db=-38, min_gap=0.22):
 def main():
     os.chdir(R.HERE)
     src = sys.argv[1]
-    subprocess.run(["ffmpeg", "-y", "-v", "error", "-i", src, "-ac", "1", "-ar", str(SR), "vo_tmp.wav"], check=True)
+    subprocess.run(["ffmpeg", "-y", "-v", "error", "-i", src, "-af", f"atempo={TEMPO}", "-ac", "1", "-ar", str(SR),
+                    "vo_tmp.wav"], check=True)
     vo = read_wav("vo_tmp.wav")[:, 0]
-    segs = segments(vo)
-    print("Sätze gefunden:", len(segs), [round((b - a) / SR, 2) for a, b in segs])
-    if len(segs) != len(STARTS):
-        raise SystemExit("Satzanzahl passt nicht – Schwelle anpassen")
+    raw = segments(vo)
+    print("Abschnitte gefunden:", len(raw), [round((b - a) / SR, 2) for a, b in raw])
+    if len(raw) != sum(len(g) for g in GROUPS):
+        raise SystemExit("Abschnittsanzahl passt nicht – Schwelle anpassen")
+    gap = np.zeros(int(0.08 * SR), np.float32)
+    clips = [np.concatenate(sum([[vo[raw[i][0]:raw[i][1]], gap] for i in g], [])[:-1]) for g in GROUPS]
     R.make_audio("audio_trapezoid.wav")
     mus = read_wav("audio_trapezoid.wav")
     n = len(mus)
     voice = np.zeros(n, np.float32)
     t_next = 0.0
-    for (a, b), st in zip(segs, STARTS):
+    for clip, st in zip(clips, STARTS):
         st = max(st, t_next)                       # nie überlappen
         s0 = int(st * SR)
-        clip = vo[a:b]
         e = min(n, s0 + len(clip))
         voice[s0:e] += clip[: e - s0]
         t_next = st + len(clip) / SR + 0.05
