@@ -37,6 +37,7 @@ TEMPO = 1.1
 
 # ================================================================= Timeline aus dem Voiceover
 VO_KEYS = ["q", "half", "past", "call", "zone", "race", "def", "att", "pk", "cta"]
+VO_PREFIX = "reel23"                 # voice/<prefix>_<key>.wav (reel23k = Kokoro-Stimme)
 VO_START = {"q": 0.10, "half": 1.35, "past": 2.65, "call": 4.12, "zone": 4.75, "race": 7.05, "def": 9.42,
             "att": 10.85, "pk": 12.2, "cta": 13.5}
 with open(os.path.join(HERE, "voice", "reel23_timing.json")) as f:
@@ -519,7 +520,7 @@ def make_audio(path):
     voice = np.zeros(n)
     for k in VO_KEYS:
         tmp = os.path.join(HERE, f"_vo_{k}.wav")
-        subprocess.run(["ffmpeg", "-y", "-v", "error", "-i", os.path.join(HERE, "voice", f"reel23_{k}.wav"),
+        subprocess.run(["ffmpeg", "-y", "-v", "error", "-i", os.path.join(HERE, "voice", f"{VO_PREFIX}_{k}.wav"),
                         "-af", f"atempo={TEMPO}", "-ar", str(SR), "-ac", "1", tmp], check=True)
         with wave.open(tmp) as w:
             v = np.frombuffer(w.readframes(w.getnframes()), np.int16).astype(np.float32) / 32768
