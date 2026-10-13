@@ -740,10 +740,10 @@ def make_audio(path):
     voice /= np.max(np.abs(voice)) + 1e-9
     k = int(0.08 * SR)
     venv = np.convolve(np.abs(voice), np.ones(k) / k, mode="same")
-    duck = 1 - 0.6 * np.clip(venv / 0.06, 0, 1)
+    duck = 1 - 0.72 * np.clip(venv / 0.06, 0, 1)                     # Stimme klar vor dem Beat
     mus /= np.max(np.abs(mus)) + 1e-9
     sfx /= np.max(np.abs(sfx)) + 1e-9
-    mix = mus * 0.5 * duck[:, None] + sfx * 0.55 + voice[:, None] * 1.0
+    mix = mus * 0.42 * duck[:, None] + sfx * 0.5 + voice[:, None] * 1.0
     mix = np.tanh(mix * 1.05)
     mix *= np.clip((DUR - np.arange(n) / SR) / 0.3, 0, 1)[:, None]
     mix = mix / np.max(np.abs(mix)) * 0.95
