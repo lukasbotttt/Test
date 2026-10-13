@@ -7,6 +7,7 @@ komplett überquert. Seit Januar 2021 (Interpretation der NHL): Ein Schlittschuh
 solange er die Ebene über der Vorderkante der Linie noch nicht durchbrochen hat.
 Blaue Linie im Renderer: x = 294–306 (12 Zoll), Vorderkante zur Angriffszone = 306.
 Stimme: Kokoro "Michael" (tts_kokoro.py, Apache-2.0), Sätze einzeln, 1,08x.
+Hook: Videobeweis-Standbild "IS THIS OFFSIDE?" (Auflösung am Ende, letztes Bild = erstes Bild -> Loop).
 Aufruf: python3 reel24_offside.py -> reel24_offside.mp4
 """
 import json
@@ -40,11 +41,11 @@ TEMPO = 1.08
 
 # ================================================================= Timeline aus dem Voiceover
 VO_KEYS = ["q", "puck", "skates", "call", "stick", "line", "air", "cta"]
-VO_START = {"q": 0.10, "puck": 1.45, "skates": 3.35, "call": 4.82, "stick": 6.25, "line": 8.05, "air": 9.75,
-            "cta": 13.4}
+VO_START = {"q": 0.15, "puck": 1.75, "skates": 3.6, "call": 5.05, "stick": 6.35, "line": 8.05, "air": 9.7,
+            "cta": 12.95}
 with open(os.path.join(HERE, "voice", "reel24_timing.json")) as f:
     VO_DUR = {k: v / TEMPO for k, v in json.load(f).items()}
-DUR = 15.6
+DUR = 14.3
 
 
 def word(key, t_word):
@@ -52,19 +53,19 @@ def word(key, t_word):
     return VO_START[key] + t_word / TEMPO
 
 
+T_UP0, T_UP1 = 1.35, 2.05            # Hook (Videobeweis) -> Kranfahrt in die Draufsicht
+S1_T0 = 1.8                           # Start Szene 1
 T_PUCK1 = word("puck", 1.04)          # "first" – Puck überquert die Linie (legal)
-T_REW0, T_REW1 = 3.02, 3.3
+T_REW0, T_REW1 = 3.25, 3.5
 T_IN2 = word("skates", 0.60)          # "in" – Angreifer 2 komplett in der Zone
-T_PUCK2 = 4.78                        # Puck überquert die Linie -> Pfiff
-T_DIVE0, T_DIVE1 = 5.45, 6.2          # Sturzflug in die Nahaufnahme (Videobeweis)
+T_PUCK2 = 5.0                         # Puck überquert die Linie -> Pfiff
+T_DIVE0, T_DIVE1 = 5.6, 6.3           # Sturzflug in die Nahaufnahme (Videobeweis)
 T_ONLY = word("stick", 1.06)          # "only skates"
 T_V3 = 7.85                           # Schlittschuh rutscht auf die Linie
 T_ON1 = word("line", 1.22)            # "onside"
-T_V4 = 9.6                            # Schlittschuh hebt ab
+T_V4 = 9.55                           # Schlittschuh hebt ab (wie im Hook)
 T_PLANE = word("air", 1.30)           # "a skate in the air"
 T_ON2 = word("air", 2.64)             # "onside"
-T_OUT0, T_OUT1 = 13.05, 13.45         # Weißblitz, Schnitt zurück in die Gesamtansicht
-T_CUT = 13.25
 LEAD = 306.0                          # Vorderkante der blauen Linie
 SQ_X = 380.0
 SPEED1, SPEED2 = 300.0, 240.0
@@ -82,27 +83,27 @@ def frz(t, t_stop, dur=0.3):
 def rew(t):
     """Im Rewind läuft Szene 1 schnell rückwärts."""
     if T_REW0 <= t < T_REW1:
-        return T_REW0 - (T_REW0 - 1.5) * (t - T_REW0) / (T_REW1 - T_REW0)
+        return T_REW0 - (T_REW0 - S1_T0) * (t - T_REW0) / (T_REW1 - T_REW0)
     return t
 
 
 def puck_top(t):
-    t = max(rew(t), 1.5)
+    t = max(rew(t), S1_T0)
     if t < T_REW1:                                            # Szene 1: Puck zuerst (legal)
-        s = t - 1.5
-        return np.array([LEAD + 1.5 - SPEED1 * (T_PUCK1 - 1.5) + SPEED1 * s, 0.5, -90 + 10 * s])
+        s = t - S1_T0
+        return np.array([LEAD + 1.5 - SPEED1 * (T_PUCK1 - S1_T0) + SPEED1 * s, 0.5, -90 + 10 * s])
     s = frz(t, T_PUCK2 + 0.03) - T_PUCK2                      # Szene 2: Abseits
     return np.array([LEAD + 1.5 + SPEED2 * s, 0.5, -90 + 8 * s])
 
 
 def players_top(t):
     """(A1, A2, D1, D2) in der Draufsicht."""
-    t = max(rew(t), 1.5)
+    t = max(rew(t), S1_T0)
     if t < T_REW1:
-        s = t - 1.5
+        s = t - S1_T0
         p = puck_top(t)
         a1 = p + np.array([-34.0, 0, -26.0])
-        a2 = np.array([LEAD + 20 - 280 * (T_PUCK1 + 0.17 - 1.5) + 280 * s, 0, 140 - 6 * s])
+        a2 = np.array([LEAD + 20 - 280 * (T_PUCK1 + 0.17 - S1_T0) + 280 * s, 0, 140 - 6 * s])
         d1 = np.array([560 + 50 * s, 0, -170 + 10 * s])
         d2 = np.array([590 + 45 * s, 0, 175 - 8 * s])
         return a1, a2, d1, d2
@@ -130,6 +131,8 @@ def ease(t, a, b):
 
 def skates_cu(t):
     """[(x-mitte, z, lift)] für den kamerafernen und den kameranahen Schlittschuh (Fahrtrichtung +x)."""
+    if t < T_DIVE0:                                                # Hook: Schlittschuh schwebt über der Linie
+        return [(325.0, FAR_Z, 0.0), (300.0, NEAR_Z, 4.5 + 0.35 * math.sin(t * 5.0))]
     far_x, near_x, lift = 325.0, 312.5, 0.0
     near_x += (302.0 - near_x) * ease(t, T_V3, T_V3 + 0.55)       # Variante 3: zurück auf die Linie
     u4 = ease(t, T_V4, T_V4 + 0.6)                                 # Variante 4: hebt über der Linie ab
@@ -139,6 +142,8 @@ def skates_cu(t):
 
 
 def puck_cu(t):
+    if t < T_DIVE0:                                                # Hook: Puck rutscht über die Linie
+        return np.array([284.0 + (LEAD + 3.5 - 284.0) * ease(t, 0.15, 1.0), 0.5, PUCK_Z])
     if t < T_V3:
         return np.array([258.0 + 26 * e_out(c01((t - T_DIVE0) / 2.4), 2), 0.5, PUCK_Z])
     if t < T_V4:
@@ -147,31 +152,25 @@ def puck_cu(t):
 
 
 def in_cu(t):
-    return T_DIVE0 + 0.35 <= t < T_CUT
+    return t < T_UP0 + 0.35 or t >= T_DIVE0 + 0.35
 
 
 def puck_at(t):
-    if t < T_DIVE0 + 0.35:
-        return puck_top(t)
-    if t < T_CUT:
+    if in_cu(t):
         return puck_cu(t)
-    return np.array([LEAD + 160.0, 0.5, -40.0])
+    return puck_top(t)
 
 
 # ================================================================= Kamera
 TOP_T = np.array([SQ_X, 0.0, 0.0])
 TOP_H = 3300.0
-T_CRANE0, T_CRANE1 = 1.45, 2.2
-HERO_P0 = np.array([-1450.0, 1150.0, -330.0])
-HERO_P1 = np.array([-1320.0, 1060.0, -200.0])
-HERO_TGT = np.array([520.0, 0.0, 0.0])
-END_POS = np.array([-1400.0, 1080.0, 260.0])
-END_TGT = np.array([620.0, 0.0, 0.0])
+CU_DRIFT = np.array([10.0, -6.0, 14.0])
+CU_PUSH = np.array([6.0, -3.0, -16.0])
 
 
 def hook_cam(t):
-    u = e_out(c01(t / T_CRANE0), 2)
-    return HERO_P0 + (HERO_P1 - HERO_P0) * u, HERO_TGT, 38.0
+    """Videobeweis-Standbild mit langsamer Fahrt nach vorn."""
+    return CU_POS + CU_PUSH * e_out(c01(t / T_UP0), 2), CU_TGT, 36.0
 
 
 def top_cam(t):
@@ -193,23 +192,18 @@ def blend_cam(a, b, s):
 
 def cam(t):
     """(pos, tgt, up, fov)"""
-    if t < T_CRANE0:
+    if t < T_UP0:
         p, g, f = hook_cam(t)
-    elif t < T_CRANE1:
-        p, g, f = blend_cam(hook_cam(T_CRANE0), top_cam(t), sio((t - T_CRANE0) / (T_CRANE1 - T_CRANE0)))
+    elif t < T_UP1:
+        p, g, f = blend_cam(hook_cam(T_UP0), top_cam(t), sio((t - T_UP0) / (T_UP1 - T_UP0)))
     elif t < T_DIVE0:
         p, g, f = top_cam(t)
     elif t < T_DIVE1:
         s = (t - T_DIVE0) / (T_DIVE1 - T_DIVE0)
-        p, g, f = blend_cam(top_cam(t), (CU_POS, CU_TGT, 36.0), e_in(s, 2) * 0.35 + e_out(s, 3) * 0.65)
-    elif t < T_OUT0:
-        u = (t - T_DIVE1) / (T_OUT0 - T_DIVE1)              # langsame Fahrt in der Nahaufnahme
-        p, g, f = CU_POS + np.array([10.0, -6.0, 14.0]) * u, CU_TGT, 36.0
-    elif t < T_CUT:
-        p, g, f = CU_POS + np.array([10.0, -6.0, 14.0]), CU_TGT, 36.0
-    else:
-        u = (t - T_CUT) / (DUR - T_CUT)
-        p, g, f = END_POS + np.array([-160.0, 120.0, -60.0]) * (1 - e_out(u, 3)), END_TGT, 36.0
+        p, g, f = blend_cam(top_cam(t), (CU_POS + CU_DRIFT, CU_TGT, 36.0), e_in(s, 2) * 0.35 + e_out(s, 3) * 0.65)
+    else:                                                   # Nahaufnahme; endet exakt im Bild vom Anfang (Loop)
+        u = (t - T_DIVE1) / (DUR - T_DIVE1)
+        p, g, f = CU_POS + CU_DRIFT * (1 - sio(u)), CU_TGT, 36.0
     d = (p - g) / np.linalg.norm(p - g)
     el = math.degrees(math.asin(max(-1.0, min(1.0, d[1]))))
     return p, g, blend_up(min(el, 89.9)), f
@@ -223,7 +217,8 @@ def cam_row_at(t):
 
 def seg(t):
     """Bewegungsunschärfe nicht über Schnitte hinweg (Puck springt beim Rewind)."""
-    for a, b in ((0.0, T_REW0), (T_REW0, T_REW1), (T_REW1, T_DIVE0 + 0.35), (T_DIVE0 + 0.35, T_CUT), (T_CUT, DUR)):
+    for a, b in ((0.0, T_UP0 + 0.35), (T_UP0 + 0.35, T_REW0), (T_REW0, T_REW1), (T_REW1, T_DIVE0 + 0.35),
+                 (T_DIVE0 + 0.35, DUR)):
         if a <= t < b:
             return a, b
     return 0.0, DUR
@@ -441,24 +436,24 @@ def plane_wall(ctx, row, a):
 
 
 def review_ui(L, ctx, t):
-    a = smooth(T_DIVE1 - 0.15, T_DIVE1 + 0.1, t) * (1 - smooth(T_OUT0, T_OUT0 + 0.25, t))
+    a = (1 - smooth(T_UP0, T_UP0 + 0.2, t)) if t < T_DIVE0 else smooth(T_DIVE1 - 0.15, T_DIVE1 + 0.1, t)
     if a <= 0:
         return
     m, ln = 70, 70
     ctx.set_source_rgba(INK[0] / 255, INK[1] / 255, INK[2] / 255, 0.75 * a)
     ctx.set_line_width(5)
-    for (x, y, dx, dy) in ((m, 300, 1, 1), (W - m, 300, -1, 1), (m, 1560, 1, -1), (W - m, 1560, -1, -1)):
+    for (x, y, dx, dy) in ((m, 200, 1, 1), (W - m, 200, -1, 1), (m, 1560, 1, -1), (W - m, 1560, -1, -1)):
         ctx.move_to(x, y + dy * ln)
         ctx.line_to(x, y)
         ctx.line_to(x + dx * ln, y)
         ctx.stroke()
     blink = 1.0 if (t * 2) % 1 < 0.6 else 0.25
     ctx.set_source_rgba(RED[0] / 255, RED[1] / 255, RED[2] / 255, a * blink)
-    ctx.arc(m + 34, 352, 10, 0, 2 * math.pi)
+    ctx.arc(m + 34, 252, 10, 0, 2 * math.pi)
     ctx.fill()
-    reveal(L, line_img("VIDEO REVIEW", 34, 850, INK, track=6), m + 58, 352, a, 0.0, anchor="l")
-    tc = f"00:0{int(4 + (t - T_DIVE1) * 0.25)}:{int((t * 30) % 60):02d}"
-    reveal(L, line_img(tc, 30, 700, INK, track=2), W - m - 10, 352, a, 0.0, anchor="r")
+    reveal(L, line_img("VIDEO REVIEW", 34, 850, INK, track=6), m + 58, 252, a, 0.0, anchor="l")
+    tc = f"00:0{int(4 + t * 0.25)}:{int((t * 30) % 60):02d}"
+    reveal(L, line_img(tc, 30, 700, INK, track=2), W - m - 10, 252, a, 0.0, anchor="r")
 
 
 # ================================================================= Texte
@@ -474,40 +469,42 @@ def label_at(L, row, p, txt, col, dx, dy, a, size=40):
 
 def texts(L, t, row):
     A = VO_START
-    if t < T_CRANE0 + 0.1:
-        for txt, cy, size in (("WHAT IS", 330, 130), ("OFFSIDE?", 480, 178)):
-            im = R18.word_img(txt, size, INK, HALO)
+    if t < T_UP0 + 0.1:                                             # Hook
+        k = 1 - smooth(T_UP0 - 0.1, T_UP0 + 0.1, t)
+        for txt, cy, size, col in (("IS THIS", 480, 140, INK), ("OFFSIDE?", 640, 178, RED)):
+            im = R18.word_img(txt, size, col, HALO)
+            if k < 1:
+                im = im.copy()
+                im.putalpha(im.getchannel("A").point(lambda v: int(v * k)))
             put(L, im, W / 2 - im.width / 2, cy - im.height / 2)
-        reveal(L, line_img("NHL RULES EXPLAINED  ·  PART 3", 34, 800, ORANGE, track=8), W / 2, 220, 1.0,
-               smooth(T_CRANE0 - 0.15, T_CRANE0 + 0.05, t))
-    top = T_CRANE1 - 0.2 <= t < T_DIVE0
+        reveal(L, line_img("NHL RULES EXPLAINED  ·  PART 3", 34, 800, ORANGE, track=8), W / 2, 360, 1.0,
+               smooth(T_UP0 - 0.15, T_UP0 + 0.05, t))
+    top = T_UP1 - 0.2 <= t < T_DIVE0
     if top:
         fade = 1 - smooth(T_DIVE0 - 0.25, T_DIVE0, t)
         label_at(L, row, np.array([LEAD, 0, -R22.board_z(LEAD) + 120]), "BLUE LINE", LINE_BLUE, 0, -46,
-                 smooth(T_CRANE1, T_CRANE1 + 0.2, t) * fade, 38)
+                 smooth(T_UP1, T_UP1 + 0.2, t) * fade, 38)
         label_at(L, row, np.array([1000.0, 0, 0]), "THEIR ZONE", BLUE, 0, 0,
-                 smooth(T_CRANE1 + 0.1, T_CRANE1 + 0.3, t) * fade * (1 - smooth(T_REW0 - 0.1, T_REW0, t)), 44)
+                 smooth(T_UP1 + 0.1, T_UP1 + 0.3, t) * fade * (1 - smooth(T_REW0 - 0.1, T_REW0, t)), 44)
     slam(L, "PUCK FIRST.", 120, GREEN, W / 2, 560, t, T_PUCK1 + 0.02, T_REW0)
     if T_REW0 <= t < T_REW1:
         reveal(L, line_img("<<  REWIND", 60, 900, INK, track=10), W / 2, 560, 1.0)
     slam(L, "OFFSIDE.", 190, RED, W / 2, 470, t, T_PUCK2 + 0.03, T_DIVE0 + 0.1)
     # Nahaufnahme
-    if T_DIVE1 - 0.05 <= t < T_OUT0:
+    if t >= T_DIVE1 - 0.05:
         slam(L, "OFFSIDE.", 120, RED, W / 2, 470, t, T_DIVE1 - 0.05, T_V3 + 0.1, s0=1.0)
         slam(L, "STICK DOESN'T COUNT", 64, INK, W / 2, 1420, t, A["stick"] + 0.1, T_ONLY)
         slam(L, "ONLY SKATES.", 104, INK, W / 2, 1420, t, T_ONLY, T_V3 + 0.1)
         slam(L, "ON THE LINE", 64, INK, W / 2, 1420, t, T_V3 + 0.55, T_ON1)
         slam(L, "ONSIDE.", 150, GREEN, W / 2, 470, t, T_ON1, T_V4 + 0.1)
-        slam(L, "SINCE 2021:", 64, INK, W / 2, 1360, t, A["air"] + 0.05, T_OUT0)
-        slam(L, "SKATE IN THE AIR", 76, INK, W / 2, 1450, t, T_PLANE, T_OUT0)
-        slam(L, "ONSIDE.", 150, GREEN, W / 2, 470, t, T_ON2, T_OUT0)
-    if t >= T_CUT:
-        slam(L, "WHICH RULE", 120, INK, W / 2, 330, t, A["cta"])
-        slam(L, "SHOULD I EXPLAIN", 92, INK, W / 2, 455, t, A["cta"] + 0.25)
-        slam(L, "NEXT?", 150, ORANGE, W / 2, 580, t, A["cta"] + 0.5)
-        if t >= A["cta"] + 0.8:
-            reveal(L, line_img("COMMENT BELOW  ·  FOLLOW FOR PART 4", 34, 800, INK, track=6), W / 2, 700,
-                   c01((t - A["cta"] - 0.8) / 0.25))
+        slam(L, "SINCE 2021:", 64, INK, W / 2, 1360, t, A["air"] + 0.05, A["cta"])
+        slam(L, "SKATE IN THE AIR", 76, INK, W / 2, 1450, t, T_PLANE, A["cta"])
+        slam(L, "ONSIDE.", 150, GREEN, W / 2, 470, t, T_ON2, A["cta"])
+        slam(L, "DID YOU", 120, INK, W / 2, 450, t, A["cta"])
+        slam(L, "GET IT RIGHT?", 120, ORANGE, W / 2, 590, t, A["cta"] + 0.2)
+        if t >= A["cta"] + 0.5:
+            reveal(L, line_img("COMMENT BELOW  ·  FOLLOW FOR PART 4", 34, 800, INK, track=6), W / 2, 1420,
+                   c01((t - A["cta"] - 0.5) / 0.25))
 
 
 # ================================================================= Bild
@@ -522,16 +519,12 @@ def compose(t, fidx):
     if not cu:
         zone_shade(lo_c, row, smooth(VO_START["puck"] + 0.2, VO_START["puck"] + 0.5, t))
         edge_glow(lo_c, row, LEAD, LINE_BLUE, smooth(VO_START["puck"], VO_START["puck"] + 0.3, t) * 0.9)
-        if t < T_CRANE1:
-            a1, a2, _, _ = players_top(1.5)
-            dash_arrow(lo_c, row, [a2 + np.array([0, 0.1, 0]), np.array([LEAD + 160, 0.1, 130])], t, ORANGE,
-                       smooth(0.2, 0.5, t) * (1 - smooth(1.3, 1.5, t)))
-        if 1.5 < t < T_REW0:
-            trail(lo_c, row, t, 1.5, puck_top)
+        if S1_T0 < t < T_REW0:
+            trail(lo_c, row, t, S1_T0, puck_top)
         if T_REW1 < t < T_DIVE0:
             trail(lo_c, row, t, T_REW1, puck_top)
-        a1, a2, d1, d2 = players_top(max(t, 1.5) if t < T_REW0 else t)
-        tok_a = 1 - smooth(T_DIVE0, T_DIVE0 + 0.25, t)
+        a1, a2, d1, d2 = players_top(t)
+        tok_a = (1 - smooth(T_DIVE0, T_DIVE0 + 0.25, t)) * smooth(T_UP0 + 0.35, T_UP1, t)
         for p, col in ((d1, BLUE), (d2, BLUE), (a1, ORANGE), (a2, ORANGE)):
             token(hi_c, row, p, col, 30, tok_a)
         if tok_a > 0.5:
@@ -565,6 +558,17 @@ def compose(t, fidx):
                     hi_c.line_to(xy[0] + 46 * k, xy[1] + sgn * 46 * k)
                     hi_c.stroke()
         draw_skates(lo_c, row, t, campos)                       # Puck liegt näher an der Kamera
+        if t < T_UP0 + 0.35:                                    # Hook: Fragezeichen-Ring um den Schlittschuh
+            xy, z = projected(row, np.array([300.0, 6.0, NEAR_Z]))
+            if z > 0:
+                a = smooth(0.3, 0.5, t) * (1 - smooth(T_UP0 - 0.1, T_UP0 + 0.1, t))
+                r = 120 + 10 * math.sin(t * 9)
+                hi_c.set_source_rgba(ORANGE[0] / 255, ORANGE[1] / 255, ORANGE[2] / 255, 0.9 * a)
+                hi_c.set_line_width(7)
+                hi_c.set_dash([26, 16], -t * 60)
+                hi_c.arc(xy[0], xy[1], r, 0, 2 * math.pi)
+                hi_c.stroke()
+                hi_c.set_dash([])
         plane_wall(hi_c, row, smooth(T_PLANE - 0.2, T_PLANE + 0.3, t))
         for tw, p in ((T_ON1, np.array([302.0, 1.0, NEAR_Z])), (T_ON2, np.array([300.0, 5.5, NEAR_Z]))):
             whistle_ring(hi_c, row, p, t, tw, GREEN)
@@ -583,11 +587,8 @@ def compose(t, fidx):
             y0, hh = int(rng.uniform(0, H - 40)), int(rng.uniform(6, 34))
             img[y0:y0 + hh] = np.roll(img[y0:y0 + hh], int(rng.uniform(-45, 45)), 1)
         img[::4] *= 0.93
-    if cu and T_DIVE1 <= t < T_OUT0:                            # leichte Scanlines im Videobeweis
+    if cu:                                                      # leichte Scanlines im Videobeweis
         img[::3] *= 0.975
-    wf = smooth(T_OUT0, T_CUT, t) * (1 - smooth(T_CUT, T_OUT1, t))  # Weißblitz
-    if wf > 0:
-        img = img * (1 - wf) + wf
     img = np.clip(img, 0, 1)
     pil = Image.fromarray((img * 255).astype(np.uint8)).convert("RGBA")
     texts(L, t, row)
@@ -701,7 +702,7 @@ def make_audio(path):
         pos = b % 4
         if T_REW0 <= tb < T_REW1 or tb > DUR - 0.5:
             continue
-        cu = T_DIVE1 <= tb < T_OUT0                     # im Videobeweis gedämpfter Beat
+        cu = tb < T_UP0 or tb >= T_DIVE1                # im Videobeweis gedämpfter Beat
         if pos in (0.0, 2.5):
             put_(mus, kick(0.7 if cu else 1.0), tb)
         if pos in (1.0, 3.0) and not cu:
@@ -710,7 +711,9 @@ def make_audio(path):
         if pos == 0.0:
             put_(mus, b808(roots[int(b // 4) % 4], 2.3 * B), tb)
         put_(mus, bell(mel[k8 % 8]), tb, pan=-0.2)
-    put_(sfx, skate_sfx(1.5, 0.22), 1.5)
+    put_(sfx, click(0.5), 0.02)
+    put_(sfx, whoosh(T_UP1 - T_UP0 + 0.1, 0.45), T_UP0)
+    put_(sfx, skate_sfx(1.5, 0.22), S1_T0)
     put_(sfx, skate_sfx(1.5, 0.22), T_REW1)
     put_(sfx, ding(0.45), T_PUCK1)
     put_(sfx, rewind(T_REW1 - T_REW0, 0.7), T_REW0)
@@ -723,7 +726,6 @@ def make_audio(path):
     put_(sfx, stamp(0.4), T_ON1)
     put_(sfx, ding(0.5), T_ON2)
     put_(sfx, stamp(0.4), T_ON2)
-    put_(sfx, whoosh(T_OUT1 - T_OUT0, 0.4), T_OUT0)
     put_(sfx, stamp(0.7), VO_START["cta"] + 0.5)
     # Voiceover
     voice = np.zeros(n)
