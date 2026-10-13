@@ -23,6 +23,7 @@ from PIL import Image
 import puck3d as P3
 import reel15_puck as R15
 import reel18_dangle as R18
+import mesh3d as M3
 import reel22_trapezoid as R22
 from reel15_puck import (W, H, FPS, SPP, KSUB, SHUTTER, c01, smooth, sio, e_out, e_in, lerp, blend_up, line_img,
                          reveal, put, proj, projected, px_per_in, stroke_poly, surface, surf_rgba, over, GOAL_X)
@@ -317,120 +318,42 @@ def letter_tokens(L, row, items):
         put(L, gi, xy[0] - gi.width / 2, xy[1] - gi.height / 2)
 
 
-# ================================================================= Overlays: Nahaufnahme (Schlittschuhe)
-LIGHT = np.array([0.35, 1.0, -0.45])
-LIGHT /= np.linalg.norm(LIGHT)
-BOOT = (30, 31, 37)
-HOLDER = (236, 236, 240)
-STEEL = (168, 174, 186)
-SOCK = ORANGE
-
-
-# Seitenprofile (u nach vorn, y nach oben), Zoll
-BOOT_P = np.array([(5.4, 3.0), (5.9, 3.6), (5.8, 4.4), (5.0, 5.1), (2.2, 6.0), (0.8, 7.6), (0.4, 10.6),
-                   (-3.4, 10.8), (-3.9, 9.2), (-4.7, 6.4), (-4.9, 4.2), (-4.5, 3.0)])
-HOLDER_P = np.array([(-4.4, 3.0), (5.1, 3.0), (4.5, 1.0), (-3.9, 1.0)])
-BLADE_P = np.array([(-4.9, 0.25), (-5.6, 0.75), (-4.9, 1.05), (5.1, 1.05), (5.8, 0.7), (5.3, 0.1), (-4.2, 0.0)])
-
-
-def extrude(profile, cx, cz, lift, width):
-    """Profil (u, y) entlang z extrudieren -> (Seitenflächen, Kappe vorn, Kappe hinten)."""
-    z0, z1 = cz - width / 2, cz + width / 2
-    P = [(cx + u, lift + y) for u, y in profile]
-    n = len(P)
-    faces = []
-    for i in range(n):
-        (xa, ya), (xb, yb) = P[i], P[(i + 1) % n]
-        faces.append(np.array([[xa, ya, z0], [xb, yb, z0], [xb, yb, z1], [xa, ya, z1]]))
-    cap1 = np.array([[x, y, z1] for x, y in P])
-    cap0 = np.array([[x, y, z0] for x, y in P][::-1])
-    return faces + [cap1, cap0]
-
-
-def skate_faces(cx, cz, lift):
-    """(Flächen, Streifen): Streifen werden nach dem Bein gezeichnet."""
-    out, bands = [], []
-    for prof, wd, col in ((BLADE_P, 0.3, STEEL), (HOLDER_P, 1.1, HOLDER), (BOOT_P, 3.8, BOOT)):
-        out += [(f, col) for f in extrude(prof, cx, cz, lift, wd)]
-    # Unterschenkel mit Stutzen (Zylinder) + weißer Streifen
-    lx, ly = cx - 1.6, lift + 10.6
-    for y0, y1, r, col, dst in ((ly, ly + 60.0, 2.9, SOCK, out), (ly + 5.0, ly + 7.5, 2.9, (246, 246, 246), bands)):
-        ring = [(lx + r * math.cos(q), cz + r * math.sin(q)) for q in np.linspace(0, 2 * math.pi, 29)[:-1]]
-        for i in range(len(ring)):
-            (xa, za), (xb, zb) = ring[i], ring[(i + 1) % len(ring)]
-            dst.append((np.array([[xa, y0, za], [xb, y0, zb], [xb, y1, zb], [xa, y1, za]]), col))
-    return out, bands
-
-
-def shade(face, col, campos):
-    n = np.cross(face[1] - face[0], face[2] - face[0])
-    nn = np.linalg.norm(n)
-    if nn < 1e-9:
-        return None
-    n /= nn
-    ctr = face.mean(0)
-    if np.dot(n, campos - ctr) < 0:                              # Rückseite
-        return None
-    k = 0.66 + 0.4 * max(0.0, float(np.dot(n, LIGHT)))
-    return tuple(int(min(255, ch * k)) for ch in col)
-
-
-def draw_skates(ctx, row, t, campos):
-    sk = skates_cu(t)
-    for cx, cz, lift in sk:                                         # Schatten
-        q = np.array([[cx - 5.6, 0.05, cz - 2.2], [cx + 5.8, 0.05, cz - 2.2], [cx + 5.8, 0.05, cz + 2.2],
-                      [cx - 5.6, 0.05, cz + 2.2]])
-        q[:, 0] += lift * 0.3
-        xy, z = proj(row, q)
-        if (z > 1).all():
-            fill_poly(ctx, xy, (20, 24, 34), 0.22 / (1 + lift * 0.15))
-    order = sorted(sk, key=lambda s_: -abs(s_[1] - campos[2]))      # ferner Schlittschuh zuerst
-    for cx, cz, lift in order:
-        faces, bands = skate_faces(cx, cz, lift)
-        faces.sort(key=lambda fc: -float(np.linalg.norm(fc[0].mean(0) - campos)))
-        for f, col in faces + bands:
-            sc = shade(f, col, campos)
-            if sc is None:
-                continue
-            xy, z = proj(row, f)
-            if (z < 1).any():
-                continue
-            fill_poly(ctx, xy, sc, 1.0)
-            ctx.set_source_rgba(sc[0] / 255, sc[1] / 255, sc[2] / 255, 1.0)    # Nähte schließen
-            ctx.set_line_width(1.2)
-            ctx.move_to(*xy[0])
-            for q in xy[1:]:
-                ctx.line_to(*q)
-            ctx.close_path()
-            ctx.stroke()
-
-
+# ================================================================= Nahaufnahme: 3D-Spieler (mesh3d)
 STICK_Z = FAR_Z - 9.0
+HIP_Y = 38.0
 
 
-def draw_stick(ctx, row, a):
-    if a <= 0:
-        return
-    blade = np.array([[281.0, 0.1, STICK_Z], [293.0, 0.1, STICK_Z], [293.0, 3.0, STICK_Z], [281.5, 3.4, STICK_Z]])
-    xy, z = proj(row, blade)
-    if (z > 1).all():
-        fill_poly(ctx, xy, (22, 22, 26), a)
-    shaft = np.array([[292.0, 2.0, STICK_Z], [313.0, 44.0, CU_Z - 3.0]])
-    xy, z = proj(row, shaft)
-    if (z > 1).all():
-        stroke_poly(ctx, xy, (40, 40, 46), a, float(np.clip(px_per_in(row, z.mean()) * 1.2, 3, 40)))
+def player_meshes(t, stick_a):
+    """Spieler (Schlittschuhe, Beine per IK, Hose, Trikot) + Schläger als 3D-Gitter."""
+    sk = skates_cu(t)
+    hipx = float(np.mean([s_[0] for s_ in sk])) - 2.0
+    meshes = []
+    for cx, cz, lift in sk:
+        meshes.append(M3.place(M3.SKATE, cx, lift, cz))
+        ankle = np.array([cx - 2.0, lift + 7.5, cz])
+        hip = np.array([hipx, HIP_Y, CU_Z + (cz - CU_Z) * 0.55])
+        meshes += M3.leg_meshes(ankle, hip)
+    meshes.append(M3.torso_mesh(np.array([hipx, HIP_Y, CU_Z])))
+    if stick_a > 0:
+        st = M3.stick_mesh((292.0, 0.1, STICK_Z), (280.5, 0.1, STICK_Z), (318.0, 62.0, CU_Z - 3.0))
+        for m_ in st:
+            m_.g[:] = 1
+        meshes += st
+    return meshes
 
 
-def plane_wall(ctx, row, a):
-    if a <= 0:
-        return
+def plane_quad(a):
     z0, z1 = CU_Z - 24.0, CU_Z + 34.0
     h = 22.0 * e_out(a, 3)
-    q = np.array([[LEAD, 0.1, z0], [LEAD, 0.1, z1], [LEAD, h, z1], [LEAD, h, z0]])
-    xy, z = proj(row, q)
+    return np.array([[LEAD, 0.1, z0], [LEAD, 0.1, z1], [LEAD, h, z1], [LEAD, h, z0]])
+
+
+def plane_edges(ctx, row, a):
+    if a <= 0:
+        return
+    xy, z = proj(row, plane_quad(a))
     if (z < 1).any():
         return
-    fill_poly(ctx, xy, LINE_BLUE, 0.15 * a)
     stroke_poly(ctx, xy[1:3], LINE_BLUE, 0.85 * a, 4)
     stroke_poly(ctx, xy[2:4], LINE_BLUE, 0.85 * a, 4)
 
@@ -546,7 +469,6 @@ def compose(t, fidx):
         if t >= T_V3:                                           # Kontakt mit der Linie
             on = smooth(T_V3 + 0.45, T_V3 + 0.6, t) * (1 - smooth(T_V4, T_V4 + 0.2, t))
             line_band(lo_c, row, 294.0, LEAD, GREEN, 0.35 * on, (NEAR_Z - 3.0, NEAR_Z + 3.0))
-        draw_stick(lo_c, row, smooth(VO_START["stick"] - 0.1, VO_START["stick"] + 0.15, t) * (1 - smooth(T_V3 - 0.2, T_V3, t)))
         if VO_START["stick"] + 0.1 <= t < T_V3:                 # Schläger durchgestrichen
             xy, z = projected(row, np.array([287.0, 1.7, STICK_Z]))
             if z > 0:
@@ -557,7 +479,6 @@ def compose(t, fidx):
                     hi_c.move_to(xy[0] - 46 * k, xy[1] - sgn * 46 * k)
                     hi_c.line_to(xy[0] + 46 * k, xy[1] + sgn * 46 * k)
                     hi_c.stroke()
-        draw_skates(lo_c, row, t, campos)                       # Puck liegt näher an der Kamera
         if t < T_UP0 + 0.35:                                    # Hook: Fragezeichen-Ring um den Schlittschuh
             xy, z = projected(row, np.array([300.0, 6.0, NEAR_Z]))
             if z > 0:
@@ -569,11 +490,21 @@ def compose(t, fidx):
                 hi_c.arc(xy[0], xy[1], r, 0, 2 * math.pi)
                 hi_c.stroke()
                 hi_c.set_dash([])
-        plane_wall(hi_c, row, smooth(T_PLANE - 0.2, T_PLANE + 0.3, t))
+        plane_edges(hi_c, row, smooth(T_PLANE - 0.2, T_PLANE + 0.3, t))
         for tw, p in ((T_ON1, np.array([302.0, 1.0, NEAR_Z])), (T_ON2, np.array([300.0, 5.5, NEAR_Z]))):
             whistle_ring(hi_c, row, p, t, tw, GREEN)
         review_ui(L, hi_c, t)
     img = over(base, *surf_rgba(lo_s))
+    if cu:                                                      # 3D-Spieler + Schläger mit Schatten
+        stick_a = smooth(VO_START["stick"] - 0.1, VO_START["stick"] + 0.15, t) * (1 - smooth(T_V3 - 0.2, T_V3, t))
+        pl_a = smooth(T_PLANE - 0.2, T_PLANE + 0.3, t)
+        m_rgb, m_a, shadow, plane_a = M3.render(player_meshes(t, stick_a), row, W, H, campos,
+                                                alpha_by_group=np.array([1.0, stick_a], np.float32),
+                                                extra_planes=[(plane_quad(pl_a), 1.0)] if pl_a > 0 else None)
+        img = img * (1 - 0.28 * shadow[..., None])
+        img = img * (1 - m_a[..., None]) + m_rgb
+        k = (0.16 * plane_a)[..., None]
+        img = img * (1 - k) + np.array(LINE_BLUE, np.float32) / 255 * k
     pa = cov[..., None]
     img = img * (1 - pa) + puck * pa
     img = over(img, *surf_rgba(hi_s))
