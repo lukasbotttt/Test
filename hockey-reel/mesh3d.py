@@ -31,6 +31,9 @@ MAT = {
     "jersey_stripe": ((0.92, 0.92, 0.94), 0.04, 10.0),
     "carbon": ((0.03, 0.03, 0.035), 0.5, 80.0),
     "tape": ((0.90, 0.90, 0.92), 0.05, 10.0),
+    "post_red": ((0.60, 0.04, 0.05), 0.9, 70.0),
+    "frame_white": ((0.78, 0.79, 0.81), 0.25, 30.0),
+    "occluder": ((0.0, 0.0, 0.0), 0.0, 1.0),
 }
 MAT_IDS = {k: i for i, k in enumerate(MAT)}
 MAT_COL = np.array([MAT[k][0] for k in MAT], np.float32)
@@ -432,7 +435,7 @@ def _shade_pattern(mat, uvw):
     return col
 
 
-def render(meshes, cam, W, H, campos, ss=2, alpha_by_group=None, extra_planes=None):
+def render(meshes, cam, W, H, campos, ss=2, alpha_by_group=None, extra_planes=None, shadow_light=None):
     """-> (rgb vormultipliziert, alpha, tiefe) in Ausgabeauflösung, plus Schattenmaske aufs Eis."""
     m = merge(meshes)
     sx, sy, sz = project(cam, m.v, W, H, ss)
@@ -491,7 +494,8 @@ def render(meshes, cam, W, H, campos, ss=2, alpha_by_group=None, extra_planes=No
             vis = (pt >= 0) & (pd < depth)
             plane_a[vis] = np.maximum(plane_a[vis], a_pl)
     # Schatten: Gitter entlang des Lichts aufs Eis projizieren
-    sh = m.v - LIGHT[None, :] * (m.v[:, 1:2] / LIGHT[1])
+    sl = LIGHT if shadow_light is None else np.asarray(shadow_light, float) / np.linalg.norm(shadow_light)
+    sh = m.v - sl[None, :] * (m.v[:, 1:2] / sl[1])
     sh[:, 1] = 0.05
     hx, hy, _ = project(cam, sh, W, H, ss)
     mask = np.zeros((Hs, Ws), np.float32)

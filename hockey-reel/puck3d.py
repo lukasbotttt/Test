@@ -298,13 +298,13 @@ def ice_albedo(x, z, fw):
     r, g, b = w * 0.985, w * 0.995, w * 1.01
     # Bande (von oben sichtbar)
     r, g, b = mix(r, g, b, 0.10, 0.11, 0.13, aa(3.0 - abs(sd + 3.0), fw))
-    RED = (0.74, 0.10, 0.12)
+    RED = (0.72, 0.04, 0.05)
     BLU = (0.12, 0.27, 0.66)
     ax = abs(x)
     # Mittellinie, blaue Linien, Torlinien
     r, g, b = mix(r, g, b, RED[0], RED[1], RED[2], aa(6.0 - ax, fw) * 0.92)
     r, g, b = mix(r, g, b, BLU[0], BLU[1], BLU[2], aa(6.0 - abs(ax - 300.0), fw) * 0.92)
-    r, g, b = mix(r, g, b, RED[0], RED[1], RED[2], aa(1.0 - abs(ax - 1068.0), fw) * 0.92)
+    r, g, b = mix(r, g, b, RED[0], RED[1], RED[2], aa(1.0 - abs(ax - 1068.0), fw) * 0.985)
     # Mittelkreis + Bully-Punkt
     r, g, b = mix(r, g, b, BLU[0], BLU[1], BLU[2], ring_cov(x, z, 0.0, 0.0, 180.0, 1.0, fw) * 0.92)
     r, g, b = mix(r, g, b, BLU[0], BLU[1], BLU[2], disc_cov(x, z, 0.0, 0.0, 6.0, fw) * 0.95)
@@ -319,7 +319,7 @@ def ice_albedo(x, z, fw):
     gx = sx * 1068.0
     dd = math.sqrt((x - gx) ** 2 + z * z)
     if sx * (gx - x) >= -1 and dd < 80:
-        inside = aa(72.0 - dd, fw) * aa(48.0 - abs(z), fw) * aa(sx * (gx - x) + 0.5, fw)
+        inside = aa(72.0 - dd, fw) * aa(48.0 - abs(z), fw) * aa(sx * (gx - x) - 1.0, fw)   # endet vor der Torlinie
         r, g, b = mix(r, g, b, 0.48, 0.72, 0.93, inside * 0.85)
         r, g, b = mix(r, g, b, RED[0], RED[1], RED[2], aa(1.0 - abs(dd - 72.0), fw) * aa(48.0 - abs(z), fw) * 0.9)
     return r, g, b
