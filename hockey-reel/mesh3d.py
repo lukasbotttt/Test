@@ -34,6 +34,10 @@ MAT = {
     "post_red": ((0.60, 0.04, 0.05), 0.9, 70.0),
     "frame_white": ((0.78, 0.79, 0.81), 0.25, 30.0),
     "occluder": ((0.0, 0.0, 0.0), 0.0, 1.0),
+    "board_white": ((0.80, 0.81, 0.83), 0.25, 30.0),
+    "kick_yellow": ((0.86, 0.60, 0.04), 0.2, 20.0),
+    "rail": ((0.70, 0.72, 0.76), 0.5, 50.0),
+    "bench_seat": ((0.06, 0.11, 0.26), 0.2, 20.0),
 }
 MAT_IDS = {k: i for i, k in enumerate(MAT)}
 MAT_COL = np.array([MAT[k][0] for k in MAT], np.float32)
@@ -490,7 +494,10 @@ def render(meshes, cam, W, H, campos, ss=2, alpha_by_group=None, extra_planes=No
             pt = np.full((Hs, Ws), -1, np.int32)
             pb0 = np.zeros((Hs, Ws), np.float32)
             pb1 = np.zeros((Hs, Ws), np.float32)
-            _raster(qx, qy, qz, np.array([[0, 1, 2], [0, 2, 3]], np.int32), pd, pt, pb0, pb1)
+            nq = len(quad) // 4                       # mehrere Vierecke (je 4 Ecken) in einem Durchgang
+            tris = np.array([[4 * g, 4 * g + 1, 4 * g + 2] for g in range(nq)] +
+                            [[4 * g, 4 * g + 2, 4 * g + 3] for g in range(nq)], np.int32)
+            _raster(qx, qy, qz, tris, pd, pt, pb0, pb1)
             vis = (pt >= 0) & (pd < depth)
             plane_a[vis] = np.maximum(plane_a[vis], a_pl)
     # Schatten: Gitter entlang des Lichts aufs Eis projizieren
