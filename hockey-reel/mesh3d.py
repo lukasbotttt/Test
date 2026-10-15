@@ -38,6 +38,10 @@ MAT = {
     "kick_yellow": ((0.86, 0.60, 0.04), 0.2, 20.0),
     "rail": ((0.70, 0.72, 0.76), 0.5, 50.0),
     "bench_seat": ((0.06, 0.11, 0.26), 0.2, 20.0),
+    "tape_white": ((0.86, 0.87, 0.88), 0.05, 8.0),
+    "tape_black": ((0.045, 0.045, 0.05), 0.10, 12.0),
+    "core": ((0.55, 0.42, 0.28), 0.05, 8.0),
+    "stick_red": ((0.66, 0.05, 0.06), 0.7, 60.0),
 }
 MAT_IDS = {k: i for i, k in enumerate(MAT)}
 MAT_COL = np.array([MAT[k][0] for k in MAT], np.float32)
@@ -430,6 +434,15 @@ def _shade_pattern(mat, uvw):
         c[lace] = MAT_COL[MAT_IDS["lace"]]
         c[eyelet] = np.array([0.6, 0.62, 0.66], np.float32)
         col[boot] = c
+    for name, seam_k in (("tape_white", 0.74), ("tape_black", 1.9)):      # Stoff-Tape: Wickelnähte + Gewebe
+        sel = mat == MAT_IDS[name]
+        if sel.any():
+            u, v = uvw[sel, 0], uvw[sel, 1]
+            weave = 0.95 + 0.05 * ((np.sin(u * 55.0) * np.sin(v * 55.0)) > 0)
+            c = col[sel] * weave[:, None]
+            seam = ((u - 0.9) % 0.95) < 0.05
+            c[seam] = c[seam] * seam_k
+            col[sel] = c
     tape = mat == MAT_IDS["tape"]
     if tape.any():
         q = (uvw[tape, 0] * 1.1 + uvw[tape, 1] * 0.7) % 1.0 < 0.06       # Tape-Wicklung
