@@ -491,8 +491,8 @@ def fmt(sec):
 _BUG = {}
 
 
-def bug_img(sa, sb, clock, ccol, ha, hb):
-    key = (sa, sb, clock, ccol, round(ha, 2), round(hb, 2))
+def bug_img(sa, sb, clock, ccol, ha, hb, period="3RD"):
+    key = (sa, sb, clock, ccol, round(ha, 2), round(hb, 2), period)
     if key in _BUG:
         return _BUG[key]
     w, h = 640, 118
@@ -509,7 +509,7 @@ def bug_img(sa, sb, clock, ccol, ha, hb):
     c_im = line_img(":", 54, 900, INK)
     im.alpha_composite(c_im, (44 + 127 - c_im.width // 2, 76 - c_im.height // 2))
     d.line((368, 44, 368, 114), fill=(214, 218, 226, 255), width=3)
-    p_im = line_img("3RD", 30, 800, GREY, track=3)
+    p_im = line_img(period, 30, 800, GREY, track=3)
     im.alpha_composite(p_im, (392, 79 - p_im.height // 2))
     k_im = line_img(clock, 64, 900, ccol)
     im.alpha_composite(k_im, (636 - k_im.width, 79 - k_im.height // 2))

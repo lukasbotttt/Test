@@ -25,9 +25,16 @@ def engine():
     return _tts
 
 
-def say(text, voice="am_michael", speed=1.0):
+def say(text, voice="am_michael", speed=1.0, fixes=None):
+    """fixes: {falsche Lautschrift: richtige} – z. B. Namensbetonung (Brodeur = broh-DUR)."""
     lang = "en-gb" if voice.startswith("b") else "en-us"
-    audio, sr = engine().create(text, voice=voice, speed=speed, lang=lang)
+    if fixes:
+        ph = engine().tokenizer.phonemize(text, lang)
+        for a, b in fixes.items():
+            ph = ph.replace(a, b)
+        audio, sr = engine().create(ph, voice=voice, speed=speed, lang=lang, is_phonemes=True)
+    else:
+        audio, sr = engine().create(text, voice=voice, speed=speed, lang=lang)
     return np.asarray(audio, np.float32), sr
 
 
@@ -45,12 +52,12 @@ def stretch(path, factor):
     os.replace(tmp, path)
 
 
-def synth(lines, out_prefix, voice="am_michael", speed=1.0, fit=None):
+def synth(lines, out_prefix, voice="am_michael", speed=1.0, fit=None, fixes=None):
     """lines: Liste von (key, text). fit: {key: höchstdauer} -> nur stauchen. Gibt {key: dauer} zurück."""
     durs = {}
     for key, text in lines:
         path = f"{out_prefix}_{key}.wav"
-        audio, sr = say(text, voice, speed)
+        audio, sr = say(text, voice, speed, fixes)
         sf.write(path, audio, sr)
         d = len(audio) / sr
         if fit and key in fit and d > fit[key]:
