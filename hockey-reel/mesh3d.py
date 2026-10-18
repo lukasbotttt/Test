@@ -42,6 +42,12 @@ MAT = {
     "tape_black": ((0.045, 0.045, 0.05), 0.10, 12.0),
     "core": ((0.55, 0.42, 0.28), 0.05, 8.0),
     "stick_red": ((0.66, 0.05, 0.06), 0.7, 60.0),
+    "glove_red": ((0.50, 0.03, 0.04), 0.30, 28.0),
+    "glove_blue": ((0.03, 0.09, 0.38), 0.30, 28.0),
+    "chip_red": ((0.62, 0.035, 0.045), 0.9, 90.0),
+    "chip_blue": ((0.04, 0.13, 0.52), 0.9, 90.0),
+    "chip_top": ((0.86, 0.87, 0.89), 0.5, 60.0),
+    "box_floor": ((0.045, 0.047, 0.055), 0.15, 12.0),
 }
 MAT_IDS = {k: i for i, k in enumerate(MAT)}
 MAT_COL = np.array([MAT[k][0] for k in MAT], np.float32)
@@ -443,6 +449,18 @@ def _shade_pattern(mat, uvw):
             seam = ((u - 0.9) % 0.95) < 0.05
             c[seam] = c[seam] * seam_k
             col[sel] = c
+    for name in ("glove_red", "glove_blue"):                             # Handschuh: Innenhand, Stulpe, Fingerrollen
+        sel = mat == MAT_IDS[name]
+        if sel.any():
+            u, y = uvw[sel, 0], uvw[sel, 1]
+            c = col[sel]
+            palm = (y < 1.1) & (u > 4.6)
+            groove = (u > 9.0) & (((u - 9.0) % 1.25) < 0.13) & ~palm
+            c[groove] = c[groove] * 0.45
+            c[(u > 1.0) & (u < 1.7) & ~palm] = np.array([0.82, 0.82, 0.84], np.float32)
+            c[palm] = np.array([0.52, 0.47, 0.40], np.float32)
+            c[u < 0.25] = np.array([0.03, 0.03, 0.035], np.float32)
+            col[sel] = c
     tape = mat == MAT_IDS["tape"]
     if tape.any():
         q = (uvw[tape, 0] * 1.1 + uvw[tape, 1] * 0.7) % 1.0 < 0.06       # Tape-Wicklung
@@ -452,8 +470,9 @@ def _shade_pattern(mat, uvw):
     return col
 
 
-def render(meshes, cam, W, H, campos, ss=2, alpha_by_group=None, extra_planes=None, shadow_light=None):
-    """-> (rgb vormultipliziert, alpha, tiefe) in Ausgabeauflösung, plus Schattenmaske aufs Eis."""
+def render(meshes, cam, W, H, campos, ss=2, alpha_by_group=None, extra_planes=None, shadow_light=None, want_pos=False):
+    """-> (rgb vormultipliziert, alpha, tiefe) in Ausgabeauflösung, plus Schattenmaske aufs Eis.
+    want_pos: zusätzlich die Weltposition je Pixel (für Licht, das vom Ort abhängt)."""
     m = merge(meshes)
     sx, sy, sz = project(cam, m.v, W, H, ss)
     Hs, Ws = H * ss, W * ss
@@ -465,6 +484,7 @@ def render(meshes, cam, W, H, campos, ss=2, alpha_by_group=None, extra_planes=No
     cov = tid >= 0
     rgb = np.zeros((Hs, Ws, 3), np.float32)
     alpha = np.zeros((Hs, Ws), np.float32)
+    posbuf = np.zeros((Hs, Ws, 3), np.float32) if want_pos else None
     if cov.any():
         t = tid[cov]
         w0, w1 = b0[cov][:, None], b1[cov][:, None]
@@ -496,6 +516,8 @@ def render(meshes, cam, W, H, campos, ss=2, alpha_by_group=None, extra_planes=No
             a = alpha_by_group[m.g[t]]
         rgb[cov] = col * a[:, None]
         alpha[cov] = a
+        if want_pos:
+            posbuf[cov] = P
     # transparente Ebene(n), mit Tiefentest gegen die Gitter
     plane_a = np.zeros((Hs, Ws), np.float32)
     if extra_planes:
@@ -526,4 +548,5 @@ def render(meshes, cam, W, H, campos, ss=2, alpha_by_group=None, extra_planes=No
         return a.reshape(H, ss, W, ss, *a.shape[2:]).mean(axis=(1, 3))
 
     mask_img = Image.fromarray((down(mask) * 255).astype(np.uint8)).filter(ImageFilter.GaussianBlur(7))
-    return down(rgb), down(alpha), np.asarray(mask_img, np.float32) / 255, down(plane_a)
+    out = (down(rgb), down(alpha), np.asarray(mask_img, np.float32) / 255, down(plane_a))
+    return out + (down(posbuf),) if want_pos else out
