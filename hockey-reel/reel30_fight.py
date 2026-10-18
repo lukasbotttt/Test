@@ -3,7 +3,8 @@
 Fakten (NHL Official Rules 2023–24):
 - Regel 46.14: Wer kämpft, bekommt eine große Strafe (Major); Regel 20.1: Major = 5 Minuten. Kein Platzverweis.
 - Regel 46.11: Der Anstifter ("instigator") bekommt zusätzlich 2 Minuten (instigating minor) und eine 10-Minuten-
-  Disziplinarstrafe -> 2 + 5 + 10 = 17 Strafminuten.
+  Disziplinarstrafe -> 2 + 5 + 10 = 17 Strafminuten (PIM). Die 2 Minuten darf laut Regel 22.3 ein Mitspieler
+  absitzen, der Anstifter selbst sitzt 5 + 10 – darum heißt es im Video "17 penalty minutes", nicht "17 Minuten in der Box".
 - IIHF-Regelbuch Art. 46.1 (gilt international, z. B. Olympia/WM): "Fighting is not part of international ice
   hockey's DNA" – Major + automatische Spieldauer-Disziplinarstrafe (Game Misconduct) = Platzverweis.
 Look: dunkle Arena mit Spotlicht (Licht wird pro Pixel auf der Eisebene berechnet), 3D-Handschuhe fallen aufs Eis,
@@ -54,7 +55,7 @@ VO_LINES = [
     ("twist", "Technically, it isn't. It's a five-minute major."),
     ("box", "But nobody gets thrown out. Both sit, then play on."),
     ("intl", "In international hockey? Automatic ejection."),
-    ("inst", "And if you start it: seventeen minutes in the box."),
+    ("inst", "And if you start it: seventeen penalty minutes."),
     ("cta", "Should the NHL ban fighting? Yes or no?"),
 ]
 VO_KEYS = [k for k, _ in VO_LINES]
@@ -455,10 +456,11 @@ def box_clock(t, team):
     if t < T_REW:
         return ("EJECTED", LED) if t >= T_EJECT else ("IIHF", (120, 170, 255))
     if team == 1:
-        return "5:00", LED
-    if t < T_17:
-        return fmt(min(1020.0, 120.0 + 300.0 * c01((t - T_START) / 0.3) + 600.0 * c01((t - T_START - 0.35) / 0.3))), LED
-    return "17:00", ORANGE
+        return "5 PIM", LED
+    if t < T_17:                                                        # Strafminuten (PIM) addieren sich
+        pim = 2 + (5 if t >= T_START + 0.35 else 0) + (10 if t >= T_START + 0.65 else 0)
+        return f"{pim} PIM", LED
+    return "17 PIM", ORANGE
 
 
 def draw_clocks(L, row, t):
@@ -557,9 +559,9 @@ def texts(L, t, row):
                                        ("+10  MISCONDUCT", T_START + 0.65))):
             a = smooth(tt, tt + 0.12, t) * (1 - smooth(T_17 - 0.05, T_17 + 0.1, t))
             tag(L, (W / 2, 1300 + i * 62), txt, WHITE, a, 40)
-    slam(L, "17 MINUTES", 150, ORANGE, W / 2, 1460, t, T_17, T_EN0, glow=(170, 70, 10))
+    slam(L, "17 PENALTY MINUTES", 84, ORANGE, W / 2, 1460, t, T_17, T_EN0, glow=(170, 70, 10))
     if T_17 + 0.3 <= t < T_EN0:
-        reveal(L, line_img("FOR THE INSTIGATOR  ·  NHL RULE 46.11", 30, 750, GREY, track=4), W / 2, 1585,
+        reveal(L, line_img("2 + 5 + 10 FOR THE INSTIGATOR  ·  NHL RULE 46.11", 28, 750, GREY, track=4), W / 2, 1585,
                c01((t - T_17 - 0.3) / 0.25), smooth(T_EN0 - 0.2, T_EN0, t))
     if t >= T_CTA:
         slam(L, "SHOULD THE NHL", 108, WHITE, W / 2, 420, t, T_CTA, glow=(90, 110, 160))
