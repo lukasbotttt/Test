@@ -805,7 +805,7 @@ def make_audio(path):
     for k in range(int((T_PLAY - T_SIT) / 0.06)):
         put_(sfx, tick(0.18), T_SIT + 0.1 + 0.06 * k)
     put_(sfx, door_clack(0.5), T_PLAY)
-    put_(sfx, buzzer(0.7, 0.4), T_EJECT)
+    put_(sfx, buzzer(0.26, 0.35), T_EJECT - 0.04)                       # kurz: endet vor "ejection"
     put_(sfx, stamp(0.9), T_EJECT)
     put_(sfx, rewind(0.4, 0.4), T_REW)
     for i in range(3):
