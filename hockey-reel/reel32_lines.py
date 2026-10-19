@@ -610,10 +610,10 @@ def make_audio(path):
     for i in range(6):                                                 # Hook: Linien leuchten auf
         put_(sfx, pop(0.25, 700 + 120 * i), 0.22 * i)
     for key in ("red", "blue", "goal", "dots", "crease", "trap", "cta"):
-        put_(sfx, whoosh(0.45, 0.3), VO_START[key] - 0.3)
-        put_(sfx, pop(0.35, 950), VO_START[key] + 0.15)                 # Abzeichen
+        put_(sfx, whoosh(0.26, 0.22), VO_START[key] - 0.3)            # kurz: nicht über dem Satzende davor
+        put_(sfx, pop(0.25, 950), VO_START[key] - 0.1)                  # Abzeichen (nicht auf dem Wort)
     put_(sfx, slap(0.7), wt("red", 2) + 0.25)
-    put_(sfx, buzz(0.35), T_ICING + 0.35)                               # nach dem Wort "icing"
+    put_(sfx, buzz(0.3), T_ICING + 0.62)                                # erst nach dem Wort "icing"
     put_(sfx, hit(0.5), T_OFF + 0.4)
     put_(sfx, buzz(0.25), T_WHOLE + 0.05)
     put_(sfx, ding(0.35), T_CROSS + 0.3)
@@ -637,11 +637,11 @@ def make_audio(path):
     voice /= np.max(np.abs(voice)) + 1e-9
     k = int(0.08 * SR)
     venv = np.convolve(np.abs(voice), np.ones(k) / k, mode="same")
-    duck = 1 - 0.7 * np.clip(venv / 0.06, 0, 1)
+    duck = 1 - 0.82 * np.clip(venv / 0.06, 0, 1)
     sduck = 1 - 0.5 * np.clip(venv / 0.06, 0, 1)
     mus /= np.max(np.abs(mus)) + 1e-9
     sfx /= np.max(np.abs(sfx)) + 1e-9
-    mix = mus * 0.36 * duck[:, None] + sfx * 0.45 * sduck[:, None] + voice[:, None] * 1.0
+    mix = mus * 0.32 * duck[:, None] + sfx * 0.45 * sduck[:, None] + voice[:, None] * 1.0
     mix = np.tanh(mix * 1.05)
     mix *= np.clip((DUR - np.arange(n) / SR) / 0.3, 0, 1)[:, None]
     mix = mix / np.max(np.abs(mix)) * 0.95
