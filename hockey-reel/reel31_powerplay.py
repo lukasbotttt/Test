@@ -32,6 +32,7 @@ HERE = os.path.dirname(os.path.abspath(__file__))
 W, H, FPS = 1080, 1920, 30
 SHUT = 0.8 / FPS                               # Verschlusszeit für Bewegungsunschärfe
 PY, PW, PH = 656, 1080, 608                    # 16:9-Panel (volle Breite) in der Bildmitte
+OFF_Y = 0                                      # Versatz beim Zeichnen: Szenen nutzen Panel-, Rahmen Bildkoordinaten
 ACC = (240, 90, 60)                            # Akzent Orangerot
 WHITE = (244, 244, 246)
 GREY = (128, 131, 140)
@@ -81,7 +82,7 @@ T_ENDS = wt("goal", 5)                         # "ends" -> Uhr springt auf 0:00
 T_BLAME = VO_START["blame"]
 T_HIST = VO_START["hist"]
 T_CTA = VO_START["cta"]
-T_SHOT, T_ARRIVE = 0.32, 0.92                  # Puck fliegt übers ganze Eis
+T_SHOT, T_ARRIVE = -0.05, 0.95                 # Puck fliegt schon in Bild 0 übers ganze Eis
 T_BOX = wt("sh", 1) + 0.12                     # Spieler landet in der Box, Strafuhr läuft
 SCENES = [0.0, T_SH, T_RULE, T_GOAL, T_BLAME, T_CTA]
 
@@ -205,7 +206,7 @@ def blit(dst, src, x, y, a=1.0):
     """src (vormultipliziert, h x w x 4) 'over' dst (H x W x 3) mit linker oberer Ecke (x, y)."""
     if a <= 0.003:
         return
-    x, y = int(round(x)), int(round(y))
+    x, y = int(round(x)), int(round(y)) + OFF_Y
     h, w = src.shape[:2]
     x0, y0, x1, y1 = max(x, 0), max(y, 0), min(x + w, dst.shape[1]), min(y + h, dst.shape[0])
     if x1 <= x0 or y1 <= y0:
@@ -221,7 +222,7 @@ def blit(dst, src, x, y, a=1.0):
 def blit_add(dst, rgb, x, y, a=1.0):
     if a <= 0.003:
         return
-    x, y = int(round(x)), int(round(y))
+    x, y = int(round(x)), int(round(y)) + OFF_Y
     h, w = rgb.shape[:2]
     x0, y0, x1, y1 = max(x, 0), max(y, 0), min(x + w, dst.shape[1]), min(y + h, dst.shape[0])
     if x1 <= x0 or y1 <= y0:
@@ -382,16 +383,24 @@ def solid(col, w, h, a=1.0):
 
 
 # ================================================================= Hintergrund, Bokeh, Licht
-def panel_bg():
-    yy, xx = np.mgrid[0:PH, 0:PW].astype(np.float32)
-    base = 0.045 + 0.050 * np.exp(-((xx - 330) ** 2 / (2 * 520 ** 2) + (yy + 60) ** 2 / (2 * 260 ** 2)))
-    base += 0.025 * np.exp(-((yy - 40) ** 2) / (2 * 120 ** 2))
-    vig = 1 - 0.55 * (((xx - PW / 2) / (PW * 0.62)) ** 2 + ((yy - PH * 0.42) / (PH * 0.85)) ** 2)
-    g = np.clip(base * np.clip(vig, 0.25, 1), 0, 1)
+def env_y(y):
+    """Helligkeit außerhalb des Panels: weich ins Schwarze statt harter 16:9-Kante (y in Panel-Koordinaten)."""
+    d = np.maximum(0, np.maximum(-y, y - PH))
+    return np.exp(-(d / 190.0) ** 2)
+
+
+def frame_bg():
+    yy, xx = np.mgrid[0:H, 0:W].astype(np.float32)
+    py = yy - PY
+    base = 0.045 + 0.050 * np.exp(-((xx - 330) ** 2 / (2 * 520 ** 2) + (py + 60) ** 2 / (2 * 260 ** 2)))
+    base += 0.025 * np.exp(-((py - 40) ** 2) / (2 * 120 ** 2))
+    vig = 1 - 0.55 * (((xx - PW / 2) / (PW * 0.62)) ** 2 + ((py - PH * 0.42) / (PH * 0.85)) ** 2)
+    g = np.clip(base * np.clip(vig, 0.25, 1), 0, 1) * env_y(py)
     return np.stack([g * 1.0, g * 0.985, g * 1.02], -1).astype(np.float32)
 
 
 BG = None
+ENV = env_y(np.arange(H, dtype=np.float32) - PY)[:, None, None]
 
 
 def disc_rgb(r, col, soft):
@@ -407,7 +416,7 @@ _rng = np.random.default_rng(31)
 BOKEH = []
 for _i in range(15):
     r = float(_rng.uniform(6, 26))
-    BOKEH.append(dict(x=float(_rng.uniform(30, PW - 30)), y=float(_rng.uniform(40, PH - 30)), r=r,
+    BOKEH.append(dict(x=float(_rng.uniform(30, PW - 30)), y=float(_rng.uniform(-120, PH + 120)), r=r,
                       vx=float(_rng.uniform(-9, 9)), vy=float(_rng.uniform(-7, 3)), ph=float(_rng.uniform(0, 6.28)),
                       a=float(_rng.uniform(0.10, 0.32)) * (0.55 if r > 18 else 1.0),
                       spr=disc_rgb(r, ACC if _i % 5 else (255, 210, 190), r * 0.35 + 1)))
@@ -416,8 +425,8 @@ for _i in range(15):
 def bokeh(dst, t, k=1.0):
     for b in BOKEH:
         x = (b["x"] + b["vx"] * t) % (PW + 80) - 40
-        y = (b["y"] + b["vy"] * t + 8 * math.sin(t * 0.7 + b["ph"])) % (PH + 60) - 30
-        a = b["a"] * (0.75 + 0.25 * math.sin(t * 1.3 + b["ph"])) * k
+        y = (b["y"] + 150 + b["vy"] * t + 8 * math.sin(t * 0.7 + b["ph"])) % (PH + 300) - 150
+        a = b["a"] * (0.75 + 0.25 * math.sin(t * 1.3 + b["ph"])) * k * float(env_y(np.float32(y)))
         rgb, R = b["spr"]
         blit_add(dst, rgb, x - R, y - R, a)
 
@@ -465,13 +474,13 @@ def tag_spr(txt, col=ACC, fg=(20, 20, 22), size=22):
     return _TXT[key]
 
 
-def draw_cursor(dst, x, y, a, label=None, la=1.0, x0=None, y0=None):
+def draw_cursor(dst, x, y, a, label=None, la=1.0, x0=None, y0=None, tsize=22):
     global CURSOR
     if CURSOR is None:
         CURSOR = cursor_img()
     draw(dst, CURSOR, x, y, a, 1.0, x0, y0)
     if label and la > 0.01:
-        tg = tag_spr(label)
+        tg = tag_spr(label, size=tsize)
         draw(dst, tg, x + 26, y + 40, a * la, 0.85 + 0.15 * e_out(la * 3))
 
 
@@ -505,7 +514,8 @@ def dot(dst, x, y, r, col, a=1.0, glow=0.0):
 # ================================================================= Szene A: Hook mit Eisfläche
 RINK_W, RINK_H = 720, 306                      # 200 x 85 ft
 GL_Y = 14.5 + math.sqrt(28 ** 2 - 17 ** 2)       # Torlinie (11 ft vor der Bande) bis zur Eckrundung (r = 28 ft)
-CARD_A = (540, 398)
+CARD_A = (540, 304)
+RINK_S = 1.1                                    # Grundskalierung der Eisfeld-Karte
 RINK_DY = 15                                    # Eisfläche sitzt unter der Kopfzeile der Karte
 
 
@@ -541,7 +551,7 @@ def rink_card():
         d.rectangle((*P(min(X, xn), -3), *P(max(X, xn), 3)), outline=(255, 255, 255, 120), width=2 * ss)
     rink = im.resize((cw, ch), Image.LANCZOS)
     card.alpha_composite(rink)
-    hdr = text_spr("ICING CAM · 4 v 5", "m5", 15, GREY)
+    hdr = text_spr("ORANGE = SHORT-HANDED (4 v 5)", "m7", 22, (215, 216, 222))
     card.alpha_composite(hdr.img, (int(24 - (hdr.ax - hdr.tw / 2)), int(17 - hdr.ay)))
     return card
 
@@ -573,12 +583,8 @@ def scene_hook(dst, t):
     q = c01((t - T_SH) / 0.3)
     a = 1 - e_in(q, 2)
     dy = e_in(q, 2) * 120
-    s = 1.035 - 0.035 * e_out(t / 1.4)
+    s = RINK_S * (1.035 - 0.035 * e_out(t / 1.4))
     card_draw(dst, RINK, CARD_A[0], CARD_A[1] + dy, a, pitch=-10 * e_in(q, 2), s=s)
-    w = [wt("q", i) - 0.05 for i in range(7)]
-    KLine([("WHY", WHITE), ("CAN", WHITE), ("THIS", ACC), ("TEAM", WHITE)], "x9", 54, 540, 74,
-          [-0.2, w[1], w[2], w[3]], T_SH - 0.04).render(dst, t)
-    KLine([("ICE", WHITE), ("THE", WHITE), ("PUCK?", WHITE)], "x9", 54, 540, 146, w[4:7], T_SH).render(dst, t)
     if a < 0.02:
         return
 
@@ -588,14 +594,14 @@ def scene_hook(dst, t):
 
     for X, Y in PP:
         x, y = RP(X, Y)
-        dot(dst, x, y, 9, WHITE, a * 0.92)
+        dot(dst, x, y, 14, WHITE, a * 0.92)
     tp = wt("q", 2)
     for i, (X, Y) in enumerate(PK):
         x, y = RP(X, Y)
         pul = c01((t - tp - 0.04 * i) / 0.55)
         if 0 < pul < 1:
-            ring(dst, x, y, 10 + 26 * e_out(pul), 3, ACC, a * (1 - pul))
-        dot(dst, x, y, 10, ACC, a, glow=0.35 + 0.5 * (1 - pul) * (pul > 0))
+            ring(dst, x, y, 15 + 30 * e_out(pul), 3, ACC, a * (1 - pul))
+        dot(dst, x, y, 15, ACC, a, glow=0.35 + 0.5 * (1 - pul) * (pul > 0))
     gl = c01((t - (T_ARRIVE - 0.12)) / 0.15) * (1 - c01((t - 1.7) / 0.4))
     if gl > 0:                                                      # Torlinie leuchtet auf
         x, y0 = RP(-89, -GL_Y)
@@ -606,20 +612,21 @@ def scene_hook(dst, t):
         if tt < T_SHOT:
             break
         x, y = RP(*puck_pos(tt))
-        dot(dst, x, y, 7 - k * 0.45, ACC, a * (0.55 - k * 0.05), glow=0.0)
+        dot(dst, x, y, 10 - k * 0.6, ACC, a * (0.6 - k * 0.05), glow=0.0)
     x, y = RP(*puck_pos(t))
     x0, y0 = RP(*puck_pos(t - SHUT))
-    dot(dst, x, y, 7, WHITE, a, glow=0.5)
     if math.hypot(x - x0, y - y0) > 2:
         for k in range(1, 5):
-            dot(dst, lerp(x, x0, k / 4), lerp(y, y0, k / 4), 6, WHITE, a * 0.25)
-    # Cursor mit Label "ICING?"
-    c = e_out((t - 0.95) / 0.45)
+            dot(dst, lerp(x, x0, k / 4), lerp(y, y0, k / 4), 11, WHITE, a * 0.22)
+    dot(dst, x, y, 12, WHITE, a, glow=0.5)                         # Puck: dunkel mit weißem Rand
+    dot(dst, x, y, 9, (30, 30, 34), a)
+    # Cursor mit Label "NO WHISTLE?"
+    c = e_out((t - 0.55) / 0.4)
     if c > 0:
         tx, ty = x - 4, y - 2
         cx, cy = lerp(60, tx, c), lerp(640, ty, c)
-        cx0, cy0 = lerp(60, tx, e_out((t - SHUT - 0.95) / 0.45)), lerp(640, ty, e_out((t - SHUT - 0.95) / 0.45))
-        draw_cursor(dst, cx, cy, a, "ICING?", c01((t - 1.3) / 0.15), cx0, cy0)
+        cx0, cy0 = lerp(60, tx, e_out((t - SHUT - 0.55) / 0.4)), lerp(640, ty, e_out((t - SHUT - 0.55) / 0.4))
+        draw_cursor(dst, cx, cy, a, "NO WHISTLE?", c01((t - 0.95) / 0.15), cx0, cy0, tsize=34)
 
 
 # ================================================================= Szene B: Unterzahl
@@ -718,25 +725,26 @@ def hud(dst, t):
 
 
 # ================================================================= Szene C: Regel 81.1
-RULE_LINES = ["Should any player of a team, equal or superior",
-              "in numerical strength (power-play) to the opposing",
-              "team, shoot, bat or deflect the puck … beyond the",
-              "goal line of the opposing team, play shall be stopped."]
+RULE_LINES = ["Should any player of a team, equal or superior in",
+              "numerical strength (power-play) to the opposing team,",
+              "shoot, bat or deflect the puck from his own half of",
+              "the ice beyond the goal line of the opposing team,",
+              "play shall be stopped."]
 HL = ("equal or superior", 0)
 
 
 def rule_card(t):
-    w, h = 880, 262
+    w, h = 880, 304
     im = rrect_img(w, h, 18, (30, 30, 34, 245), (255, 255, 255, 28), 2)
     d = ImageDraw.Draw(im)
     for i in range(3):
         d.ellipse((22 + i * 18, 20, 32 + i * 18, 30), fill=(255, 255, 255, 50 if i else 70))
-    hd = text_spr("NHL RULE 81.1  ·  ICING", "m5", 16, GREY)
+    hd = text_spr("NHL RULE 81.1  ·  ICING", "m7", 20, (190, 192, 200))
     im.alpha_composite(hd.img, (int(w / 2 - hd.ax), int(25 - hd.ay)))
     d.line((0, 50, w, 50), fill=(255, 255, 255, 22), width=2)
     f = font("in", 27)
     t0 = T_RULE + 0.12
-    chars = int(max(0, (t - t0) * 95))
+    chars = int(max(0, (t - t0) * 140))
     y = 66
     hl_p = e_out((t - wt("rule", 5) + 0.05) / 0.35)
     for li, ln in enumerate(RULE_LINES):
@@ -769,8 +777,10 @@ def radial(dst, cx, cy, t, t0, n=26, col=ACC):
     if not 0 < p < 1:
         return
     rng = np.random.default_rng(7)
-    im = Image.new("L", (PW, PH), 0)
+    M = 260
+    im = Image.new("L", (PW, PH + 2 * M), 0)
     d = ImageDraw.Draw(im)
+    cy += M
     for i in range(n):
         ang = i / n * 2 * math.pi + rng.uniform(-0.08, 0.08)
         r0 = 180 + 520 * e_out(p) * rng.uniform(0.6, 1.0)
@@ -779,7 +789,7 @@ def radial(dst, cx, cy, t, t0, n=26, col=ACC):
         x1, y1 = cx + math.cos(ang) * (r0 + ln), cy + math.sin(ang) * (r0 + ln) * 0.62
         d.line((x0, y0, x1, y1), fill=255, width=3)
     m = np.asarray(im, np.float32)[..., None] / 255
-    dst += m * (np.array(col, np.float32) / 255) * (1 - p) * 0.9
+    blit_add(dst, m * (np.array(col, np.float32) / 255), 0, -M, (1 - p) * 0.9)
 
 
 def scene_rule(dst, t):
@@ -806,8 +816,8 @@ def scene_rule(dst, t):
         dt = text_spr(".", "x9", 100, ACC)
         draw(dst, nw, 540 - 22, 300, aa, s, glow=0.0)
         draw(dst, dt, 540 - 22 + nw.tw / 2 * s + 18 * s, 300, aa, s, glow=0.9)
-        sub = text_spr("RULE 81.6 · \"PLAY SHALL CONTINUE\"", "m5", 20, GREY)
-        draw(dst, sub, 540, 392, c01((t - T_NOWH - 0.35) / 0.2) * (1 - x_out))
+        sub = text_spr("Rule 81.6: \"play shall continue\"", "in6", 32, (205, 207, 214))
+        draw(dst, sub, 540, 400, c01((t - T_NOWH - 0.3) / 0.2) * (1 - x_out))
 
 
 # ================================================================= Szene D: Überzahltor
@@ -827,9 +837,9 @@ def scene_goal(dst, t):
         return
     if t < T_BACK:                                                  # oranger Blitz: POWER-PLAY GOAL
         fl = 1 - c01((t - T_GOAL) / 0.08)
-        dst[:] = np.array(ACC, np.float32) / 255 * (1 + 0.25 * fl)
-        g = np.linspace(1.08, 0.92, PH, dtype=np.float32)[:, None, None]
-        dst *= g
+        sl = dst[OFF_Y:OFF_Y + PH]
+        sl[:] = np.array(ACC, np.float32) / 255 * (1 + 0.25 * fl)
+        sl *= np.linspace(1.08, 0.92, PH, dtype=np.float32)[:, None, None]
         k = KLine([("POWER-PLAY", DARK), ("GOAL", DARK)], "x9", 64, 540, 230,
                   [T_GOAL - 0.02, wt("goal", 1) - 0.05], None, glow=0)
         k.render(dst, t)
@@ -838,7 +848,7 @@ def scene_goal(dst, t):
         return
     out = c01((t - T_BLAME + 0.32) / 0.22)
     a = c01((t - T_BACK) / 0.12) * (1 - out)
-    lab = text_spr("PENALTY BOX", "m5", 22, GREY)
+    lab = text_spr("PENALTY BOX", "m7", 26, (190, 192, 200))
     draw(dst, lab, 540, 120 - out * 40, a)
     snap = c01((t - T_ENDS) / 0.18)
     left = penalty_left(T_GOAL)
@@ -854,8 +864,8 @@ def scene_goal(dst, t):
         ring(dst, 540, 262, 120 + 300 * e_out(rp), 3, ACC, (1 - rp) * a)
     KLine([("MINOR", ACC), ("OVER.", WHITE)], "x9", 62, 540, 432, [T_ENDS - 0.02, T_ENDS + 0.14],
           T_BLAME - 0.32).render(dst, t)
-    note = text_spr("RULE 16.2 · A MAJOR KEEPS RUNNING", "m5", 19, GREY)
-    draw(dst, note, 540, 512, c01((t - wt("goal", 6)) / 0.25) * (1 - out))
+    note = text_spr("Majors keep running (Rule 20.2)", "in6", 32, (205, 207, 214))
+    draw(dst, note, 540, 515, c01((t - T_ENDS - 0.15) / 0.25) * (1 - out))
 
 
 # ================================================================= Szene E: Geschichte
@@ -870,22 +880,25 @@ def scene_hist(dst, t):
     out = T_CTA - 0.06
     oq = c01((t - out) / 0.2)
     if oq < 1:
-        typed(dst, HIST_KICKER, "m7", 22, ACC, 540, 44, t, T_BLAME + 0.25, cps=48, anchor="c", cursor=False)
+        typed(dst, HIST_KICKER, "m7", 26, ACC, 540, 44, t, T_BLAME + 0.25, cps=48, anchor="c", cursor=False)
     wb = [wt("blame", i) - 0.05 for i in range(4)]
-    KLine([("BLAME", WHITE), ("IT", WHITE), ("ON", WHITE)], "x9", 46, 540, 236, wb[:3], T_HIST - 0.12).render(dst, t)
-    KLine([("MONTREAL.", ACC)], "x9", 104, 540, 330, [wb[3]], T_HIST - 0.08).render(dst, t)
-    tag = text_spr("\"THE CANADIENS RULE\" · SINCE 1956-57", "m5", 18, GREY)
-    draw(dst, tag, 540, 420, c01((t - wb[3] - 0.45) / 0.2) * (1 - c01((t - T_HIST + 0.12) / 0.15)))
-    KLine([("BÉLIVEAU", WHITE)], "x9", 66, 540, 112, [wt("hist", 0) - 0.06], out).render(dst, t)
+    bo = T_HIST + 0.3                                               # Montreal-Pointe bleibt bis hierhin stehen
+    KLine([("BLAME", WHITE), ("IT", WHITE), ("ON", WHITE)], "x9", 46, 540, 150, wb[:3], bo - 0.04).render(dst, t)
+    KLine([("MONTREAL.", ACC)], "x9", 96, 520, 244, [wb[3]], bo).render(dst, t)
+    KLine([("The NHL changed this rule in 1956.", WHITE)], "in6", 42, 540, 368, [wb[3] + 0.3], bo, track=0,
+          glow=0).render(dst, t)
+    KLine([("Only Montreal voted no.", ACC)], "in6", 42, 540, 432, [wb[3] + 0.55], bo + 0.03, track=0,
+          glow=0).render(dst, t)
+    KLine([("BÉLIVEAU", WHITE)], "x9", 66, 540, 112, [T_HIST + 0.4], out).render(dst, t)
     c0, c1 = wt("hist", 2), wt("hist", 7) + 0.15                    # "scored" .. "seconds": Zähler 0 -> 44
     p = c01((t - c0) / (c1 - c0))
     sec = HIST_GOALS[-1] * sio(p) if p < 1 else HIST_GOALS[-1]
-    a = c01((t - T_HIST - 0.1) / 0.25) * (1 - oq)
+    a = c01((t - T_HIST - 0.45) / 0.25) * (1 - oq)
     if a > 0:
         cnt = text_spr(f"00:{int(sec):02d}", "m7", 116, WHITE if p < 1 else ACC)
         draw(dst, cnt, 540, 250, a, glow=0.6 if p >= 1 else 0)
         x0, x1 = 140, 940
-        ruler(dst, 392, t, T_HIST + 0.1, (200, 200, 205), ACC, x0, x1, 51,
+        ruler(dst, 392, t, T_HIST + 0.45, (200, 200, 205), ACC, x0, x1, 51,
               head=lerp(x0, x1, sec / 50.0) if p > 0 else None)
         for i, g in enumerate(HIST_GOALS):
             tg = goal_time(g, c0, c1)
@@ -895,14 +908,14 @@ def scene_hist(dst, t):
             x = lerp(x0, x1, g / 50.0)
             dot(dst, x, 392, 11 * back(pp, 2.0), ACC, a, glow=0.8)
             ring(dst, x, 392, 11 + 40 * e_out(pp), 3, ACC, a * (1 - pp))
-            lb = text_spr(f"GOAL {i + 1}", "m7", 17, WHITE)
-            draw(dst, lb, x, 440, a * c01(pp * 3))
-            tm = text_spr(f"+{int(g)}s", "m5", 16, GREY)
-            draw(dst, tm, x, 344, a * c01(pp * 3))
+            lb = text_spr(f"GOAL {i + 1}", "m7", 22, WHITE)
+            draw(dst, lb, x, 446, a * c01(pp * 3))
+            tm = text_spr(f"+{int(g)}s", "m7", 22, (190, 192, 200))
+            draw(dst, tm, x, 340, a * c01(pp * 3))
     KLine([("3 GOALS", WHITE), ("·", GREY), ("44 SECONDS", ACC)], "x9", 46, 540, 512,
           [wt("hist", 3) - 0.05, wt("hist", 6) - 0.15, wt("hist", 6) - 0.05], out).render(dst, t)
-    note = text_spr("5-ON-3 · BACK THEN, MINORS WERE SERVED IN FULL", "m5", 17, GREY)
-    draw(dst, note, 540, 572, c01((t - wt("hist", 9)) / 0.25) * (1 - oq))
+    note = text_spr("Back then, both Bruins sat the full 2:00.", "in6", 34, WHITE)
+    draw(dst, note, 540, 574, c01((t - wt("hist", 8)) / 0.25) * (1 - oq))
 
 
 # ================================================================= Szene F: Frage
@@ -947,19 +960,39 @@ def scene_cta(dst, t):
 
 
 # ================================================================= Rahmen (Header, Fortschritt)
-HEADER = None
+HOOK_LINES = [[("WHY", WHITE), ("CAN", WHITE)], [("THIS", ACC), ("TEAM", WHITE)],
+              [("ICE", WHITE), ("THE", WHITE), ("PUCK?", WHITE)]]
 
 
-def header():
-    global HEADER
-    if HEADER is None:
-        arr = np.zeros((H, W, 3), np.float32)
-        k = text_spr("NHL RULES EXPLAINED · PART 8", "in6", 27, ACC)
-        draw(arr, k, 540, 416)
-        tt = text_spr("Power Play", "in6", 50, WHITE)
-        draw(arr, tt, 540, 466)
-        HEADER = arr
-    return HEADER
+def hook_size():
+    """Größte Schrift, bei der die breiteste Hook-Zeile in 960 px passt."""
+    for size in range(110, 60, -2):
+        widths = [sum(text_spr(w, "x9", size, c, 0.02).tw for w, c in ln) + 0.32 * size * (len(ln) - 1)
+                  for ln in HOOK_LINES]
+        if max(widths) <= 960:
+            return size
+    return 60
+
+
+HOOK_S = None
+
+
+def header(frame, t):
+    """Kopfbereich: in der Hook die ganze Frage riesig (ab Bild 0), danach Serien-Titel."""
+    global HOOK_S
+    if HOOK_S is None:
+        HOOK_S = hook_size()
+    if t < T_SH + 0.4:
+        ho = c01((t - T_SH + 0.12) / 0.25)
+        k = text_spr("NHL RULES EXPLAINED · PART 8", "in6", 30, ACC)
+        draw(frame, k, 540, 214 - 30 * e_in(ho, 2), 1 - ho)
+        for i, ln in enumerate(HOOK_LINES):
+            KLine(ln, "x9", HOOK_S, 540, 300 + i * HOOK_S * 1.26, [-0.6] * len(ln),
+                  T_SH - 0.12 + 0.03 * i).render(frame, t)
+    a = c01((t - T_SH - 0.1) / 0.3)
+    if a > 0:
+        draw(frame, text_spr("NHL RULES EXPLAINED · PART 8", "in6", 27, ACC), 540, 416, a)
+        draw(frame, text_spr("Power Play", "in6", 50, WHITE), 540, 466, a)
 
 
 def progress(frame, t):
@@ -984,24 +1017,24 @@ def rr_spr(w, h, col):
 
 
 def compose(t, fidx=0):
-    global BG
+    global BG, OFF_Y
     if BG is None:
-        BG = panel_bg()
-    p = BG.copy()
-    flash = T_GOAL <= t < T_BACK
-    if not flash:
-        bokeh(p, t)
-    scene_hook(p, t)
-    scene_short(p, t)
-    hud(p, t)
-    scene_rule(p, t)
-    scene_goal(p, t)
-    scene_hist(p, t)
-    scene_cta(p, t)
+        BG = frame_bg()
+    frame = BG.copy()
+    OFF_Y = PY                                                      # Szenen: Panel-Koordinaten
+    if not T_GOAL <= t < T_BACK:
+        bokeh(frame, t)
+    scene_hook(frame, t)
+    scene_short(frame, t)
+    hud(frame, t)
+    scene_rule(frame, t)
+    scene_goal(frame, t)
+    scene_hist(frame, t)
+    scene_cta(frame, t)
     if T_NOWH - 0.02 <= t < T_NOWH + 0.06:                          # kurzer Lichtblitz beim Impact
-        p += 0.08 * (1 - (t - T_NOWH + 0.02) / 0.08)
-    frame = header().copy()
-    frame[PY:PY + PH] = p
+        frame += 0.08 * (1 - (t - T_NOWH + 0.02) / 0.08) * ENV
+    OFF_Y = 0                                                       # Rahmen: Bildkoordinaten
+    header(frame, t)
     progress(frame, t)
     frame += np.random.default_rng(fidx).normal(0, 0.008, (H, W))[..., None].astype(np.float32)
     return (np.clip(frame, 0, 1) * 255).astype(np.uint8)
