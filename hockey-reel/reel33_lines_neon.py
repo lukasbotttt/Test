@@ -40,6 +40,21 @@ GOAL_X, END_X, GL_Z = L.GOAL_X, L.END_X, L.GL_Z
 DUR = 21.3
 L.DUR = DUR                                       # Ton (L.make_audio) läuft bis zur Endkarte
 T_END = 19.95                                     # Endkarte mit Logo
+L.T_TRAP_OUT = wt("trap", 6)                      # Puck verlässt das Trapez bei "behind" (2 MIN gut lesbar)
+_puck_state_32 = L.puck_state
+
+
+def _puck_state(t):
+    """Wie reel32, aber in der Trapez-Szene bleibt der Puck im Bild (Ecke knapp außerhalb des Trapezes)."""
+    if VO_START["trap"] - 0.25 <= t < VO_START["cta"] - 0.3:
+        u = sio(c01((t - L.T_TRAP_OUT + 0.1) / 0.5))
+        return np.array([lerp(1150.0, 1160.0, u), 0.5, lerp(70.0, 182.0, u)]), 1.0
+    return _puck_state_32(t)
+
+
+L.puck_state = _puck_state
+_a, _b, _ = L.SHOTS[6]                           # Trapez-Einstellung etwas weiter, damit die Ecke im Bild ist
+L.SHOTS[6] = (_a, _b, (np.array([860.0, 800.0, 0.0]), np.array([1125.0, 0.0, 20.0]), 50.0))
 
 
 # ================================================================= Licht: Eis abdunkeln + Spotlicht-Kegel
@@ -235,7 +250,7 @@ def demos(ctx, row, t, fill):
         neon_fill(fill, row, inside, NEON_G, 0.16 * min(a, 1))
         p, vis = L.puck_state(t)
         if vis:
-            ok = p[2] < 168.0
+            ok = p[2] < 132.0 + (p[0] - GOAL_X) / (END_X - GOAL_X) * 36.0
             neon(ctx, row, circle_pts(p[0], p[2], 9, 24), NEON_G if ok else NEON_R, 1.0, 4)
 
 
@@ -366,8 +381,8 @@ def typography(img, t):
     title(img, t, "dots", 4, "9 FACEOFF DOTS", WHITE, "Every faceoff starts on one")
     title(img, t, "crease", 5, "THE CREASE", NEON_B, "The goalie's blue paint")
     title(img, t, "trap", 6, "TRAPEZOID", NEON_R, "Goalie may play it in here")
-    slam(img, "OK", 160, NEON_G, 540, 1080, t, wt("trap", 4), L.T_TRAP_OUT + 0.15)
-    slam(img, "2 MIN", 160, NEON_R, 540, 1080, t, L.T_TRAP_OUT + 0.45, scene_end("trap"))
+    slam(img, "OK", 160, NEON_G, 540, 1330, t, wt("trap", 4), L.T_TRAP_OUT + 0.15)
+    slam(img, "2 MIN", 160, NEON_R, 540, 1330, t, L.T_TRAP_OUT + 0.45, scene_end("trap"))
     c0 = VO_START["cta"] - 0.05
     out = T_END - 0.1
     NLine([("SAVE", ORANGE), ("THIS", ORANGE), ("FOR", WHITE), ("YOUR", WHITE), ("NEXT", WHITE), ("GAME", WHITE)],
