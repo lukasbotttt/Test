@@ -1,11 +1,13 @@
 """TikTok-Untertitel (Wort für Wort, aktives Wort orange) in ein fertiges Video einbrennen – ohne Neu-Rendern.
 
 Wortzeiten aus dem Voiceover-Timing des jeweiligen Reels (VO_START + WT, faster-whisper), max. 3 Wörter pro Zeile.
-Aufruf: python3 burn_captions.py   (reel33_lines_neon.mp4 -> reel33_lines_neon_cap.mp4)
+Aufruf: python3 burn_captions.py        (reel33_lines_neon.mp4 -> reel33_lines_neon_cap.mp4)
+        python3 burn_captions.py 31     (reel31_powerplay.mp4 -> reel31_powerplay_cap.mp4, + Logo oben)
 """
 import json
 import os
 import subprocess
+import sys
 
 import numpy as np
 
@@ -17,6 +19,8 @@ W, H, FPS = 1080, 1920, 30
 SRC, DST = "reel33_lines_neon.mp4", "reel33_lines_neon_cap.mp4"
 CAP_Y = 1535
 SIZE = 56
+VO, TIMING, END = L, "reel32_timing.json", N.T_END
+LOGO_FROM = None                                  # Part 8: Logo-Lockup oben ab Ende der Hook-Frage
 WORDS = {
     "q": "What do all these lines on a hockey rink mean?",
     "red": "Red line: shoot it from your half past their goal line? Icing.",
@@ -28,17 +32,32 @@ WORDS = {
     "cta": "Which one didn't you know? One to six.",
 }
 
+if len(sys.argv) > 1 and sys.argv[1] == "31":
+    SRC, DST = "reel31_powerplay.mp4", "reel31_powerplay_cap.mp4"
+    CAP_Y = 1440                                  # unter dem Panel und den Fortschrittspunkten
+    VO, TIMING, END = M, "reel31_timing.json", M.DUR - 0.1
+    LOGO_FROM = M.T_SH + 0.1
+    WORDS = {
+        "q": "Why can THIS team ice the puck?",
+        "sh": "They're short-handed. _ Four on five.",
+        "rule": "Icing only counts if you're even or stronger. No whistle.",
+        "goal": "Power-play _ goal? The minor ends. Instantly.",
+        "blame": "Blame it on Montreal.",
+        "hist": "Béliveau once scored three goals in forty-four seconds on one power play.",
+        "cta": "Should short-handed _ teams get to ice it? Yes or no?",
+    }
+
 
 def chunks():
     """-> Liste (t0, t1, [(wort, t_wort)])"""
-    with open(os.path.join(L.HERE, "voice", "reel32_timing.json")) as f:
-        dur = {k: v / L.TEMPO for k, v in json.load(f).items()}
+    with open(os.path.join(L.HERE, "voice", TIMING)) as f:
+        dur = {k: v / VO.TEMPO for k, v in json.load(f).items()}
     out = []
     for key, text in WORDS.items():
         ws = text.split()
-        ts = [L.wt(key, i) for i in range(len(ws))]
+        ts = [VO.wt(key, i) for i in range(len(ws))]
         pairs = [(w, t) for w, t in zip(ws, ts) if w != "_"]
-        end = min(L.VO_START[key] + dur[key] - 0.05, N.T_END - 0.05)
+        end = min(VO.VO_START[key] + dur[key] - 0.05, END - 0.05)
         groups, cur = [], []
         for w, t in pairs:                       # max. 3 Wörter, nach Satzzeichen neue Zeile
             cur.append((w, t))
@@ -55,6 +74,13 @@ def chunks():
 
 CH = chunks()
 ORANGE, WHITE = N.ORANGE, N.WHITE
+
+
+def draw_logo(img, t):
+    if LOGO_FROM is None or t < LOGO_FROM:
+        return
+    lk = N.brand_img("bladesandpucks_lockup_transparent.png", 320)
+    M.draw(img, lk, 540, 330, 0.92 * M.c01((t - LOGO_FROM) / 0.3))
 
 
 def draw_caption(img, t):
@@ -93,6 +119,7 @@ def main():
         if len(buf) < W * H * 3:
             break
         img = np.frombuffer(buf, np.uint8).reshape(H, W, 3).astype(np.float32) / 255
+        draw_logo(img, n / FPS)
         draw_caption(img, n / FPS)
         enc.stdin.write((np.clip(img, 0, 1) * 255).astype(np.uint8).tobytes())
         n += 1
