@@ -48,6 +48,10 @@ MAT = {
     "chip_blue": ((0.04, 0.13, 0.52), 0.9, 90.0),
     "chip_top": ((0.86, 0.87, 0.89), 0.5, 60.0),
     "box_floor": ((0.045, 0.047, 0.055), 0.15, 12.0),
+    "octopus": ((0.62, 0.13, 0.20), 0.75, 45.0),            # nass glänzend, rot-violett
+    "octopus_cup": ((0.86, 0.62, 0.58), 0.4, 30.0),         # Saugnäpfe / Unterseite
+    "eye_white": ((0.92, 0.90, 0.84), 0.9, 90.0),
+    "eye_black": ((0.02, 0.02, 0.03), 1.2, 120.0),
 }
 MAT_IDS = {k: i for i, k in enumerate(MAT)}
 MAT_COL = np.array([MAT[k][0] for k in MAT], np.float32)
@@ -461,6 +465,14 @@ def _shade_pattern(mat, uvw):
             c[palm] = np.array([0.52, 0.47, 0.40], np.float32)
             c[u < 0.25] = np.array([0.03, 0.03, 0.035], np.float32)
             col[sel] = c
+    octo = mat == MAT_IDS["octopus"]                                     # Krake: Flecken, Saugnäpfe unten an den Armen
+    if octo.any():
+        u, v, w = uvw[octo, 0], uvw[octo, 1], uvw[octo, 2]
+        c = col[octo] * (0.86 + 0.14 * np.sin(u * 37.0 + v * 21.0)[:, None] * np.sin(u * 11.0 - v * 17.0)[:, None])
+        arm = w < 0.5
+        cup = arm & (np.abs(((v + 0.25) % 1.0) - 0.5) < 0.17) & (((u * 46.0) % 1.0) < 0.55) & (u < 0.96)
+        c[cup] = MAT_COL[MAT_IDS["octopus_cup"]]
+        col[octo] = c
     tape = mat == MAT_IDS["tape"]
     if tape.any():
         q = (uvw[tape, 0] * 1.1 + uvw[tape, 1] * 0.7) % 1.0 < 0.06       # Tape-Wicklung
