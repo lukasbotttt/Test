@@ -33,10 +33,10 @@ def main():
     # Frage
     N.NLine([("POWER-PLAY", WHITE), ("GOAL", WHITE), ("=", ORANGE)], "x9", 74, 540, 760, [-5] * 3, None).render(img, 0)
     N.NLine([("PENALTY", WHITE), ("OVER.", ORANGE)], "x9", 74, 540, 850, [-5] * 2, None).render(img, 0)
-    N.NLine([("Should players serve the", WHITE)], "in6", 50, 540, 965, [-5], None, track=0).render(img, 0)
-    N.NLine([("FULL 2 minutes again?", ORANGE)], "in6", 50, 540, 1030, [-5], None, track=0).render(img, 0)
+    N.NLine([("BRING", WHITE), ("BACK", WHITE), ("THE", WHITE), ("FULL", ORANGE), ("2:00?", ORANGE)], "x9", 60, 540, 985,
+            [-5] * 5, None).render(img, 0)
     # Platz für den Umfrage-Sticker (ca. y 1150-1450) + Hinweis
-    N.NLine([("VOTE", ORANGE), ("BELOW", WHITE)], "x9", 44, 540, 1110, [-5] * 2, None).render(img, 0)
+    N.NLine([("VOTE", ORANGE), ("BELOW", WHITE)], "x9", 44, 540, 1100, [-5] * 2, None).render(img, 0)
     N.NLine([("Until 1956 they did. Montreal's power play changed it.", GREY)], "in6", 32, 540, 1560, [-5], None,
             track=0, maxw=980).render(img, 0)
     N.NLine([("Full story in the new reel", WHITE)], "in6", 36, 540, 1620, [-5], None, track=0).render(img, 0)
