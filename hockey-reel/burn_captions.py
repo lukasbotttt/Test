@@ -47,6 +47,20 @@ if len(sys.argv) > 1 and sys.argv[1] == "31":
         "cta": "Should short-handed _ teams get to ice it? Yes or no?",
     }
 
+if len(sys.argv) > 1 and sys.argv[1] == "34":
+    import reel34_octopus as O
+    SRC, DST = "reel34_octopus.mp4", "reel34_octopus_cap.mp4"
+    CAP_Y = 1660                                  # unter LED-Tafeln und FOLLOW, Logo ist schon im Video
+    VO, TIMING, END = O, "reel34_timing.json", O.DUR - 0.1
+    WORDS = {
+        "q": "Why is THIS on the rink?",
+        "born": "Detroit, 1952, Stanley Cup Final.",
+        "arms": "Eight arms, for the eight wins it took to win the Cup.",
+        "won": "Detroit won all eight.",
+        "today": "Today you would need 16. Two octopuses.",
+        "cta": "Next: why do fans throw hats? Follow so you don't miss it.",
+    }
+
 
 def chunks():
     """-> Liste (t0, t1, [(wort, t_wort)])"""

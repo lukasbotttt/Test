@@ -42,24 +42,23 @@ LED = (255, 52, 40)
 TEMPO = 1.08
 
 VO_LINES = [
-    ("q", "Why do Detroit fans throw octopuses on the ice?"),
-    ("born", "It started in nineteen fifty-two, at the Stanley Cup Final."),
-    ("arms", "Eight arms, for the eight wins it took to win the Cup back then."),
-    ("won", "Detroit won all eight. Stanley Cup."),
-    ("today", "Today it takes sixteen. That's two octopuses."),
-    ("cta", "Best playoff tradition: octopus or hats?"),
+    ("q", "Why is THIS on the rink?"),
+    ("born", "Detroit, nineteen fifty-two, Stanley Cup Final."),
+    ("arms", "Eight arms, for the eight wins it took to win the Cup."),
+    ("won", "Detroit won all eight."),
+    ("today", "Today you would need sixteen. Two octopuses."),
+    ("cta", "Next: why do fans throw hats? Follow so you don't miss it."),
 ]
 VO_KEYS = [k for k, _ in VO_LINES]
-VO_START = {"q": 0.12, "born": 3.05, "arms": 6.15, "won": 9.3, "today": 11.35, "cta": 14.05}
-DUR = 17.1
-_K = 1.0                                         # Wortzeiten bei 1,08x gemessen
-WT = {
-    "q": [0.0, 0.14, 0.3, 0.5, 0.98, 1.36, 1.98, 2.22, 2.34],
-    "born": [0.0, 0.06, 0.3, 0.48, 1.06, 1.8, 1.88, 2.04, 2.4],
-    "arms": [0.0, 0.18, 0.44, 0.94, 1.04, 1.24, 1.46, 1.66, 1.76, 1.9, 2.06, 2.16, 2.32, 2.54],
-    "won": [0.0, 0.22, 0.48, 0.64, 1.06, 1.36],
-    "today": [0.0, 0.18, 0.34, 0.48, 1.32, 1.5, 1.64],
-    "cta": [0.0, 0.16, 0.42, 1.24, 1.66, 1.84],
+VO_START = {"q": 0.1, "born": 1.5, "arms": 4.15, "won": 6.75, "today": 8.05, "cta": 10.6}
+DUR = 14.1
+WT = {                                           # Wortanfänge (s nach Satzbeginn, nach 1,08x), faster-whisper
+    "q": [0.0, 0.16, 0.34, 0.48, 0.7, 0.8],
+    "born": [0.0, 0.26, 1.1, 1.66, 2.0],
+    "arms": [0.0, 0.16, 0.44, 0.86, 0.94, 1.14, 1.36, 1.52, 1.66, 1.82, 1.96, 2.1],
+    "won": [0.0, 0.24, 0.5, 0.66],
+    "today": [0.0, 0.18, 0.38, 0.48, 0.62, 1.42, 1.54],
+    "cta": [0.0, 0.22, 0.4, 0.52, 0.72, 1.08, 1.9, 1.96, 2.22, 2.34, 2.52, 2.64],
 }
 
 
@@ -72,11 +71,11 @@ def wt(key, i):
 
 
 T_LAND = 0.42                                    # Krake 1 landet
-T_UP0, T_UP1 = 2.75, 3.55                        # Hook -> Draufsicht
+T_UP0, T_UP1 = 1.4, 2.1                          # Hook -> Draufsicht
 T_ARMS = wt("arms", 0)                           # Nummern 1–8 an den Armen
 T_WON = VO_START["won"]
-T_CUP = wt("won", 4)
-T_LAND2 = wt("today", 3) + 0.05                  # zweite Krake bei "sixteen"
+T_CUP = wt("won", 3) + 0.2
+T_LAND2 = wt("today", 4) + 0.05                  # zweite Krake bei "sixteen"
 T_CTA = VO_START["cta"]
 C1 = (0.0, 0.0)
 C2 = (66.0, -40.0)
@@ -289,9 +288,8 @@ def texts(L, t, row):
     blue_gl, red_gl, or_gl = (90, 110, 160), (160, 20, 30), (170, 70, 10)
     if t < T_UP0 + 0.1:                                              # Hook: ganze Frage ab Bild 0
         k = 1 - smooth(T_UP0 - 0.1, T_UP0 + 0.1, t)
-        for txt, cy, size, col, gl in (("WHY DO DETROIT", 330, 96, WHITE, blue_gl),
-                                       ("FANS THROW", 450, 120, WHITE, blue_gl),
-                                       ("OCTOPUSES?", 590, 140, RED, red_gl)):
+        for txt, cy, size, col, gl in (("WHY IS THIS", 360, 140, WHITE, blue_gl),
+                                       ("ON THE RINK?", 530, 140, RED, red_gl)):
             im = word(txt, size, col, gl)
             if im.width > 1000:
                 im = im.resize((1000, int(im.height * 1000 / im.width)), Image.LANCZOS)
@@ -304,38 +302,40 @@ def texts(L, t, row):
     if tb - 0.05 <= t < T_ARMS:
         a = smooth(tb - 0.05, tb + 0.15, t) * (1 - smooth(T_ARMS - 0.2, T_ARMS, t))
         led(L, "1952", LED, W / 2, 330, a, 120)
-        if t >= wt("born", 4) - 0.05:
-            reveal(L, line_img("PETE & JERRY CUSIMANO", 50, 850, WHITE, track=6), W / 2, 470,
-                   c01((t - wt("born", 4) + 0.05) / 0.25), smooth(T_ARMS - 0.2, T_ARMS, t))
-            reveal(L, line_img("STANLEY CUP FINAL · DETROIT OLYMPIA", 30, 750, GREY, track=6), W / 2, 535,
-                   c01((t - wt("born", 4) - 0.2) / 0.25), smooth(T_ARMS - 0.2, T_ARMS, t))
+        if t >= wt("born", 2) - 0.05:
+            reveal(L, line_img("STANLEY CUP FINAL", 54, 850, WHITE, track=6), W / 2, 470,
+                   c01((t - wt("born", 2) + 0.05) / 0.25), smooth(T_ARMS - 0.2, T_ARMS, t))
+            reveal(L, line_img("PETE & JERRY CUSIMANO · DETROIT OLYMPIA", 30, 750, GREY, track=6), W / 2, 540,
+                   c01((t - wt("born", 2) - 0.25) / 0.25), smooth(T_ARMS - 0.2, T_ARMS, t))
     # 8 Arme = 8 Siege
     slam(L, "8 ARMS", 150, ORANGE, W / 2, 360, t, wt("arms", 1) - 0.05, T_WON, glow=or_gl)
     slam(L, "= 8 WINS", 130, WHITE, W / 2, 510, t, wt("arms", 5) - 0.05, T_WON, glow=blue_gl)
     if wt("arms", 9) <= t < T_WON:
         reveal(L, line_img("2 ROUNDS · BEST OF 7 · BACK THEN", 34, 800, GREY, track=6), W / 2, 620,
                c01((t - wt("arms", 9)) / 0.25), smooth(T_WON - 0.2, T_WON, t))
+    T_WEND = VO_START["today"] + 0.45             # 8–0 / Stanley Cup länger stehen lassen
     # Detroit gewinnt alle 8
-    if T_WON - 0.05 <= t < VO_START["today"]:
-        a = smooth(T_WON - 0.05, T_WON + 0.15, t) * (1 - smooth(VO_START["today"] - 0.2, VO_START["today"], t))
-        led(L, "SEMIS  4–0", LED, W / 2, 1300, a * smooth(wt("won", 1), wt("won", 1) + 0.12, t), 64)
-        led(L, "FINAL  4–0", LED, W / 2, 1430, a * smooth(wt("won", 3), wt("won", 3) + 0.12, t), 64)
-    slam(L, "8–0", 210, WHITE, W / 2, 370, t, wt("won", 2) - 0.05, VO_START["today"], glow=blue_gl)
-    slam(L, "STANLEY CUP", 118, GOLD, W / 2, 540, t, T_CUP - 0.05, VO_START["today"], glow=or_gl)
+    if T_WON - 0.05 <= t < T_WEND:
+        a = smooth(T_WON - 0.05, T_WON + 0.15, t) * (1 - smooth(T_WEND - 0.2, T_WEND, t))
+        led(L, "SEMIS  4–0", LED, 295, 1520, a * smooth(wt("won", 1), wt("won", 1) + 0.12, t), 60)
+        led(L, "FINAL  4–0", LED, 785, 1520, a * smooth(wt("won", 3), wt("won", 3) + 0.12, t), 60)
+    slam(L, "8–0", 210, WHITE, W / 2, 370, t, wt("won", 2) - 0.05, T_WEND, glow=blue_gl)
+    slam(L, "STANLEY CUP", 118, GOLD, W / 2, 540, t, T_CUP - 0.05, T_WEND, glow=or_gl)
     # Heute 16
-    slam(L, "TODAY: 16 WINS", 104, WHITE, W / 2, 370, t, wt("today", 3) - 0.05, T_CTA, glow=blue_gl)
+    slam(L, "TODAY: 16 WINS", 104, WHITE, W / 2, 370, t, wt("today", 4) - 0.05, T_CTA, glow=blue_gl)
     slam(L, "= 2 OCTOPUSES", 104, RED, W / 2, 500, t, wt("today", 5) - 0.05, T_CTA, glow=red_gl)
     if wt("today", 6) + 0.3 <= t < T_CTA:
         reveal(L, line_img("4 ROUNDS · BEST OF 7", 34, 800, GREY, track=6), W / 2, 600,
                c01((t - wt("today", 6) - 0.3) / 0.25), smooth(T_CTA - 0.2, T_CTA, t))
     # Frage
     if t >= T_CTA:
-        slam(L, "BEST PLAYOFF TRADITION?", 72, WHITE, W / 2, 360, t, T_CTA, glow=blue_gl)
-        slam(L, "OCTOPUS", 150, RED, W / 2, 500, t, wt("cta", 3) - 0.05, glow=red_gl)
-        slam(L, "OR HATS?", 130, WHITE, W / 2, 640, t, wt("cta", 4) - 0.05, glow=blue_gl)
-        if t >= wt("cta", 5) + 0.4:
-            reveal(L, line_img("COMMENT BELOW · FOLLOW FOR MORE", 32, 800, ORANGE, track=6), W / 2, 760,
-                   c01((t - wt("cta", 5) - 0.4) / 0.25))
+        slam(L, "NEXT:", 80, ORANGE, W / 2, 330, t, T_CTA, glow=or_gl)
+        slam(L, "WHY DO FANS", 110, WHITE, W / 2, 450, t, wt("cta", 1) - 0.05, glow=blue_gl)
+        slam(L, "THROW HATS?", 130, WHITE, W / 2, 590, t, wt("cta", 4) - 0.05, glow=blue_gl)
+        slam(L, "FOLLOW", 170, RED, W / 2, 1380, t, wt("cta", 6) - 0.05, glow=red_gl)
+        if t >= wt("cta", 7) + 0.2:
+            reveal(L, line_img("SO YOU DON'T MISS IT", 40, 850, WHITE, track=6), W / 2, 1500,
+                   c01((t - wt("cta", 7) - 0.2) / 0.25))
 
 
 def splash(ctx, row, t):
