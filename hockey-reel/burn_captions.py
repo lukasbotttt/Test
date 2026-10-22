@@ -77,6 +77,19 @@ if len(sys.argv) > 1 and sys.argv[1] == "35":
         "cta": "Next: why do Florida fans throw rats? Follow.",
     }
 
+if len(sys.argv) > 1 and sys.argv[1] == "36":
+    import reel36_goalie_line as GL36
+    SRC, DST = "reel36_goalie_line.mp4", "reel36_goalie_line_cap.mp4"
+    CAP_Y = 1700
+    VO, TIMING, END = GL36, "reel36_timing.json", GL36.DUR - 0.1
+    LIGHT = True
+    WORDS = {
+        "q": "Why can't the goalie touch the puck HERE?",
+        "rule": "Past the center red line, a goalie can't play the puck. Two-minute penalty.",
+        "twist": "From his own half? He can shoot, and even score.",
+        "cta": "Should that change? Follow for more rules.",
+    }
+
 
 def chunks():
     """-> Liste (t0, t1, [(wort, t_wort)])"""
