@@ -101,7 +101,7 @@ def ticket(L, cx, cy, w=900, h=250, ang=-3.0):
     # Abriss-Abschnitt: hochkant
     st = Image.new("RGBA", (h - 40, stub - 30), (0, 0, 0, 0))
     t1 = line_img("SA 24.10.", 46, 900, INK)
-    t2 = line_img("BLADES & PUCKS", 17, 800, (140, 136, 130), track=3)
+    t2 = line_img("EISTEUFEL FRANKFURT", 15, 800, (140, 136, 130), track=2)
     put(st, t1, st.width / 2 - t1.width / 2, 30)
     put(st, t2, st.width / 2 - t2.width / 2, 108)
     st = st.rotate(90, expand=True, resample=Image.BICUBIC)
@@ -128,7 +128,6 @@ def make(H, out, lay):
     img = bloom(img)
     L = Image.new("RGBA", (W, H), (0, 0, 0, 0))
     L.alpha_composite(bolt_layer(H, (W / 2 + 30, lay["bolt"]), (float(pxy[0]), float(pxy[1]) - 10), 11))
-    brand(L, lay["brand"])
     k = line_img("SAMSTAG  ·  24.10.", 40, 800, WHITE, track=14)
     put(L, k, W / 2 - k.width / 2, lay["kick"] - k.height / 2)
     gd = word_img("GAMEDAY", 220, WHITE, RED)
@@ -139,11 +138,15 @@ def make(H, out, lay):
     logo(L, "pirates", 835, ly, lay["lh"], GOLD)
     vs = word_img("VS.", 110, WHITE, (255, 190, 70))
     put(L, vs, W / 2 - vs.width / 2, ly - 30 - vs.height / 2)
-    for txt, cx, col in (("EISTEUFEL", 245, RED), ("PIRATES", 835, GOLD)):
+    for txt, sub, cx, col in (("EISTEUFEL", "FRANKFURT", 245, RED), ("PIRATES", "WALLERNHAUSEN", 835, GOLD)):
         im = line_img(txt, 40, 900, WHITE, track=6)
         put(L, im, cx - im.width / 2, ly + lay["lh"] / 2 + 24)
+        im = line_img(sub, 24, 800, (205, 205, 212), track=8)
+        put(L, im, cx - im.width / 2, ly + lay["lh"] / 2 + 80)
     ticket(L, W / 2, lay["ticket"])
     cta = word_img(lay["cta"], 76, WHITE, RED)
+    if cta.width > 1070:
+        cta = cta.resize((1070, int(cta.height * 1070 / cta.width)), Image.LANCZOS)
     put(L, cta, W / 2 - cta.width / 2, lay["cta_y"] - cta.height / 2)
     arr = np.asarray(L).astype(np.float32) / 255
     img = img * (1 - arr[..., 3:4]) + arr[..., :3] * arr[..., 3:4]
@@ -155,10 +158,10 @@ def make(H, out, lay):
     print("fertig:", out)
 
 
-STORY = dict(cam=(34, 14, 1.0), brand=150, kick=330, title=470, logos=880, lh=360, bolt=640,
-             ticket=1540, cta="AUF GEHT'S, TEUFEL!", cta_y=1790)
-POST = dict(cam=(26, 17, 1.9), brand=95, kick=210, title=340, logos=650, lh=300, bolt=470,
-            ticket=1105, cta="AUF GEHT'S, TEUFEL!", cta_y=1290)
+STORY = dict(cam=(34, 14, 1.0), brand=150, kick=250, title=390, logos=880, lh=360, bolt=640,
+             ticket=1540, cta="AUF GEHT'S, EISTEUFEL!", cta_y=1790)
+POST = dict(cam=(26, 17, 1.9), brand=95, kick=150, title=280, logos=650, lh=300, bolt=470,
+            ticket=1105, cta="AUF GEHT'S, EISTEUFEL!", cta_y=1290)
 
 if __name__ == "__main__":
     os.chdir(HERE)
