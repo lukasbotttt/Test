@@ -52,6 +52,14 @@ MAT = {
     "octopus_cup": ((0.86, 0.62, 0.58), 0.4, 30.0),         # Saugnäpfe / Unterseite
     "eye_white": ((0.92, 0.90, 0.84), 0.9, 90.0),
     "eye_black": ((0.02, 0.02, 0.03), 1.2, 120.0),
+    "cap_red": ((0.66, 0.06, 0.07), 0.12, 14.0),             # Hüte (reel35): Stoff, kaum Glanz
+    "cap_navy": ((0.05, 0.08, 0.22), 0.12, 14.0),
+    "cap_black": ((0.035, 0.035, 0.04), 0.12, 14.0),
+    "cap_white": ((0.86, 0.86, 0.87), 0.10, 12.0),
+    "cap_grey": ((0.42, 0.43, 0.46), 0.10, 12.0),
+    "cap_orange": ((0.90, 0.36, 0.06), 0.12, 14.0),
+    "cap_blue": ((0.06, 0.24, 0.62), 0.12, 14.0),
+    "cap_under": ((0.13, 0.14, 0.15), 0.05, 8.0),            # Schirm-Unterseite
 }
 MAT_IDS = {k: i for i, k in enumerate(MAT)}
 MAT_COL = np.array([MAT[k][0] for k in MAT], np.float32)

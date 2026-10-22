@@ -20,6 +20,7 @@ SRC, DST = "reel33_lines_neon.mp4", "reel33_lines_neon_cap.mp4"
 CAP_Y = 1535
 SIZE = 56
 VO, TIMING, END = L, "reel32_timing.json", N.T_END
+LIGHT = False                                     # heller Studio-Look: dunkle Schrift mit weißem Halo
 LOGO_FROM = None                                  # Part 8: Logo-Lockup oben ab Ende der Hook-Frage
 WORDS = {
     "q": "What do all these lines on a hockey rink mean?",
@@ -59,6 +60,21 @@ if len(sys.argv) > 1 and sys.argv[1] == "34":
         "won": "Detroit won all eight.",
         "today": "Today you would need 16. Two octopuses.",
         "cta": "Next: why do fans throw hats? Follow so you don't miss it.",
+    }
+
+if len(sys.argv) > 1 and sys.argv[1] == "35":
+    import reel35_hats as HT35
+    SRC, DST = "reel35_hats.mp4", "reel35_hats_cap.mp4"
+    CAP_Y = 1700                                  # unter Zählern, Hüten im Fokus und FOLLOW
+    VO, TIMING, END = HT35, "reel35_timing.json", HT35.DUR - 0.1
+    LIGHT = True
+    WORDS = {
+        "q": "Why is the ice covered in HATS?",
+        "three": "Three goals by one player: a hat trick.",
+        "cricket": "It started in cricket: three wickets, three balls, one new hat.",
+        "toronto": "Then a Toronto hat shop promised a player a free hat for three goals. He scored four.",
+        "fans": "Now fans throw theirs.",
+        "cta": "Next: why do Florida fans throw rats? Follow.",
     }
 
 
@@ -111,12 +127,40 @@ def draw_caption(img, t):
         x = W / 2 - total / 2
         y = CAP_Y + 18 * (1 - M.e_out(p))
         s = 0.92 + 0.08 * M.e_out(p)
+        if LIGHT:
+            light_caption(img, g, t, t1, y, p)
+            return
         for spr in sprs:
             sh, hx, hy = N.shadow(spr, 8)
             M.blit(img, sh, x + spr.tw / 2 - hx, y - hy + 4, p)
             M.draw(img, spr, x + spr.tw / 2, y, p, s)
             x += spr.tw + gap
         return
+
+
+def light_caption(img, g, t, t1, y, p):
+    """Wie im Video: schwarze Schrift (aktives Wort orange) mit weißem Halo."""
+    import reel18_dangle as R18
+    import reel15_puck as R15
+    from PIL import Image
+    ims = []
+    for w, tw in g:
+        act = tw <= t < (next((x for _, x in g if x > tw), t1))
+        ims.append(R18.word_img(w.upper(), SIZE, R15.ORANGE if act else R15.INK, (255, 255, 255)))
+    gap = 0.3 * SIZE - 80
+    total = sum(im.width for im in ims) + gap * (len(ims) - 1)
+    x = W / 2 - total / 2
+    yy = y + 0 * p
+    for im in ims:
+        a = np.asarray(im).astype(np.float32) / 255
+        x0, y0 = int(round(x)), int(round(yy - im.height / 2))
+        xa, ya = max(0, x0), max(0, y0)
+        xb, yb = min(W, x0 + im.width), min(H, y0 + im.height)
+        if xb > xa and yb > ya:
+            sub = a[ya - y0:yb - y0, xa - x0:xb - x0]
+            al = sub[..., 3:4] * p
+            img[ya:yb, xa:xb] = img[ya:yb, xa:xb] * (1 - al) + sub[..., :3] * al
+        x += im.width + gap
 
 
 def main():
