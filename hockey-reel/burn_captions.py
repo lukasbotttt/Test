@@ -93,7 +93,7 @@ if len(sys.argv) > 1 and sys.argv[1] == "36":
 if len(sys.argv) > 1 and sys.argv[1] == "37":
     import reel37_jersey as JS37
     SRC, DST = "reel37_jersey.mp4", "reel37_jersey_cap.mp4"
-    CAP_Y = 1700
+    CAP_Y = 1755
     VO, TIMING, END = JS37, "reel37_timing.json", JS37.DUR - 0.1
     LIGHT = True
     WORDS = {

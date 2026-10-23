@@ -60,14 +60,11 @@ MAT = {
     "cap_orange": ((0.90, 0.36, 0.06), 0.12, 14.0),
     "cap_blue": ((0.06, 0.24, 0.62), 0.12, 14.0),
     "cap_under": ((0.13, 0.14, 0.15), 0.05, 8.0),            # Schirm-Unterseite
-    "kit_jersey": ((1.0, 1.0, 1.0), 0.10, 12.0),             # Trikot/Hose (reel37): Farbe aus TEXTURES (uvw = u, v)
-    "kit_pants": ((1.0, 1.0, 1.0), 0.18, 16.0),
 }
 MAT_IDS = {k: i for i, k in enumerate(MAT)}
 MAT_COL = np.array([MAT[k][0] for k in MAT], np.float32)
 MAT_SPEC = np.array([MAT[k][1] for k in MAT], np.float32)
 MAT_SHINE = np.array([MAT[k][2] for k in MAT], np.float32)
-TEXTURES = {}                                                 # Materialname -> Bild (H, W, 3) float, uvw[:, :2] in [0, 1]
 
 
 class Mesh:
@@ -484,13 +481,6 @@ def _shade_pattern(mat, uvw):
         cup = arm & (np.abs(((v + 0.25) % 1.0) - 0.5) < 0.17) & (((u * 46.0) % 1.0) < 0.55) & (u < 0.96)
         c[cup] = MAT_COL[MAT_IDS["octopus_cup"]]
         col[octo] = c
-    for name, tex in TEXTURES.items():                                   # Bildtexturen (Trikot, Hose)
-        sel = mat == MAT_IDS[name]
-        if sel.any():
-            th, tw = tex.shape[:2]
-            u = np.clip((uvw[sel, 0] * (tw - 1)).astype(np.int32), 0, tw - 1)
-            v = np.clip(((1 - uvw[sel, 1]) * (th - 1)).astype(np.int32), 0, th - 1)
-            col[sel] = tex[v, u]
     tape = mat == MAT_IDS["tape"]
     if tape.any():
         q = (uvw[tape, 0] * 1.1 + uvw[tape, 1] * 0.7) % 1.0 < 0.06       # Tape-Wicklung

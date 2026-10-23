@@ -9,7 +9,8 @@ Fakten (Recherche 23.10.2026):
 - Durchsetzung 2026-27 (Friedman/Sportsnet, berichtet von AP/TSN, theScore, THN, Daily Faceoff): Trikot muss zu
   Beginn jedes Shifts draußen sein; erst Verwarnung, danach 2-Minuten-Strafe.
 - Letzte Strafen dafür 2013 (AP/TSN); im Sept. 2026 wieder gepfiffen (Preseason, 2-Min-Strafe).
-Bilder: Bande, Glas, Tore (mesh3d), Eis (Raytracer), Trikot + Hose als schwebende Kleidung (kit3d.py), kein Körper.
+Bilder: Bande, Glas, Tore (mesh3d), Eis (Raytracer) als Standbild-Hintergrund; davor das echte Löwen-Frankfurt-
+Heimtrikot 2026/27 (ohne Sponsoren, kit_clean.py) als Stoff mit Falten-Licht und Wehen (cloth2d.py) + Hose. Kein Körper.
 Stimme: Kokoro "Michael", 1,08x. Aufruf: python3 reel37_jersey.py vo | audio | prev 0.5,3.0 out.jpg | (Video)
 """
 import json
@@ -23,16 +24,14 @@ import wave
 import numpy as np
 from PIL import Image
 
-import hats3d as HT
-import kit3d as K
+import cloth2d as C
 import mesh3d as M3
 import puck3d as P3
 import reel15_puck as R15
 import reel18_dangle as R18
 import reel26_overglass as R26
 import reel28_emptynet as R28
-from reel15_puck import (W, H, FPS, c01, smooth, sio, e_out, lerp, blend_up, line_img, reveal, put, projected,
-                         px_per_in, surface, surf_rgba, over)
+from reel15_puck import W, H, FPS, c01, smooth, sio, e_out, lerp, line_img, reveal, put, surface, surf_rgba, over
 from reel22_trapezoid import slam
 
 HERE = R15.HERE
@@ -80,11 +79,11 @@ T_2013 = wt("hist", 5) - 0.05
 T_BACK = wt("hist", 7) - 0.05
 T_CTA = VO_START["cta"]
 
-KIT_C = np.array([880.0, 40.0, 0.0])             # schwebt vor dem Tor über dem Eis
-YAW0 = -math.pi / 2                              # Vorderseite zeigt zur Kamera (-x)
+KIT_C = np.array([880.0, 40.0, 0.0])             # Bezugspunkt der Kamera für den Hintergrund
+KX0, KY0 = (W - C.CW) // 2, 640                  # Trikot-Arbeitsfläche auf dem Bildschirm
 
 
-# ================================================================= Kleidung
+# ================================================================= Trikot
 def tuck_amount(t):
     if t < T_UNTUCK:
         return 1.0
@@ -93,86 +92,57 @@ def tuck_amount(t):
     return e_out(c01((t - T_RETUCK) / 0.4), 3)
 
 
-def kit_pose(t):
-    yaw = YAW0 + 0.16 * math.sin(t * 0.8 + 0.4)
-    bob = np.array([0.0, 1.4 * math.sin(t * 1.7), 0.0])
-    pop = 0.0
+def kit_offset(t):
+    """Schweben + kleiner Hüpfer bei den Aktionen (Bildschirm-Pixel)."""
+    y = 7.0 * math.sin(t * 1.7)
     for t0 in (T_UNTUCK, T_RETUCK, T_2MIN):
         if t0 <= t < t0 + 0.4:
-            pop += 2.5 * math.sin(math.pi * (t - t0) / 0.4)
-    return KIT_C + bob + np.array([0.0, pop, 0.0]), HT.rot((0, 1, 0), yaw)
+            y -= 16.0 * math.sin(math.pi * (t - t0) / 0.4)
+    return KX0, KY0 + y
 
 
-_PANTS = None
+def kit_yaw(t):
+    return 0.10 * math.sin(t * 0.8 + 0.4)
 
 
-def kit_meshes(t):
-    global _PANTS
-    if _PANTS is None:
-        _PANTS = K.pants_mesh()
-    c, R = kit_pose(t)
-    tk = round(tuck_amount(t), 3)
-    return HT.place_hat(_PANTS, c, R) + HT.place_hat(K.jersey_mesh(tk), c, R)
+_AN = {"tuck": (C.CX - 230, C.WAIST - 10), "waist": (C.CX - 220, C.WAIST + 30)}   # Trikot-Koordinaten
 
 
-def kit_point(t, local):
-    c, R = kit_pose(t)
-    return c + R @ np.asarray(local, float)
+def anchor(t, name):
+    ox, oy = kit_offset(t)
+    ax, ay = _AN[name]
+    return ox + ax, oy + ay
 
 
-# ================================================================= Kamera
-def wide_cam(t):
-    s = c01(t / DUR)
-    p = KIT_C + np.array([-166.0 + 12 * s, 4.0, 22.0 - 28 * s])
-    return p, KIT_C + np.array([0.0, 19.0, 0.0]), 44.0
+# ================================================================= Hintergrund (Standbild, einmal gerendert)
+_BG = {}
 
 
-def close_cam(t):
-    """Nahaufnahme auf Bund/Polster bei "Protective gear"."""
-    return KIT_C + np.array([-100.0, 0.0, -16.0]), KIT_C + np.array([0.0, 15.0, -4.0]), 40.0
-
-
-def cam(t):
-    c0, c1 = T_GEAR - 0.25, T_GEAR + 0.4
-    d0, d1 = T_UNTUCK - 0.55, T_UNTUCK + 0.15
-    if t < c0:
-        p, g, f = wide_cam(t)
-    elif t < c1:
-        p, g, f = R28.blend_cam(wide_cam(c0), close_cam(c1), sio((t - c0) / (c1 - c0)))
-    elif t < d0:
-        p, g, f = close_cam(t)
-    elif t < d1:
-        p, g, f = R28.blend_cam(close_cam(d0), wide_cam(d1), sio((t - d0) / (d1 - d0)))
-    else:
-        p, g, f = wide_cam(t)
-    for t0, amp in ((T_2MIN, 2.2), (T_UNTUCK, 0.8)):
-        lt = t - t0
-        if 0 <= lt < 0.5:
-            e = amp * math.exp(-lt * 9)
-            p = p + np.array([math.sin(lt * 83), math.cos(lt * 71), math.sin(lt * 59)]) * e
-    d = (p - g) / np.linalg.norm(p - g)
-    el = math.degrees(math.asin(max(-1.0, min(1.0, d[1]))))
-    return p, g, blend_up(min(el, 89.9)), f
-
-
-def cam_row_at(t):
-    pos, tgt, up, fov = cam(t)
-    r, u, f = P3.look_at(pos, tgt, up)
-    return P3.cam_row(pos, r, u, f, fov), float(np.linalg.norm(tgt - pos))
-
-
-def render3d(t, fidx):
-    cams, lens, pk = np.zeros((KSUB, 13)), np.zeros((KSUB, 2)), np.zeros((KSUB, 7))
-    for j in range(KSUB):
-        tk = min(max(t + ((j + 0.5) / KSUB - 0.5) * SHUTTER, 0.0), DUR - 1e-4)
-        row, focus = cam_row_at(tk)
-        cams[j], lens[j] = row, (0.0, focus)
-        pk[j] = (0.0, -50.0, 0.0, 0.0, 0.0, 0.0, tk)
+def bg_plate():
+    if "img" in _BG:
+        return _BG["img"]
+    pos, tgt = KIT_C + np.array([-166.0, 4.0, 10.0]), KIT_C + np.array([0.0, 19.0, 0.0])
+    r, u, f = P3.look_at(pos, tgt, np.array([0.0, 1.0, 0.0]))
+    row = P3.cam_row(pos, r, u, f, 44.0)
     base = np.zeros((H, W, 3), np.float32)
     puck = np.zeros((H, W, 3), np.float32)
     cov = np.zeros((H, W), np.float32)
-    P3.render(W, H, SPP, fidx + 37, cams, lens, pk, R15.logo_tex(), base, puck, cov)
-    return P3.tonemap(base)
+    P3.render(W, H, int(os.environ.get("BGSPP", "32")), 37, row[None], np.array([[0.0, 166.0]]),
+              np.array([[0.0, -50.0, 0.0, 0.0, 0.0, 0.0, 0.0]]), R15.logo_tex(), base, puck, cov)
+    img = P3.tonemap(base)
+    lo_s, lo_c = surface()
+    R28.draw_net_lines(lo_c, row)
+    R28.glass_edges(lo_c, row)
+    img = over(img, *surf_rgba(lo_s))
+    m_rgb, m_a, shadow, plane_a = M3.render(R28.BOARDS + R28.FRAMES, row, W, H, pos,
+                                            extra_planes=[(R28.GLASS_ALL, 1.0)], shadow_light=(0.15, 1.0, 0.1))
+    img = img * (1 - 0.2 * shadow[..., None])
+    img = img * (1 - m_a[..., None]) + m_rgb
+    k = (0.30 * plane_a)[..., None]
+    img = img * (1 - k) + np.array([0.70, 0.82, 0.94], np.float32) * k
+    img = img + (R26.glass_streaks() * plane_a * 0.10)[..., None]
+    _BG["img"] = np.clip(img, 0, 1).astype(np.float32)
+    return _BG["img"]
 
 
 # ================================================================= Overlays
@@ -191,27 +161,22 @@ def word(txt, size, col):
     return im
 
 
-def ring_at(ctx, row, t, local, rx, ry, col, a, dash=True):
-    """Gestrichelter Kreis um eine Stelle am Trikot (in Pixeln, perspektivisch skaliert)."""
+def ring_at(ctx, t, name, rx, ry, col, a, dash=True, dy=0.0):
+    """Kreis um eine Stelle am Trikot (Bildschirm-Pixel)."""
     if a <= 0:
         return
-    p = kit_point(t, local)
-    xy, z = projected(row, p)
-    if z <= 0:
-        return
-    k = px_per_in(row, z)
+    x, y = anchor(t, name)
     ctx.set_source_rgba(col[0] / 255, col[1] / 255, col[2] / 255, a)
-    ctx.set_line_width(9)
+    ctx.set_line_width(10)
     if dash:
-        ctx.set_dash([26, 16], -t * 60)
+        ctx.set_dash([28, 18], -t * 60)
     ctx.save()
-    ctx.translate(xy[0], xy[1])
-    ctx.scale(rx * k, ry * k)
+    ctx.translate(x, y + dy)
+    ctx.scale(rx, ry)
     ctx.arc(0, 0, 1, 0, 2 * math.pi)
     ctx.restore()
     ctx.stroke()
     ctx.set_dash([])
-    return xy, k
 
 
 def arrow(ctx, sx, sy, ex, ey, col, a, k=1.0):
@@ -250,6 +215,25 @@ def badge(L, txt, col, cx, cy, t, t0, t1, size=90, txt_col=(255, 255, 255)):
     put(L, fade_im(im, a), cx - im.width / 2, cy - im.height / 2)
 
 
+def card(L, lines, cx, cy, a, size=58):
+    """Weiße Karte mit Textzeilen (lesbar auch über dem dunklen Trikot)."""
+    if a <= 0:
+        return
+    from PIL import ImageDraw
+    ims = [line_img(txt, size, 900, col, track=3) for txt, col in lines]
+    w = max(im.width for im in ims) + 70
+    h = sum(im.height for im in ims) + 18 * (len(ims) - 1) + 44
+    im = Image.new("RGBA", (w + 40, h + 40), (0, 0, 0, 0))
+    d = ImageDraw.Draw(im)
+    d.rounded_rectangle((24, 30, 20 + w, 26 + h), 24, fill=(0, 0, 0, 60))
+    d.rounded_rectangle((20, 20, 20 + w, 20 + h), 24, fill=(255, 255, 255, 240))
+    y = 42
+    for t_im in ims:
+        im.alpha_composite(t_im, (int(20 + (w - t_im.width) / 2), int(y)))
+        y += t_im.height + 18
+    put(L, fade_im(im, a), cx - im.width / 2, cy - im.height / 2)
+
+
 _NAVY = {}
 
 
@@ -264,7 +248,7 @@ def brand(L, t):
         arr[wm, 0:3] = NAVY
         _NAVY["lock"] = Image.fromarray(arr.astype(np.uint8), "RGBA")
     im = fade_im(_NAVY["lock"], 0.92 * smooth(1.9, 2.2, t))
-    put(L, im, W / 2 - im.width / 2, 1830 - im.height / 2)
+    put(L, im, W / 2 - im.width / 2, 1862 - im.height / 2)
 
 
 def texts(L, t):
@@ -278,10 +262,8 @@ def texts(L, t):
     # Regel
     if T_GEAR - 0.1 <= t < T_UNTUCK - 0.1:
         a = smooth(T_GEAR - 0.1, T_GEAR + 0.1, t) * (1 - smooth(T_UNTUCK - 0.3, T_UNTUCK - 0.1, t))
-        reveal(L, line_img("PROTECTIVE GEAR", 64, 900, INK, track=3), W / 2, 300, a)
-        if t >= T_UNDER - 0.05:
-            reveal(L, line_img("= UNDER THE UNIFORM", 64, 900, ORANGE, track=3), W / 2, 385,
-                   a * c01((t - T_UNDER + 0.05) / 0.2))
+        card(L, [("PROTECTIVE GEAR", INK)] + ([("= UNDER THE UNIFORM", ORANGE)] if t >= T_UNDER - 0.05 else []),
+             W / 2, 330, a)
     if T_UNTUCK - 0.1 <= t < T_RETUCK:
         slam(L, "EVERY SHIFT:", 90, INK, W / 2, 300, t, T_UNTUCK - 0.1, T_RETUCK)
         slam(L, "UNTUCKED.", 150, GREEN, W / 2, 430, t, T_UNTUCK, T_RETUCK)
@@ -304,73 +286,74 @@ def texts(L, t):
         reveal(L, line_img("/", 110, 300, INK), W / 2, 570, c01((t - wt("cta", 4) - 0.48) / 0.15))
     slam(L, "FOLLOW", 150, RED, W / 2, 1480, t, wt("cta", 5) - 0.05)
     if t >= wt("cta", 6):
-        reveal(L, line_img("FOR MORE RULES", 42, 850, INK, track=8), W / 2, 1590, c01((t - wt("cta", 6)) / 0.25))
+        card(L, [("FOR MORE RULES", INK)], W / 2, 1600, c01((t - wt("cta", 6)) / 0.25), size=40)
 
 
-def marks(ctx, row, t):
+def marks(ctx, t):
     # rote Markierung am eingesteckten Teil (Hook, Strafe, Ende)
     tuck_a = max(1 - smooth(VO_START["rule"] - 0.3, VO_START["rule"], t),
                  smooth(T_RETUCK + 0.3, T_RETUCK + 0.5, t) * (1 - smooth(T_2MIN - 0.1, T_2MIN + 0.1, t)),
                  smooth(T_CTA + 0.1, T_CTA + 0.4, t))
-    ring_at(ctx, row, t, (-8.0, -1.5, 3.0), 9.5, 6.5, RED, 0.95 * tuck_a)
+    ring_at(ctx, t, "tuck", 170, 95, RED, 0.95 * tuck_a)
     if t < VO_START["rule"]:
-        p = kit_point(t, (-8.0, 5.0, 3.0))
-        xy, z = projected(row, p)
-        if z > 0:
-            arrow(ctx, 330.0, 700.0, xy[0] - 20, xy[1] - 30, RED, 1 - smooth(VO_START["rule"] - 0.3, VO_START["rule"], t),
-                  e_out(c01((t - 0.2) / 0.4), 3))
-    # Polster am Bund (Ausrüstung) leuchtet bei "Protective gear"
+        x, y = anchor(t, "tuck")
+        arrow(ctx, 300.0, 690.0, x - 40, y - 90, RED, 1 - smooth(VO_START["rule"] - 0.3, VO_START["rule"], t),
+              e_out(c01((t - 0.2) / 0.4), 3))
+    # Polster am Bund (Ausrüstung) bei "Protective gear"
     ga = smooth(T_GEAR - 0.05, T_GEAR + 0.2, t) * (1 - smooth(T_UNTUCK - 0.2, T_UNTUCK + 0.1, t))
-    ring_at(ctx, row, t, (-7.0, 0.0, 3.5), 7.5, 4.0, ORANGE, 0.95 * ga, dash=False)
-    # grüner Haken beim Rausziehen
+    ring_at(ctx, t, "waist", 175, 60, ORANGE, 0.95 * ga, dash=False)
+    # grüner Kreis beim Rausziehen
     ok = smooth(T_UNTUCK + 0.1, T_UNTUCK + 0.3, t) * (1 - smooth(T_RETUCK - 0.2, T_RETUCK, t))
-    ring_at(ctx, row, t, (-8.0, -2.5, 3.0), 9.5, 6.5, GREEN, 0.9 * ok, dash=False)
+    ring_at(ctx, t, "tuck", 170, 95, GREEN, 0.9 * ok, dash=False, dy=40)
 
 
 # ================================================================= Bild
-FRONT_LIGHT = np.array([-0.60, 0.80, 0.30])                  # von der Kameraseite (-x) und oben
-FRONT_LIGHT /= np.linalg.norm(FRONT_LIGHT)
+def zoom_state(t):
+    """Nahaufnahme auf den Bund bei "Protective gear": (Faktor, Mittelpunkt der Ansicht)."""
+    c0, c1 = T_GEAR - 0.25, T_GEAR + 0.35
+    d0, d1 = T_UNTUCK - 0.5, T_UNTUCK + 0.1
+    k = sio(c01((t - c0) / (c1 - c0))) * (1 - sio(c01((t - d0) / (d1 - d0))))
+    ax, ay = anchor(t, "waist")
+    z = 1 + 0.75 * k
+    cx = lerp(W / 2, ax + 60, k)
+    cy = lerp(H / 2, ay - 230, k)
+    return z, cx, cy
 
 
 def compose(t, fidx):
-    base = render3d(t, fidx)
-    row, _ = cam_row_at(t)
-    campos = cam(t)[0]
-    lo_s, lo_c = surface()
+    img = bg_plate().copy()
+    # weicher Schatten auf dem Eis
+    yy, xx = np.mgrid[0:H, 0:W].astype(np.float32)
+    ox, oy = kit_offset(t)
+    sh = np.exp(-(((xx - 540) / 330) ** 2 + ((yy - 1790 - 0.3 * (oy - KY0)) / 34) ** 2))
+    img = img * (1 - 0.26 * sh[..., None])
+    kit, _ = C.frame(t, tuck_amount(t), kit_yaw(t))
+    x0, y0 = int(round(ox)), int(round(oy))
+    hh, ww = kit.shape[:2]
+    ya, yb = max(0, y0), min(H, y0 + hh)
+    seg = img[ya:yb, x0:x0 + ww]
+    k = kit[ya - y0:yb - y0, :, :]
+    seg[:] = seg * (1 - k[..., 3:4]) + k[..., :3] * k[..., 3:4]
     hi_s, hi_c = surface()
-    L = Image.new("RGBA", (W, H), (0, 0, 0, 0))
-    R28.draw_net_lines(lo_c, row)
-    R28.glass_edges(lo_c, row)
-    img = over(base, *surf_rgba(lo_s))
-    old = M3.LIGHT
-    M3.LIGHT = FRONT_LIGHT                                    # Kleidung von vorn-oben beleuchten
-    m_rgb, m_a, shadow, plane_a = M3.render(R28.BOARDS + R28.FRAMES + kit_meshes(t), row, W, H, campos,
-                                            extra_planes=[(R28.GLASS_ALL, 1.0)], shadow_light=(0.15, 1.0, 0.1))
-    M3.LIGHT = old
-    img = img * (1 - 0.28 * shadow[..., None])
-    img = img * (1 - m_a[..., None]) + m_rgb
-    k = (0.30 * plane_a)[..., None]
-    img = img * (1 - k) + np.array([0.70, 0.82, 0.94], np.float32) * k
-    img = img + (R26.glass_streaks() * plane_a * 0.10)[..., None]
-    marks(hi_c, row, t)
+    marks(hi_c, t)
     img = over(img, *surf_rgba(hi_s))
     for t0, col in ((T_UNTUCK, (1, 1, 1)), (T_WARN, (1, 0.95, 0.7)), (T_2MIN, (1, 0.85, 0.85))):
         if t0 <= t < t0 + 0.2:
             a = 0.14 * (1 - (t - t0) / 0.2)
             img = img * (1 - a) + np.array(col, np.float32) * a
-    pil = Image.fromarray((np.clip(img, 0, 1) * 255).astype(np.uint8)).convert("RGBA")
+    pil = Image.fromarray((np.clip(img, 0, 1) * 255).astype(np.uint8))
+    lc = min([t - c for c in (T_UNTUCK, T_WARN, T_2MIN, T_BACK) if t >= c] + [t + 0.5])
+    z, cx, cy = zoom_state(t)
+    z *= 1 + 0.035 * math.exp(-lc * 12) + 0.02 * t / DUR
+    if z > 1.002:
+        w2, h2 = W / z, H / z
+        pil = pil.transform((W, H), Image.EXTENT, (cx - w2 / 2, cy - h2 / 2, cx + w2 / 2, cy + h2 / 2), Image.BICUBIC)
+    pil = pil.convert("RGBA")
+    L = Image.new("RGBA", (W, H), (0, 0, 0, 0))
     texts(L, t)
     brand(L, t)
     pil.alpha_composite(L)
     arr = np.asarray(pil.convert("RGB")).astype(np.float32) / 255
-    lc = min([t - c for c in (T_UNTUCK, T_WARN, T_2MIN, T_BACK) if t >= c] + [t + 0.5])
-    zp = 1 + 0.035 * math.exp(-lc * 12)
-    if zp > 1.002:
-        im2 = Image.fromarray((arr * 255).astype(np.uint8))
-        w2, h2 = W / zp, H / zp
-        im2 = im2.transform((W, H), Image.EXTENT, ((W - w2) / 2, (H - h2) / 2, (W + w2) / 2, (H + h2) / 2),
-                            Image.BILINEAR)
-        arr = np.asarray(im2).astype(np.float32) / 255
     arr = arr * R18.vignette()
     return (np.clip(arr, 0, 1) * 255).astype(np.uint8)
 
