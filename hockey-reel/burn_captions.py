@@ -90,6 +90,20 @@ if len(sys.argv) > 1 and sys.argv[1] == "36":
         "cta": "Should that change? Follow for more rules.",
     }
 
+if len(sys.argv) > 1 and sys.argv[1] == "37":
+    import reel37_jersey as JS37
+    SRC, DST = "reel37_jersey.mp4", "reel37_jersey_cap.mp4"
+    CAP_Y = 1700
+    VO, TIMING, END = JS37, "reel37_timing.json", JS37.DUR - 0.1
+    LIGHT = True
+    WORDS = {
+        "q": "Why is THIS a penalty in the NHL?",
+        "rule": "Protective gear has to be worn under the uniform. So every shift starts with the jersey untucked.",
+        "pen": "Tucked anyway? First, a warning. Then, two minutes.",
+        "hist": "It hadn't been called since 2013. This season, it's back.",
+        "cta": "Should this be a penalty? Follow for more rules.",
+    }
+
 
 def chunks():
     """-> Liste (t0, t1, [(wort, t_wort)])"""
