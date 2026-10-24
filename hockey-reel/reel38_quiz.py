@@ -1,14 +1,15 @@
-"""Reel 38: "3 GOALS. ONLY 1 COUNTS." – Tor-Quiz (weißer Studio-Look, ~18 s).
+"""Reel 38: "3 GOALS. ONLY 1 COUNTS." – Tor-Quiz mit echten Fotos (2,5D, ~18 s).
 
-Format: Quiz-Hook (Zuschauer raten und kommentieren 1/2/3), drei Tore hintereinander, "Which one?", Auflösung mit
-Zeitlupen-Replays, FOLLOW. Allgemeine Regeln, keine Teams/Vereine.
+Format: Quiz-Hook (Zuschauer raten 1/2/3), drei Tore, "Which one?", Auflösung in Zeitlupe, FOLLOW.
+Allgemeine Regeln, keine Teams/Vereine.
 Fakten (NHL Official Rules 2024-25, media.nhl.com, geprüft 24.10.2026):
-- Rule 80.3: Angreifer trifft den Puck oberhalb der Torlatte und er geht ins Tor -> kein Tor. Entscheidend ist,
-  wo der Puck den Schläger berührt.
+- Rule 80.3: Angreifer trifft den Puck oberhalb der Latte, Puck geht rein -> kein Tor (Kontaktpunkt entscheidet).
 - Rule 67.6: Angreifer schlägt/lenkt den Puck mit der Hand ins Tor -> kein Tor.
-- Rule 80.3 (2. Absatz): Verteidiger schlägt den Puck mit hohem Schläger ins EIGENE Tor -> Tor zählt.
-  (IIHF Rule 80.3 genauso.)
-Bilder: Tor, Bande, Glas (mesh3d), Eis + Puck (Raytracer), schwebende Schläger + Handschuh als Tokens. Keine Körper.
+- Rule 80.3 (2. Absatz): Verteidiger schlägt den Puck mit hohem Schläger ins EIGENE Tor -> Tor zählt. (IIHF 80.3 gleich.)
+Bild: echtes Foto eines leeren Eishockeytors als Kulisse; die Kamera ist an den vier Rahmenecken kalibriert
+(solvePnP, Brennweite geschätzt), damit Puck, Schatten und Lattenhöhe perspektivisch stimmen. Schläger, Puck und
+Handschuh sind echte, freigestellte Fotos (gear_cut.py) und werden als Sprites animiert. Keine Spielerkörper.
+Bildnachweis (Wikimedia Commons): Tor + Schläger + Puck: Santeri Viinamäki, CC BY-SA 4.0; Handschuh: Petey21, CC0.
 Stimme: Kokoro "Michael", 1,08x. Aufruf: python3 reel38_quiz.py vo | audio | prev 0.5,3.0 out.jpg | (Video)
 """
 import json
@@ -19,23 +20,16 @@ import sys
 import time
 import wave
 
+import cv2
 import numpy as np
 from PIL import Image, ImageDraw
 
-import mesh3d as M3
-import puck3d as P3
 import reel15_puck as R15
 import reel18_dangle as R18
-import reel26_overglass as R26
-import reel28_emptynet as R28
-from reel15_puck import (W, H, FPS, c01, smooth, sio, e_out, lerp, blend_up, line_img, reveal, put, proj,
-                         projected, stroke_poly, surface, surf_rgba, over, GOAL_X)
-from reel22_trapezoid import slam, puck_marker
+from reel15_puck import W, H, FPS, c01, smooth, sio, e_out, line_img, reveal, put, stroke_poly, surface, surf_rgba, over
+from reel22_trapezoid import slam
 
 HERE = R15.HERE
-SPP = int(os.environ.get("SPP", "8"))
-KSUB = int(os.environ.get("KSUB", "10"))
-SHUTTER = 0.5 / FPS
 INK, ORANGE = R15.INK, R15.ORANGE
 RED = (225, 30, 40)
 GREEN = (30, 160, 80)
@@ -80,18 +74,44 @@ T_NO1 = wt("r1", 8)                              # "No goal"
 T_NO2 = wt("r2", 5)
 T_YES = wt("r3", 1)                              # "counts"
 T_CTA = VO_START["cta"]
-CROSSBAR = 48.0
 
-# ================================================================= Spielzüge (Zoll; Tor bei x = 1068, offen nach -x)
+# ================================================================= Foto-Kamera (an den Torpfosten kalibriert)
+GEAR = os.path.join(HERE, "gear")
+PH_W, PH_H = 3868, 2762
+FPH = 7275.0                                     # Brennweite in Pixeln (aus den 4 Rahmenecken geschätzt)
+POST_Z, BAR_Y = 37.2, 49.2                       # Rohrmitte: 6 x 4 ft Innenmaß + Rohr
+CROSSBAR = BAR_Y
+
+
+def _pose():
+    img_pts = np.array([(1325, 1065), (1335, 1930), (2142, 1215), (2116, 2198)], np.float64)
+    obj = np.array([(0, BAR_Y, -POST_Z), (0, 0, -POST_Z), (0, BAR_Y, POST_Z), (0, 0, POST_Z)], np.float64)
+    K = np.array([[FPH, 0, PH_W / 2], [0, FPH, PH_H / 2], [0, 0, 1.0]])
+    _, rv, tv = cv2.solvePnP(obj, img_pts, K, None, flags=cv2.SOLVEPNP_IPPE)
+    return cv2.Rodrigues(rv)[0], tv.ravel()
+
+
+ROT, TRA = _pose()
+
+
+def to_photo(p):
+    q = ROT @ np.asarray(p, float) + TRA
+    return np.array([FPH * q[0] / q[2] + PH_W / 2, FPH * q[1] / q[2] + PH_H / 2]), q[2]
+
+
+# ================================================================= Spielzüge (Zoll; Torlinie x = 0, Tor offen nach -x)
 P = [
-    dict(a=np.array([995.0, 8.0, -30.0]), c=np.array([1040.0, 64.0, 4.0]), n=np.array([1088.0, 17.0, -8.0]),
-         r=np.array([1094.0, 0.5, -11.0]), arc=26.0, kind="stick", mat="stick_red", grip=np.array([-40.0, 30.0, 26.0]),
-         pre=np.array([-12.0, 22.0, 4.0]), post=np.array([12.0, -16.0, -2.0]), who="ATTACKER", col=RED),
-    dict(a=np.array([985.0, 0.5, 16.0]), c=np.array([1042.0, 26.0, 12.0]), n=np.array([1086.0, 9.0, 2.0]),
-         r=np.array([1092.0, 0.5, 0.0]), arc=10.0, kind="glove", who="ATTACKER", col=RED),
-    dict(a=np.array([980.0, 30.0, -44.0]), c=np.array([1045.0, 64.0, -10.0]), n=np.array([1085.0, 21.0, 12.0]),
-         r=np.array([1093.0, 0.5, 14.0]), arc=24.0, kind="stick", mat="stick_blue", grip=np.array([16.0, 30.0, 42.0]),
-         pre=np.array([-6.0, 14.0, -18.0]), post=np.array([9.0, -12.0, 10.0]), who="DEFENDER", col=BLUE),
+    dict(a=np.array([-32.0, 25.0, -5.0]), c=np.array([-12.0, 62.0, 6.0]), n=np.array([18.0, 16.0, -6.0]),
+         r=np.array([24.0, 0.5, -9.0]), arc=14.0, kind="stick", spr="stick_white", flip=False,
+         grip=np.array([-30.0, 42.0, -30.0]), pre=np.array([-10.0, 18.0, -4.0]), post=np.array([12.0, -14.0, -2.0]),
+         far=np.array([-34.0, 30.0, -10.0]), who="ATTACKER", col=RED),
+    dict(a=np.array([-60.0, 0.5, 30.0]), c=np.array([-12.0, 24.0, 10.0]), n=np.array([18.0, 9.0, 2.0]),
+         r=np.array([24.0, 0.5, 0.0]), arc=10.0, kind="glove", far=np.array([-30.0, 20.0, 10.0]),
+         who="ATTACKER", col=RED),
+    dict(a=np.array([-50.0, 40.0, 10.0]), c=np.array([-10.0, 62.0, -12.0]), n=np.array([17.0, 21.0, 8.0]),
+         r=np.array([24.0, 0.5, 10.0]), arc=24.0, kind="stick", spr="stick_black", flip=True,
+         grip=np.array([14.0, 42.0, 40.0]), pre=np.array([6.0, 14.0, 12.0]), post=np.array([9.0, -12.0, 8.0]),
+         far=np.array([18.0, 30.0, 26.0]), who="DEFENDER", col=BLUE),
 ]
 
 
@@ -122,61 +142,109 @@ def swing(k, u):
     pre = p.get("pre", np.array([-10.0, 12.0, 0.0]))
     post = p.get("post", hit_dir(k) * 14)
     if u < 0.55:
-        far = pre + np.array([-34.0, 30.0, 0.0]) * (1 - sio(c01((u - 0.05) / 0.5)))
-        return far
+        return pre + p["far"] * (1 - sio(c01((u - 0.05) / 0.5)))
     if u < U_HIT:
         s = (u - 0.55) / (U_HIT - 0.55)
         return pre * (1 - s ** 1.8)
     s = e_out(c01((u - U_HIT) / 0.25), 2)
     out = post * s
     if u > 1.45:
-        out = out + np.array([-30.0, 26.0, 0.0]) * sio(c01((u - 1.45) / 0.35))
+        out = out + p["far"] * sio(c01((u - 1.45) / 0.35))
     return out
 
 
-def stick_meshes(k, u, group=0):
-    p = P[k]
-    d = hit_dir(k)
-    up = np.array([0.0, 1.0, 0.0])
-    side = np.cross(d, up)
-    side /= np.linalg.norm(side)
-    b = p["c"] + swing(k, u) - d * 2.4 - np.array([0, 1.4, 0])
-    heel, toe = b + side * 5.5, b - side * 6.5
-    top = p["c"] + p["grip"] + swing(k, u) * 0.35
-    ms = M3.stick_mesh(heel, toe, top, shaft_mat=p["mat"])
-    for m in ms:
-        m.g[:] = group
-    return ms, top
+# ================================================================= Freisteller (echte Fotos, gear_cut.py)
+SPR_PPI = 26.0                                   # Sprites werden auf 26 px/Zoll vorskaliert
+_SPR = {}
 
 
-_GLOVE = {}
+def _premul(rgba):
+    a = rgba[..., 3:4].astype(np.float32) / 255
+    return np.dstack([rgba[..., :3].astype(np.float32) / 255 * a, a])
 
 
-def glove_mesh(k, u, group=0):
-    if "g" not in _GLOVE:
-        import ig02_gloves as G2
-        g = G2.GLOVE
-        mats = np.where(g.m == G2.PART_INSIDE, M3.MAT_IDS["carbon"], M3.MAT_IDS["glove_red"])
-        _GLOVE["g"] = (g, mats, G2)
-    g, mats, G2 = _GLOVE["g"]
-    p = P[k]
-    flick = 0.55 * (1 - sio(c01((u - 0.6) / 0.35))) - 0.5 * e_out(c01((u - U_HIT) / 0.25), 2)
-    R = G2.rot_y(0.55) @ G2.rot_z(math.pi / 2 + flick)
-    sc = 1.05
-    v = (g.v * sc) @ R.T
-    n = g.n @ R.T
-    ctr = p["c"] + swing(k, u) + np.array([-5.5, -3.0, 0.0])
-    v = v + ctr - np.array([0.0, 0.0, 0.0])
-    m = M3.Mesh(v, n, g.t, mats, g.uvw, group=group)
-    return [m], ctr + np.array([-4.0, 14.0, 0.0])
+def stick_sprite(name, flip):
+    """(RGBA vormultipliziert, Blattmitte (x, y), Schaftrichtung) – Schaft nach links oben verlängert."""
+    key = (name, flip)
+    if key in _SPR:
+        return _SPR[key]
+    im = np.asarray(Image.open(os.path.join(GEAR, name + ".png")).convert("RGBA"))
+    h, w = im.shape[:2]
+    al = im[..., 3] > 128
+    ys = np.arange(h)
+
+    def ctr(x):
+        col = al[:, x]
+        return float(ys[col].mean()) if col.any() else None
+
+    bend = int(w * (0.47 if name == "stick_white" else 0.42))
+    blade_px = w - bend
+    sc = SPR_PPI * 11.0 / blade_px                # Blatt ≈ 11 Zoll
+    im = cv2.resize(im, (int(w * sc), int(h * sc)), interpolation=cv2.INTER_AREA)
+    h, w = im.shape[:2]
+    al = im[..., 3] > 128
+    ys = np.arange(h)
+    x0, x1 = 3, int(w * 0.18)
+    c0, c1 = ctr(x0), ctr(x1)
+    d = np.array([x0 - x1, c0 - c1], float)
+    d /= np.linalg.norm(d)
+    # Schaft verlängern: linken Streifen entlang der Schaftrichtung wiederholen
+    ext = int(SPR_PPI * 46)
+    step = 12
+    n = ext // step
+    off_x, off_y = int(-d[0] * ext) + 10, int(-d[1] * ext) + 10
+    can = np.zeros((h + off_y + 20, w + off_x + 10, 4), np.uint8)
+    can[off_y:off_y + h, off_x:off_x + w] = im
+    strip = im[:, 4:4 + step + 2]
+    for i in range(1, n + 1):
+        sx = off_x + 4 - step * i
+        sy = off_y + int(round(-step * i * d[1] / d[0])) if d[0] != 0 else off_y
+        if sx < 0 or sy < 0:
+            break
+        reg = can[sy:sy + h, sx:sx + strip.shape[1]]
+        hh, ww = reg.shape[:2]
+        m = strip[:hh, :ww, 3:4] > reg[..., 3:4]
+        can[sy:sy + hh, sx:sx + ww] = np.where(m, strip[:hh, :ww], reg)
+    xs = np.arange(int(w * 0.62), w - 2)
+    bx = float(xs.mean()) + off_x
+    by = float(np.mean([ctr(x) for x in xs if ctr(x) is not None])) + off_y
+    spr = _premul(can)
+    if flip:
+        spr = spr[:, ::-1].copy()
+        bx = spr.shape[1] - 1 - bx
+        d = np.array([-d[0], d[1]])
+    _SPR[key] = (spr, np.array([bx, by]), d)
+    return _SPR[key]
 
 
-def play_meshes(k, u):
-    if not (0.05 <= u < 1.8):
-        return [], None
-    if P[k]["kind"] == "glove":
-        return glove_mesh(k, u)
-    return stick_meshes(k, u)
+def glove_sprite():
+    if "glove" not in _SPR:
+        im = np.asarray(Image.open(os.path.join(GEAR, "glove.png")).convert("RGBA"))[::-1, ::-1]   # Finger nach oben
+        h, w = im.shape[:2]
+        sc = SPR_PPI * 16.0 / h                   # Handschuh ≈ 16 Zoll lang (inkl. Stulpe)
+        im = cv2.resize(np.ascontiguousarray(im), (int(w * sc), int(h * sc)), interpolation=cv2.INTER_AREA)
+        _SPR["glove"] = _premul(im)
+    return _SPR["glove"]
+
+
+def puck_sprite():
+    if "puck" not in _SPR:
+        im = np.asarray(Image.open(os.path.join(GEAR, "puck.png")).convert("RGBA"))
+        h, w = im.shape[:2]
+        sc = SPR_PPI * 3.0 / w * 2                # doppelte Auflösung, Puck 3 Zoll
+        im = cv2.resize(im, (int(w * sc), int(h * sc)), interpolation=cv2.INTER_AREA)
+        _SPR["puck"] = _premul(im)
+    return _SPR["puck"]
+
+
+_PHOTO = {}
+
+
+def photo():
+    if "p" not in _PHOTO:
+        im = cv2.imread(os.path.join(GEAR, "goal_clean.jpg"))[..., ::-1]
+        _PHOTO["p"] = np.ascontiguousarray(im)
+    return _PHOTO["p"]
 
 
 # ================================================================= Zeitlinie
@@ -198,14 +266,6 @@ def state(t):
     return "lock", 2, 1.79
 
 
-def seg(t):
-    cuts = [0.0] + [S[1], S[2], T_PLAYS_END, VO_START["r1"], VO_START["r2"], VO_START["r3"], T_CTA - 0.1, DUR]
-    for a, b in zip(cuts[:-1], cuts[1:]):
-        if a <= t < b:
-            return a, b
-    return 0.0, DUR
-
-
 def puck_state(t):
     sc, k, u = state(t)
     if sc in ("lock", "cta"):
@@ -213,86 +273,181 @@ def puck_state(t):
     return puck_at(k, u), 1.0
 
 
-# ================================================================= Kamera
-_e = os.environ.get
-CAM0 = [float(v) for v in _e("CAM0", "800,85,-130").split(",")]
-TGT0 = [float(v) for v in _e("TGT0", "1080,42,-4").split(",")]
-FOV0 = float(_e("FOV0", "34"))
-BARX, BARZ, BARDY, BARFOV = (float(v) for v in _e("BARC", "760,110,4,38").split(","))
-def main_cam(t, k=0):
-    drift = [np.array([0.0, 0.0, 0.0]), np.array([22.0, -10.0, 26.0]), np.array([4.0, 2.0, -18.0])][k]
-    p0 = np.array(CAM0) + drift
-    p1 = p0 + np.array([30.0, -4.0, 16.0])
-    s = c01((t - S[k]) / PLAY_LEN) if k < 3 else 0.0
-    return p0 + (p1 - p0) * sio(s), np.array(TGT0), FOV0
+# ================================================================= Bildausschnitt (digitale Kamera im Foto)
+TOP_FADE = (np.clip(1 - np.arange(H, dtype=np.float32) / 760, 0, 1) ** 1.6 * 0.62)[:, None, None]
+S_MIN = H / PH_H                                  # ganze Fotohöhe
+BASE_V = (1880.0, PH_H / 2, S_MIN)
 
 
-def bar_cam(t, side=-1.0, t0=0.0):
-    s = c01((t - t0) / 2.8)
-    pos = np.array([BARX + 30 * s, CROSSBAR, side * (BARZ - 10 * s)])
-    return pos, np.array([1058.0, CROSSBAR + BARDY, 0.0]), BARFOV
+def clamp_view(vx, vy, s):
+    s = max(s, S_MIN)
+    hw, hh = W / 2 / s, H / 2 / s
+    return float(np.clip(vx, hw, PH_W - hw)), float(np.clip(vy, hh, PH_H - hh)), s
 
 
-def cam(t):
+def lerp_v(a, b, k):
+    return tuple(a[i] + (b[i] - a[i]) * k for i in range(3))
+
+
+def replay_view(k):
+    ph, _ = to_photo(P[k]["c"])
+    g, _ = to_photo(np.array([0.0, 30.0, 0.0]))
+    dy = -170.0 if P[k]["kind"] == "stick" else 0.0
+    dx = 140.0 if k == 2 else 60.0
+    return (ph[0] * 0.5 + g[0] * 0.5 + dx, ph[1] * 0.5 + g[1] * 0.5 + 40 + dy, 0.86)
+
+
+def view(t):
     sc, k, u = state(t)
+    v_a, v_b = (1800.0, PH_H / 2, S_MIN), (1760.0, 1440.0, 0.75)
     if sc == "play":
-        p, g, f = main_cam(t, k)
+        v = lerp_v(v_a, v_b, sio(c01(u / PLAY_LEN)))
     elif sc == "lock":
-        s = sio(c01((t - T_PLAYS_END) / 1.8))
-        p, g, f = main_cam(S[0], 0)
-        p = p + np.array([-30.0, 10.0, -10.0]) * s
+        v = lerp_v(v_b, v_a, sio(c01((t - T_PLAYS_END) / 1.2)))
     elif sc == "replay":
-        key = REPLAY[k][0]
-        if k == 1:
-            p, g, f = main_cam(S[1] + 0.9, 1)
-            p = p + (np.array([1000.0, 40.0, -40.0]) - p) * 0.45 + np.array([0, 0, 1.0]) * 8 * (t - VO_START[key])
-            g = np.array([1052.0, 22.0, 4.0])
-        else:
-            p, g, f = bar_cam(t, -1.0 if k == 0 else 1.0, VO_START[key])
+        tt_ = t - VO_START[REPLAY[k][0]]
+        v0 = replay_view(k)
+        v = (v0[0] - 10 * tt_, v0[1], v0[2] + 0.03 * tt_)
     else:
-        s = sio(c01((t - T_CTA) / 2.0))
-        p, g, f = main_cam(S[0], 0)
-        p = p + np.array([-40.0, 14.0, -6.0]) * s
-    d = (p - g) / np.linalg.norm(p - g)
-    el = math.degrees(math.asin(max(-1.0, min(1.0, d[1]))))
-    return p, g, blend_up(min(el, 89.9)), f
+        v = lerp_v(v_a, (1780.0, 1420.0, 0.74), sio(c01((t - T_CTA) / 2.2)))
+    return clamp_view(*v)
 
 
-def cam_row_at(t):
-    pos, tgt, up, fov = cam(t)
-    r, u, f = P3.look_at(pos, tgt, up)
-    return P3.cam_row(pos, r, u, f, fov), float(np.linalg.norm(tgt - pos))
+def to_screen(p, v):
+    ph, d = to_photo(p)
+    vx, vy, s = v
+    return np.array([(ph[0] - vx) * s + W / 2, (ph[1] - vy) * s + H / 2]), FPH / d * s
 
 
-def render3d(t, fidx):
-    lo, hi = seg(t)
-    cams, lens, pk = np.zeros((KSUB, 13)), np.zeros((KSUB, 2)), np.zeros((KSUB, 7))
-    for j in range(KSUB):
-        tk = min(max(t + ((j + 0.5) / KSUB - 0.5) * SHUTTER, lo), hi - 1e-4)
-        row, focus = cam_row_at(tk)
-        cams[j], lens[j] = row, (0.0, focus)
-        p, vis = puck_state(tk)
-        pk[j] = (p[0], p[1], p[2], 1.3 + 9.0 * tk, vis, 0.0, tk)
-    base = np.zeros((H, W, 3), np.float32)
-    puck = np.zeros((H, W, 3), np.float32)
-    cov = np.zeros((H, W), np.float32)
-    P3.render(W, H, SPP, fidx + 38, cams, lens, pk, R15.logo_tex(), base, puck, cov)
-    return P3.tonemap(base), P3.tonemap(puck), cov
+def background(v):
+    vx, vy, s = v
+    if s < 0.9:                                   # Verkleinern ohne Aliasing: halbe Auflösung als Quelle
+        src = _PHOTO.get("half")
+        if src is None:
+            src = _PHOTO["half"] = cv2.resize(photo(), (PH_W // 2, PH_H // 2), interpolation=cv2.INTER_AREA)
+        M = np.array([[2 * s, 0, W / 2 - s * vx], [0, 2 * s, H / 2 - s * vy]], np.float32)
+    else:
+        src = photo()
+        M = np.array([[s, 0, W / 2 - s * vx], [0, s, H / 2 - s * vy]], np.float32)
+    img = cv2.warpAffine(src, M, (W, H), flags=cv2.INTER_LINEAR, borderMode=cv2.BORDER_REFLECT)
+    img = img.astype(np.float32) / 255
+    # Studio-Look: oben weich aufgehellt (Text), Farben leicht kühler/heller
+    img = img * np.array([0.98, 1.0, 1.03], np.float32)
+    img = img + (1 - img) * TOP_FADE
+    return img
+
+
+def blit(img, spr, M):
+    """Vormultipliziertes RGBA-Sprite mit Affinmatrix M (Sprite -> Bild) aufs Bild."""
+    out = cv2.warpAffine(spr, M.astype(np.float32), (W, H), flags=cv2.INTER_LINEAR, borderMode=cv2.BORDER_CONSTANT,
+                         borderValue=(0, 0, 0, 0))
+    a = out[..., 3:4]
+    return img * (1 - a) + out[..., :3]
+
+
+def affine(src_pt, dst_pt, scale, ang):
+    c, s_ = math.cos(ang) * scale, math.sin(ang) * scale
+    A = np.array([[c, -s_], [s_, c]])
+    t_ = np.asarray(dst_pt) - A @ np.asarray(src_pt)
+    return np.hstack([A, t_[:, None]])
+
+
+def soft_shadow(img, xy, rx, ry, a):
+    if a <= 0.01:
+        return img
+    x0, x1 = int(max(0, xy[0] - rx * 2.5)), int(min(W, xy[0] + rx * 2.5))
+    y0, y1 = int(max(0, xy[1] - ry * 2.5)), int(min(H, xy[1] + ry * 2.5))
+    if x1 <= x0 or y1 <= y0:
+        return img
+    yy, xx = np.mgrid[y0:y1, x0:x1].astype(np.float32)
+    g = np.exp(-(((xx - xy[0]) / rx) ** 2 + ((yy - xy[1]) / ry) ** 2)) * a
+    img[y0:y1, x0:x1] *= (1 - g)[..., None]
+    return img
+
+
+def draw_stick(img, k, u, v):
+    p = P[k]
+    spr, bc, d_s = stick_sprite(p["spr"], p["flip"])
+    B = p["c"] + swing(k, u) - hit_dir(k) * 2.2 - np.array([0, 0.5, 0])
+    T = p["c"] + p["grip"] + swing(k, u) * 0.35
+    bxy, ppi = to_screen(B, v)
+    txy, _ = to_screen(T, v)
+    d = (txy - bxy) / (np.linalg.norm(txy - bxy) + 1e-6)
+    ang = math.atan2(d[1], d[0]) - math.atan2(d_s[1], d_s[0])
+    # Schatten aufs Eis
+    gxy, gppi = to_screen(np.array([B[0], 0.0, B[2]]), v)
+    img = soft_shadow(img, gxy, 7 * gppi, 2.2 * gppi, 0.28 * math.exp(-B[1] / 40))
+    return blit(img, spr, affine(bc, bxy, ppi / SPR_PPI, ang)), txy, ppi
+
+
+def draw_glove(img, k, u, v):
+    p = P[k]
+    spr = glove_sprite()
+    G = p["c"] + swing(k, u) + np.array([-4.0, 1.0, 0.0])
+    gxy, ppi = to_screen(G, v)
+    flick = 0.5 * (1 - sio(c01((u - 0.6) / 0.35))) - 0.45 * e_out(c01((u - U_HIT) / 0.25), 2)
+    sxy, sppi = to_screen(np.array([G[0], 0.0, G[2]]), v)
+    img = soft_shadow(img, sxy, 6 * sppi, 2.0 * sppi, 0.3 * math.exp(-G[1] / 40))
+    ctr = np.array([spr.shape[1] / 2, spr.shape[0] * 0.42])
+    return blit(img, spr, affine(ctr, gxy, ppi / SPR_PPI, -0.25 + flick)), gxy - np.array([0, 9 * ppi]), ppi
+
+
+def draw_puck(img, k, u, v, rate):
+    spr = puck_sprite()
+    p = puck_at(k, u)
+    pxy, ppi = to_screen(p, v)
+    sxy, sppi = to_screen(np.array([p[0], 0.0, p[2]]), v)
+    img = soft_shadow(img, sxy, 2.0 * sppi, 0.7 * sppi, 0.45 * math.exp(-p[1] / 25))
+    q, _ = to_screen(puck_at(k, max(0.0, u - rate / 60)), v)
+    n = 5 if np.linalg.norm(pxy - q) > 3 else 1
+    sc = ppi * 3.0 / (spr.shape[1])
+    acc = np.zeros((H, W, 4), np.float32)
+    for i in range(n):
+        f = i / max(n - 1, 1)
+        c = q + (pxy - q) * f
+        M = affine((spr.shape[1] / 2, spr.shape[0] / 2), c, sc, 0.15 * math.sin(u * 7))
+        acc += cv2.warpAffine(spr, M.astype(np.float32), (W, H), flags=cv2.INTER_LINEAR,
+                              borderMode=cv2.BORDER_CONSTANT, borderValue=(0, 0, 0, 0)) / n
+    return img * (1 - acc[..., 3:4]) + acc[..., :3], pxy
 
 
 # ================================================================= Overlays
-def bar_line(ctx, row, a, t):
+def ring(ctx, xy, r, col, a, wd=6):
+    ctx.set_source_rgba(col[0] / 255, col[1] / 255, col[2] / 255, a)
+    ctx.set_line_width(wd)
+    ctx.arc(float(xy[0]), float(xy[1]), r, 0, 2 * math.pi)
+    ctx.stroke()
+
+
+def brackets(ctx, xy, t, r=30):
+    r = r + 3 * math.sin(t * 9)
+    ctx.set_source_rgba(1, 1, 1, 0.95)
+    ctx.set_line_width(5)
+    for k_ in range(4):
+        a0 = k_ * math.pi / 2 + 0.35
+        ctx.arc(float(xy[0]), float(xy[1]), r, a0, a0 + 0.9)
+        ctx.stroke()
+    ctx.set_source_rgba(INK[0] / 255, INK[1] / 255, INK[2] / 255, 0.9)
+    ctx.set_line_width(2.5)
+    for k_ in range(4):
+        a0 = k_ * math.pi / 2 + 0.35
+        ctx.arc(float(xy[0]), float(xy[1]), r, a0, a0 + 0.9)
+        ctx.stroke()
+
+
+def bar_line(ctx, v, a, t):
     """Gestrichelte Linie auf Lattenhöhe, über das Tor hinaus."""
     if a <= 0:
         return
-    pts = np.array([(GOAL_X, CROSSBAR + 1.4, z) for z in np.linspace(-150, 150, 60)])
-    xy, z = proj(row, pts)
-    if (z < 3).any():
-        return
-    stroke_poly(ctx, xy, ORANGE, 0.22 * a, 24)
+    pts = np.array([to_screen(np.array([0.0, BAR_Y, z]), v)[0] for z in np.linspace(-170, 170, 40)])
+    stroke_poly(ctx, pts, (255, 255, 255), 0.5 * a, 16)
+    stroke_poly(ctx, pts, ORANGE, 0.25 * a, 22)
     ctx.set_dash([26, 16], -t * 60)
-    stroke_poly(ctx, xy, ORANGE, 0.95 * a, 6)
+    stroke_poly(ctx, pts, ORANGE, 0.95 * a, 6)
     ctx.set_dash([])
+    lab = line_img("CROSSBAR HEIGHT", 26, 850, ORANGE, track=5)
+    return pts, lab
+
 
 
 def word(txt, size, col):
@@ -375,11 +530,8 @@ def badges_row(L, t, cy, size=118):
         put(L, im, xs[i] - im.width / 2, cy - im.height / 2)
 
 
-def who_label(L, row, anchor, k, a, ymin=560):
-    if anchor is None or a <= 0:
-        return
-    xy, z = projected(row, anchor)
-    if z <= 0:
+def who_label(L, xy, k, a, ymin=560):
+    if xy is None or a <= 0:
         return
     im = fade_im(chip(P[k]["who"], P[k]["col"], 32), a)
     x = float(np.clip(xy[0] - im.width / 2, 30, W - 30 - im.width))
@@ -491,64 +643,58 @@ def replay_fx(img, t):
 
 
 # ================================================================= Bild
-def hit_time(t):
-    """Zeitpunkte, an denen Kontakt/Tor im aktuellen Abschnitt passieren (für Ringe und Ton)."""
-    sc, k, u = state(t)
-    return sc, k, u
-
-
 def compose(t, fidx):
-    base, puck, cov = render3d(t, fidx)
-    row, _ = cam_row_at(t)
-    campos = cam(t)[0]
-    p, vis = puck_state(t)
+    v = view(t)
     sc, k, u = state(t)
-    lo_s, lo_c = surface()
+    img = background(v)
     hi_s, hi_c = surface()
     L = Image.new("RGBA", (W, H), (0, 0, 0, 0))
-    R28.draw_net_lines(lo_c, row)
-    R28.glass_edges(lo_c, row)
-    img = over(base, *surf_rgba(lo_s))
-    meshes = R28.BOARDS + R28.FRAMES
     anchor = None
-    if sc in ("play", "replay"):
-        pm, anchor = play_meshes(k, u)
-        meshes = meshes + pm
-    if vis > 0:
-        import reel25_goalline as G25
-        meshes = meshes + [G25.cyl_mesh(p - np.array([0, 0.5, 0]), 1.5, 1.0, "occluder", group=1)]
-    m_rgb, m_a, shadow, plane_a = M3.render(meshes, row, W, H, campos, alpha_by_group=np.array([1.0, 0.0], np.float32),
-                                            extra_planes=[(R28.GLASS_ALL, 1.0)], shadow_light=(0.02, 1.0, -0.03))
-    img = img * (1 - 0.15 * shadow[..., None])
-    pa = cov[..., None]
-    img = img * (1 - pa) + puck * pa
-    img = img * (1 - m_a[..., None]) + m_rgb
-    kk = (0.30 * plane_a)[..., None]
-    img = img * (1 - kk) + np.array([0.70, 0.82, 0.94], np.float32) * kk
-    img = img + (R26.glass_streaks() * plane_a * 0.10)[..., None]
+    rate = 1.0 if sc != "replay" else REPLAY[k][2]
+    pxy = None
+    if sc in ("play", "replay") and 0.05 <= u < 1.8:
+        p = puck_at(k, u)
+        B = P[k]["c"] + swing(k, u)
+        _, dp = to_photo(p)
+        _, db = to_photo(B)
+        draw_obj = draw_glove if P[k]["kind"] == "glove" else draw_stick
+        if db > dp:                                               # weiter hinten zuerst
+            img, anchor, _ = draw_obj(img, k, u, v)
+            img, pxy = draw_puck(img, k, u, v, rate)
+        else:
+            img, pxy = draw_puck(img, k, u, v, rate)
+            img, anchor, _ = draw_obj(img, k, u, v)
+    elif sc in ("play", "replay"):
+        img, pxy = draw_puck(img, k, u, v, rate)
     # Lattenhöhe in den Replays 1 und 3
     if sc == "replay" and k in (0, 2):
-        bar_line(hi_c, row, c01((t - VO_START[REPLAY[k][0]]) / 0.3), t)
+        a = c01((t - VO_START[REPLAY[k][0]]) / 0.3)
+        res = bar_line(hi_c, v, a, t)
+        if res is not None:
+            pts, lab = res
+            x_ = W - 40 - lab.width
+            y_ = float(np.interp(x_ + lab.width / 2, pts[:, 0], pts[:, 1])) if pts[0, 0] < pts[-1, 0] else float(pts[-1, 1])
+            put(L, fade_im(lab, a), x_, y_ - lab.height - 16)
     # Kontakt-Ring + Tor-Ring
-    if sc in ("play", "replay") and vis > 0:
-        rate = 1.0 if sc == "play" else REPLAY[k][2]
+    if sc in ("play", "replay"):
         for uu, col in ((U_HIT, ORANGE), (U_IN, P[k]["col"] if sc == "play" else (GREEN if k == 2 else RED))):
             du = (u - uu) / rate
             if 0 <= du < 0.5:
-                xy, z = projected(row, puck_at(k, uu))
-                if z > 0:
-                    R28.pulse_ring(hi_c, (xy, 26.0), col, du, 0.0, 0.5)
-    if sc in ("play", "replay") and vis > 0 and u < U_IN + 0.1:
-        puck_marker(hi_c, row, p, t)
-        rate = 1.0 if sc == "play" else REPLAY[k][2]
-        us = np.linspace(max(0.0, u - 0.3 * rate), u, 14)
-        R28.path_line(hi_c, row, [puck_at(k, x) for x in us], ORANGE, 0.8, 5)
+                xy, ppi = to_screen(puck_at(k, uu), v)
+                q = e_out(du / 0.5, 3)
+                ring(hi_c, xy, ppi * 3 * (1.2 + 3.5 * q), col, 0.9 * (1 - q), 8 * (1 - q) + 2)
+        if pxy is not None and u < U_IN + 0.1:
+            us = np.linspace(max(0.0, u - 0.3 * rate), u, 14)
+            pts = np.array([to_screen(puck_at(k, x), v)[0] for x in us])
+            stroke_poly(hi_c, pts, (255, 255, 255), 0.35, 12)
+            stroke_poly(hi_c, pts, ORANGE, 0.85, 5)
+            brackets(hi_c, pxy, t, 34)
     img = over(img, *surf_rgba(hi_s))
     img = replay_fx(np.clip(img, 0, 1), t)
     img = flash_wipe(img, t)
     pil = Image.fromarray((np.clip(img, 0, 1) * 255).astype(np.uint8)).convert("RGBA")
-    if sc in ("play", "replay"):
-        who_label(L, row, anchor, k, c01((u - 0.3) / 0.15) * (1 - c01((u - 1.55) / 0.15)), 560 if sc == "play" else 760)
+    if sc in ("play", "replay") and anchor is not None:
+        who_label(L, anchor, k, c01((u - 0.3) / 0.15) * (1 - c01((u - 1.55) / 0.15)), 560 if sc == "play" else 760)
     texts(L, t)
     brand(L, t)
     pil.alpha_composite(L)
