@@ -104,6 +104,21 @@ if len(sys.argv) > 1 and sys.argv[1] == "37":
         "cta": "Should this be a penalty? Follow for more rules.",
     }
 
+if len(sys.argv) > 1 and sys.argv[1] == "38":
+    import reel38_quiz as QZ38
+    SRC, DST = "reel38_quiz.mp4", "reel38_quiz_cap.mp4"
+    CAP_Y = 1720
+    VO, TIMING, END = QZ38, "reel38_timing.json", QZ38.DUR - 0.1
+    LIGHT = True
+    WORDS = {
+        "q": "Three goals. Only ONE counts.",
+        "lock": "Which one? Lock it in.",
+        "r1": "One: the attacker's stick is above the crossbar. No goal.",
+        "r2": "Two. Batted in by hand. No goal.",
+        "r3": "Three counts! A defender's high stick into his own net is a goal.",
+        "cta": "Did you get it? Follow for more rules.",
+    }
+
 
 def chunks():
     """-> Liste (t0, t1, [(wort, t_wort)])"""

@@ -42,6 +42,7 @@ MAT = {
     "tape_black": ((0.045, 0.045, 0.05), 0.10, 12.0),
     "core": ((0.55, 0.42, 0.28), 0.05, 8.0),
     "stick_red": ((0.66, 0.05, 0.06), 0.7, 60.0),
+    "stick_blue": ((0.05, 0.16, 0.62), 0.7, 60.0),
     "glove_red": ((0.50, 0.03, 0.04), 0.30, 28.0),
     "glove_blue": ((0.03, 0.09, 0.38), 0.30, 28.0),
     "chip_red": ((0.62, 0.035, 0.045), 0.9, 90.0),
@@ -326,7 +327,7 @@ def torso_mesh(hip_center):
 
 
 # ================================================================= Schläger
-def stick_mesh(heel, toe, top, blade_h=2.8):
+def stick_mesh(heel, toe, top, blade_h=2.8, shaft_mat="carbon"):
     """Blatt (Heel->Toe, mit Tape) + Schaft (Heel -> Griff)."""
     heel, toe, top = map(lambda a: np.asarray(a, float), (heel, toe, top))
     along = toe - heel
@@ -355,7 +356,7 @@ def stick_mesh(heel, toe, top, blade_h=2.8):
     blade = Mesh(v1, vertex_normals(v1, t1), t1, np.array(mats), v1.copy())
     sh0 = heel + up * 1.6 - a * 0.4
     shaft_pts = np.stack([sh0 + (top - sh0) * q for q in np.linspace(0, 1, 6)])
-    shaft = tube_along(shaft_pts, [0.62] * 6, lambda s: MAT_IDS["carbon"], nr=8)
+    shaft = tube_along(shaft_pts, [0.62] * 6, lambda s: MAT_IDS[shaft_mat], nr=8)
     return [blade, shaft]
 
 
