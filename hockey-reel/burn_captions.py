@@ -119,6 +119,21 @@ if len(sys.argv) > 1 and sys.argv[1] == "38":
         "cta": "Did you get it? Follow for more rules.",
     }
 
+if len(sys.argv) > 1 and sys.argv[1] == "39":
+    import reel39_goalline as GL39
+    SRC, DST = "reel39_goalline.mp4", "reel39_goalline_cap.mp4"
+    CAP_Y = 1720
+    VO, TIMING, END = GL39, "reel39_timing.json", GL39.DUR - 0.1
+    LIGHT = True
+    WORDS = {
+        "q": "Three pucks. Only ONE is a goal.",
+        "lock": "Which one? Lock it in.",
+        "r1": "One: half on the line. No goal.",
+        "r3": "Three: still touching the line. No goal.",
+        "r2": "Two counts! The whole puck has to cross the line.",
+        "cta": "Did you get it? Follow for part three.",
+    }
+
 
 def chunks():
     """-> Liste (t0, t1, [(wort, t_wort)])"""
