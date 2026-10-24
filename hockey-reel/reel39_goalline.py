@@ -36,20 +36,20 @@ TEMPO = 1.08
 VO_LINES = [
     ("q", "Three pucks. Only ONE is a goal."),
     ("lock", "Which one? Lock it in."),
-    ("r1", "One: half on the line. No goal."),
-    ("r3", "Three: still touching the line. No goal."),
-    ("r2", "Two counts! The whole puck has to cross the line."),
+    ("r1", "One: half on the line. Nope."),
+    ("r3", "Three: sooo close. Still touching. No goal."),
+    ("r2", "Two counts! The whole puck is over the line."),
     ("cta", "Did you get it? Follow for part three."),
 ]
 VO_KEYS = [k for k, _ in VO_LINES]
-VO_START = {"q": 0.1, "lock": 4.75, "r1": 6.35, "r3": 8.25, "r2": 10.55, "cta": 13.1}
-DUR = 15.4
+VO_START = {"q": 0.1, "lock": 4.75, "r1": 6.35, "r3": 8.4, "r2": 11.0, "cta": 13.45}
+DUR = 15.75
 WT = {                                           # Wortanfänge (s nach Satzbeginn, nach 1,08x), faster-whisper small.en
     "q": [0.0, 0.24, 0.74, 0.88, 1.14, 1.24, 1.36],
     "lock": [0.0, 0.2, 0.46, 0.78, 0.94],
-    "r1": [0.0, 0.24, 0.42, 0.58, 0.68, 0.98, 1.14],
-    "r3": [0.0, 0.26, 0.48, 0.78, 0.96, 1.38, 1.56],
-    "r2": [0.0, 0.16, 0.78, 0.88, 1.08, 1.28, 1.46, 1.58, 1.78, 1.96],
+    "r1": [0.0, 0.22, 0.42, 0.58, 0.66, 1.08],
+    "r3": [0.0, 0.24, 0.56, 1.08, 1.16, 1.68, 1.82],
+    "r2": [0.0, 0.14, 0.78, 0.86, 1.06, 1.26, 1.4, 1.56, 1.66],
     "cta": [0.0, 0.12, 0.24, 0.4, 0.7, 0.94, 1.18, 1.36],
 }
 
@@ -132,7 +132,7 @@ def painted_photo():
 
 
 # ================================================================= Puck als Zylinder in Fotoperspektive
-def draw_puck(img, v, c, alpha=1.0):
+def draw_puck(img, v, c, alpha=1.0, ground=None):
     """Puck (Mittelpunkt am Boden c) perspektivisch korrekt zeichnen, 3x überabgetastet."""
     ang = np.linspace(0, 2 * math.pi, 64, endpoint=False)
     bot = np.array([Q.to_screen(c + np.array([PR * math.cos(a), 0.0, PR * math.sin(a)]), v)[0] for a in ang])
@@ -166,8 +166,10 @@ def draw_puck(img, v, c, alpha=1.0):
     col = cv2.resize(col, (x1 - x0, y1 - y0), interpolation=cv2.INTER_AREA)
     al = cv2.resize(al, (x1 - x0, y1 - y0), interpolation=cv2.INTER_AREA) * alpha
     # Kontaktschatten
-    cxy, ppi = Q.to_screen(c, v)
-    img = Q.soft_shadow(img, cxy + np.array([0, 0.25 * ppi]), 2.0 * ppi, 0.6 * ppi, 0.55 * alpha)
+    g = c if ground is None else ground
+    cxy, ppi = Q.to_screen(g, v)
+    lift = math.exp(-(c[1] - g[1]) / 4.0)
+    img = Q.soft_shadow(img, cxy + np.array([0, 0.25 * ppi]), 2.0 * ppi * (2 - lift), 0.6 * ppi * (2 - lift), 0.55 * alpha * lift)
     xa, ya, xb, yb = max(0, x0), max(0, y0), min(W, x1), min(H, y1)
     sub_c = col[ya - y0:yb - y0, xa - x0:xb - x0]
     sub_a = al[ya - y0:yb - y0, xa - x0:xb - x0, None]
@@ -341,7 +343,7 @@ def texts(L, t, v):
             R15.reveal_halo(L, line_img("COMMENT 1, 2 OR 3", 48, 850, RED, track=6), W / 2, 440,
                             c01((t - wt("lock", 2)) / 0.25), smooth(VO_START["r1"] - 0.1, VO_START["r1"], t))
     # Auflösung
-    info = {0: ("NO GOAL", RED, "HALF ON THE LINE", T_NO1), 2: ("NO GOAL", RED, "STILL TOUCHING THE LINE", T_NO3),
+    info = {0: ("NOPE.", RED, "HALF ON THE LINE", T_NO1), 2: ("NO GOAL", RED, "SO CLOSE… STILL TOUCHING", T_NO3),
             1: ("GOAL!", GREEN, "ENTIRELY ACROSS THE LINE", T_YES)}
     for i, (key, k) in enumerate(REVEAL):
         t0 = VO_START[key]
@@ -379,6 +381,186 @@ def flash_wipe(img, t):
     return img
 
 
+# ================================================================= Comedy: Wackelaugen, Sprechblasen, Konfetti
+def hop(i, t):
+    """Freudensprünge von Puck 2 nach der Auflösung."""
+    if PUCKS[i]["verdict"] != "yes" or not (T_YES <= t < T_YES + 1.35):
+        return 0.0
+    u = (t - T_YES) / 0.45
+    return 4.5 * abs(math.sin(math.pi * u)) * (0.75 ** int(u))
+
+
+def mood(i, t):
+    if PUCKS[i]["verdict"] == "yes" and t >= T_YES:
+        return "happy" if t < T_YES + 1.6 else "proud"
+    if i == 0 and t >= T_NO1:
+        return "sad"
+    if i == 2 and t >= T_NO3:
+        return "sad"
+    if T_LOCK <= t < VO_START["r1"]:
+        return {0: "nervous", 1: "neutral", 2: "proud"}[i]
+    return "neutral"
+
+
+def draw_eyes(ctx, v, i, c, t):
+    xy, ppi = Q.to_screen(c + np.array([0.0, 0.62, 0.0]), v)
+    re = max(4.0, 0.44 * ppi)
+    m = mood(i, t)
+    # Blickrichtung: beim Rutschen nach vorn, danach Nachwackeln
+    look = np.array([0.0, 0.0])
+    if S[i] <= t < S[i] + 1.05:
+        a_, _ = Q.to_screen(puck_pos(i, t + 0.05), v)
+        b_, _ = Q.to_screen(puck_pos(i, t), v)
+        d = a_ - b_
+        if np.linalg.norm(d) > 0.5:
+            look = d / np.linalg.norm(d) * 0.55
+    else:
+        ts = t - (S[i] + 1.05)
+        look = np.array([math.sin(ts * 22) * 0.5 * math.exp(-ts * 4), 0.15])
+    if m == "nervous":
+        look = np.array([0.6 * math.copysign(1, math.sin(t * 5.3)), 0.1])
+    if m == "sad":
+        look = np.array([0.0, 0.55])
+    if m == "proud":
+        look = np.array([0.25, -0.35])
+    blink = (t * 1.0 + i * 0.37) % 2.6 < 0.09 and m in ("neutral", "nervous")
+    for sgn in (-1, 1):
+        ex, ey = xy[0] + sgn * 0.62 * ppi, xy[1]
+        if m == "happy":
+            ctx.set_source_rgba(1, 1, 1, 1)
+            ctx.set_line_width(max(2.0, re * 0.32))
+            ctx.arc(ex, ey + re * 0.35, re * 0.75, math.pi * 1.15, math.pi * 1.85)
+            ctx.stroke()
+            continue
+        ctx.set_source_rgba(1, 1, 1, 1)
+        ctx.arc(ex, ey, re, 0, 2 * math.pi)
+        ctx.fill()
+        ctx.set_source_rgba(0.08, 0.08, 0.1, 1)
+        ctx.set_line_width(max(1.2, re * 0.1))
+        ctx.arc(ex, ey, re, 0, 2 * math.pi)
+        ctx.stroke()
+        if blink:
+            ctx.set_source_rgba(0.06, 0.06, 0.07, 1)
+            ctx.arc(ex, ey, re * 1.02, 0, 2 * math.pi)
+            ctx.fill()
+            continue
+        ctx.arc(ex + look[0] * re * 0.5, ey + look[1] * re * 0.5, re * 0.5, 0, 2 * math.pi)
+        ctx.fill()
+        if m == "sad":                                            # Augenlid schräg (innen hoch)
+            ctx.save()
+            ctx.arc(ex, ey, re * 1.05, 0, 2 * math.pi)
+            ctx.clip()
+            ctx.set_source_rgba(0.06, 0.06, 0.07, 1)
+            ctx.move_to(ex - re * 1.2, ey - re * (0.55 if sgn > 0 else 0.05))
+            ctx.line_to(ex + re * 1.2, ey - re * (0.05 if sgn > 0 else 0.55))
+            ctx.line_to(ex + re * 1.2, ey - re * 1.3)
+            ctx.line_to(ex - re * 1.2, ey - re * 1.3)
+            ctx.close_path()
+            ctx.fill()
+            ctx.restore()
+        if m == "proud":                                          # halb geschlossen, lässig
+            ctx.save()
+            ctx.arc(ex, ey, re * 1.05, 0, 2 * math.pi)
+            ctx.clip()
+            ctx.set_source_rgba(0.06, 0.06, 0.07, 1)
+            ctx.rectangle(ex - re * 1.2, ey - re * 1.3, re * 2.4, re * 0.95)
+            ctx.fill()
+            ctx.restore()
+    # Träne bei Puck 3
+    if i == 2 and t >= T_NO3 + 0.2:
+        for j in range(3):
+            q = ((t - T_NO3 - 0.2) * 1.1 + j / 3) % 1.0
+            tx, ty = xy[0] + 0.62 * ppi + re * 0.5, xy[1] + re * 0.6 + q * 2.2 * ppi
+            ctx.set_source_rgba(0.35, 0.65, 1.0, 0.9 * (1 - q))
+            r_ = re * 0.32
+            ctx.move_to(tx, ty - r_ * 1.8)
+            ctx.curve_to(tx + r_, ty - r_ * 0.4, tx + r_, ty + r_, tx, ty + r_)
+            ctx.curve_to(tx - r_, ty + r_, tx - r_, ty - r_ * 0.4, tx, ty - r_ * 1.8)
+            ctx.fill()
+
+
+_BUB = {}
+
+
+def bubble_img(txt, size=32):
+    key = (txt, size)
+    if key in _BUB:
+        return _BUB[key]
+    t_ = line_img(txt, size, 850, INK, track=2)
+    pw, ph = t_.width + 44, t_.height + 30
+    im = Image.new("RGBA", (pw, ph + 26), (0, 0, 0, 0))
+    d = ImageDraw.Draw(im)
+    d.rounded_rectangle((2, 2, pw - 3, ph - 3), ph // 2, fill=(255, 255, 255, 250), outline=INK + (255,), width=4)
+    cx = pw * 0.32
+    d.polygon([(cx - 12, ph - 5), (cx + 12, ph - 5), (cx - 8, ph + 22)], fill=(255, 255, 255, 250))
+    d.line([(cx - 12, ph - 4), (cx - 8, ph + 22), (cx + 12, ph - 4)], fill=INK + (255,), width=4)
+    im.alpha_composite(t_, (22, 15))
+    _BUB[key] = im
+    return im
+
+
+BUBBLES = [  # (Puck, Text, ab, bis, Höhe über dem Puck in Zoll, Zusatz-Pixel nach oben)
+    (0, "AM I IN?", T_LOCK + 0.25, VO_START["r1"], 7.0, 70),
+    (2, "I'M SO IN.", T_LOCK + 0.6, VO_START["r1"], 7.0, 70),
+    (1, "...", T_LOCK + 0.95, VO_START["r1"], 7.0, 190),
+    (0, "WAIT... WHAT?", T_NO1 + 0.25, VO_START["r3"] - 0.1, 3.5, 40),
+    (2, "BUT I'M SO CLOSE!", wt("r3", 2), VO_START["r2"] - 0.1, 3.5, 40),
+    (1, "TOLD YA.", T_YES + 0.7, T_CTA - 0.15, 3.5, 40),
+]
+
+
+def bubbles(L, v, t):
+    for i, txt, t0, t1, hy, dy in BUBBLES:
+        if not (t0 <= t < t1):
+            continue
+        c = puck_pos(i, t)
+        if c is None:
+            continue
+        xy, _ = Q.to_screen(c + np.array([0.0, hy, 0.0]), v)
+        im = bubble_img(txt)
+        k = e_out(c01((t - t0) / 0.18), 3) * (1 + 0.12 * math.sin(math.pi * c01((t - t0) / 0.25)))
+        a = 1 - smooth(t1 - 0.12, t1, t)
+        if k < 0.99:
+            im = im.resize((max(1, int(im.width * k)), max(1, int(im.height * k))), Image.LANCZOS)
+        x = float(np.clip(xy[0] - im.width * 0.32, 20, W - 20 - im.width))
+        put(L, Q.fade_im(im, a), x, xy[1] - im.height - dy)
+
+
+_CONF = {}
+
+
+def confetti(ctx, v, t):
+    if not (T_YES <= t < T_YES + 2.4):
+        return
+    if "p" not in _CONF:
+        rng = np.random.default_rng(39)
+        n = 110
+        _CONF["p"] = dict(ang=rng.uniform(-2.6, -0.55, n), sp=rng.uniform(700, 1500, n), rot=rng.uniform(0, 6.3, n),
+                          spin=rng.uniform(-12, 12, n), sz=rng.uniform(10, 20, n), col=rng.integers(0, 5, n),
+                          dl=rng.uniform(0, 0.15, n))
+    p = _CONF["p"]
+    cols = [(0.93, 0.25, 0.2), (0.15, 0.7, 0.35), (0.98, 0.75, 0.1), (0.2, 0.5, 0.95), (0.95, 0.45, 0.1)]
+    c = puck_pos(1, t)
+    org, _ = Q.to_screen(c + np.array([0.0, 2.0, 0.0]), v)
+    for j in range(len(p["ang"])):
+        tt_ = t - T_YES - p["dl"][j]
+        if tt_ < 0:
+            continue
+        x = org[0] + math.cos(p["ang"][j]) * p["sp"][j] * tt_
+        y = org[1] + math.sin(p["ang"][j]) * p["sp"][j] * tt_ + 900 * tt_ * tt_
+        a = 1 - c01((tt_ - 1.6) / 0.6)
+        r = p["rot"][j] + p["spin"][j] * tt_
+        sz = p["sz"][j]
+        ctx.save()
+        ctx.translate(x, y)
+        ctx.rotate(r)
+        cc = cols[p["col"][j]]
+        ctx.set_source_rgba(cc[0], cc[1], cc[2], a)
+        ctx.rectangle(-sz / 2, -sz * 0.3 * abs(math.cos(r * 1.7)) - 1, sz, sz * 0.6 * abs(math.cos(r * 1.7)) + 2)
+        ctx.fill()
+        ctx.restore()
+
+
 # ================================================================= Bild
 def compose(t, fidx):
     painted_photo()
@@ -390,7 +572,7 @@ def compose(t, fidx):
     for i in order:
         c = puck_pos(i, t)
         if c is not None:
-            img = draw_puck(img, v, c)
+            img = draw_puck(img, v, c + np.array([0.0, hop(i, t), 0.0]), ground=c)
     # Rutsch-Spur + Marker während des Anrutschens
     for i in range(3):
         if S[i] <= t < S[i] + 1.2:
@@ -410,11 +592,17 @@ def compose(t, fidx):
         if t0 <= t < t1:
             highlight(hi_c, v, k, c01((t - t0 - 0.2) / 0.3) * (1 - smooth(t1 - 0.12, t1, t)), t)
             Q.brackets(hi_c, Q.to_screen(puck_pos(k, t) + np.array([0, 0.5, 0]), v)[0], t, 70)
+    for i in range(3):                                          # Wackelaugen
+        c = puck_pos(i, t)
+        if c is not None:
+            draw_eyes(hi_c, v, i, c + np.array([0.0, hop(i, t), 0.0]), t)
+    confetti(hi_c, v, t)
     img = over(img, *surf_rgba(hi_s))
     img = flash_wipe(np.clip(img, 0, 1), t)
     pil = Image.fromarray((np.clip(img, 0, 1) * 255).astype(np.uint8)).convert("RGBA")
     tag_a = c01((t - T_BACK - 0.3) / 0.3) * (1 - smooth(VO_START["r1"] - 0.15, VO_START["r1"], t))
     puck_tags(L, v, t, tag_a)
+    bubbles(L, v, t)
     texts(L, t, v)
     Q.brand(L, t)
     pil.alpha_composite(L)
@@ -527,6 +715,30 @@ def make_audio(path):
         x = tt(0.9)
         return (np.sin(2 * np.pi * 1318.5 * x) + 0.6 * np.sin(2 * np.pi * 1975.5 * x)) * np.exp(-x * 4) * vol
 
+    def boing(vol=0.4):
+        x = tt(0.45)
+        f = 220 + 260 * np.exp(-x * 9) * (1 + 0.35 * np.sin(2 * np.pi * 14 * x))
+        return np.sin(2 * np.pi * np.cumsum(f) / SR) * np.exp(-x * 7) * vol
+
+    def trombone(vol=0.5):
+        """Traurige Posaune: wah wah wah waaah."""
+        out = np.zeros(int(1.35 * SR))
+        for j, (f0, d) in enumerate(((233.1, 0.22), (220.0, 0.22), (207.7, 0.22), (196.0, 0.55))):
+            x = tt(d)
+            vib = 1 + (0.025 * np.sin(2 * np.pi * 6 * x) if j == 3 else 0)
+            ph_ = 2 * np.pi * np.cumsum(f0 * vib) / SR
+            sig = sum(np.sin(ph_ * h) / h ** 0.9 for h in range(1, 8))
+            env = np.minimum(x / 0.03, 1) * np.clip((d - x) / 0.05, 0, 1)
+            st = int(sum((0.24, 0.24, 0.24)[:j]) * SR)
+            out[st:st + len(x)] += lp(sig, 5) * env
+        return out * vol / 3
+
+    def blower(vol=0.4):
+        x = tt(0.8)
+        f = 420 + 380 * np.clip(x / 0.25, 0, 1)
+        sig = np.sign(np.sin(2 * np.pi * np.cumsum(f) / SR)) * 0.6 + np.sin(2 * np.pi * np.cumsum(f * 2) / SR) * 0.3
+        return lp(sig, 6) * np.minimum(x / 0.02, 1) * np.clip((0.8 - x) / 0.15, 0, 1) * vol
+
     def scrape(dur=1.05, vol=0.4):
         x = tt(dur)
         env = np.minimum(x / 0.03, 1) * (1 - x / dur) ** 1.5
@@ -549,14 +761,16 @@ def make_audio(path):
     for i in range(3):                                   # Pucks rutschen an die Linie
         put_(sfx, pop(0.3), S[i] + 0.02)
         put_(sfx, scrape(1.05, 0.55), S[i] + 0.02, pan=-0.2 + 0.2 * i)
-        put_(sfx, clack(0.35), S[i] + 1.05)
+        put_(sfx, boing(0.4), S[i] + 1.05)
     put_(sfx, whoosh(0.5, 0.35), T_BACK)
     for j in range(7):                                   # Uhr ticken bei "Which one?"
         put_(sfx, tick(0.35), T_LOCK + 0.1 + j * 0.2)
     for key, k in REVEAL:
         put_(sfx, whoosh(0.5, 0.4), VO_START[key] - 0.1)
-    put_(sfx, buzz(0.5, 0.45), T_NO1)
-    put_(sfx, buzz(0.5, 0.45), T_NO3)
+    put_(sfx, trombone(0.5), T_NO1 + 0.12)
+    put_(sfx, trombone(0.5), T_NO3 + 0.12)
+    put_(sfx, blower(0.4), T_YES + 0.1)
+    put_(sfx, pop(0.5), T_YES)
     put_(sfx, ding(0.5), T_YES)
     put_(sfx, horn(1.3, 0.45), T_YES + 0.05)
     put_(sfx, crowd(2.4, 0.45), T_YES + 0.05)

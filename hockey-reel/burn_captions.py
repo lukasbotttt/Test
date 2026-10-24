@@ -128,9 +128,9 @@ if len(sys.argv) > 1 and sys.argv[1] == "39":
     WORDS = {
         "q": "Three pucks. Only ONE is a goal.",
         "lock": "Which one? Lock it in.",
-        "r1": "One: half on the line. No goal.",
-        "r3": "Three: still touching the line. No goal.",
-        "r2": "Two counts! The whole puck has to cross the line.",
+        "r1": "One: half on the line. Nope.",
+        "r3": "Three: sooo close. Still touching. No goal.",
+        "r2": "Two counts! The whole puck is over the line.",
         "cta": "Did you get it? Follow for part three.",
     }
 
