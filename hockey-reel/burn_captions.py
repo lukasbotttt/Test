@@ -148,6 +148,19 @@ if len(sys.argv) > 1 and sys.argv[1] == "40":
         "cta": "NHL or Europe? Which is fairer?",
     }
 
+if len(sys.argv) > 1 and sys.argv[1] == "40m":
+    import reel40_motion as PM40
+    SRC, DST = "reel40_motion.mp4", "reel40_motion_cap.mp4"
+    CAP_Y = 1710                                  # dunkler Motion-Look: weiße Schrift, aktives Wort orange
+    VO, TIMING, END = PM40, "reel40_timing.json", PM40.DUR - 0.1
+    WORDS = {
+        "q": "In the NHL, you get a point for losing.",
+        "nhl": "Win: two points. Lose in overtime or a shootout? Still one.",
+        "eu": "In Sweden, Finland and Germany, a regulation win is worth three.",
+        "twist": "So in the NHL, some games are worth three points. Others, only two.",
+        "cta": "NHL or Europe? Which is fairer?",
+    }
+
 
 def chunks():
     """-> Liste (t0, t1, [(wort, t_wort)])"""
