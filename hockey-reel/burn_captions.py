@@ -134,6 +134,20 @@ if len(sys.argv) > 1 and sys.argv[1] == "39":
         "cta": "Did you get it? Follow for part three.",
     }
 
+if len(sys.argv) > 1 and sys.argv[1] == "40":
+    import reel40_points as PT40
+    SRC, DST = "reel40_points.mp4", "reel40_points_cap.mp4"
+    CAP_Y = 1730
+    VO, TIMING, END = PT40, "reel40_timing.json", PT40.DUR - 0.1
+    LIGHT = True
+    WORDS = {
+        "q": "In the NHL, you get a point for losing.",
+        "nhl": "Win: two points. Lose in overtime or a shootout? Still one.",
+        "eu": "In Sweden, Finland and Germany, a regulation win is worth three.",
+        "twist": "So in the NHL, some games are worth three points. Others, only two.",
+        "cta": "NHL or Europe? Which is fairer?",
+    }
+
 
 def chunks():
     """-> Liste (t0, t1, [(wort, t_wort)])"""
