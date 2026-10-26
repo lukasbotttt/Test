@@ -25,6 +25,14 @@ def hexcol(c):
 
 def build_paths():
     """-> (weiß, lime, (x0, y0, x1, y1)) als pathops-Pfade in SVG-Koordinaten (y nach unten)."""
+    p, b = build_pieces()
+    white = pathops.op(p["N"], p["M"], pathops.PathOp.UNION)
+    lime = pathops.op(p["C1"], p["C2"], pathops.PathOp.UNION)
+    return white, lime, b
+
+
+def build_pieces():
+    """Einzelteile N, M, C1, C2 (für Animationen) + Gesamt-Bounds, Koordinaten wie build_paths."""
     tt = TTFont(FONT)
     gs = tt.getGlyphSet()
     cmap = tt.getBestCmap()
@@ -55,25 +63,29 @@ def build_paths():
         # Font (y nach oben) -> SVG (y nach unten), dabei kursiv: x' = x + k*(y - base)
         return (1, 0, k, -1, dx - nx0 - k * base, cap)
 
-    white = pathops.Path()
-    gn.draw(TransformPen(white.getPen(), mat(0)))
-    gm.draw(TransformPen(white.getPen(), mat(dx_m)))
-    white.simplify(fix_winding=True)
+    pieces = {}
+    for key, g, dx in (("N", gn, 0), ("M", gm, dx_m)):
+        pieces[key] = pathops.Path()
+        g.draw(TransformPen(pieces[key].getPen(), mat(dx)))
+        pieces[key].simplify(fix_winding=True)
 
-    lime = pathops.Path()
     w, dep, gap = stem * 0.82, h * 0.40, stem * 0.42
     x_ch = dx_m + mx1 + stem * 0.55
-    pen = TransformPen(lime.getPen(), mat(0))
     for i in range(2):
+        path = pathops.Path()
+        pen = TransformPen(path.getPen(), mat(0))
         x0 = x_ch + i * (w + gap)
         pts = [(x0, cap), (x0 + w, cap), (x0 + w + dep, base + h / 2), (x0 + w, base), (x0, base), (x0 + dep, base + h / 2)]
         pen.moveTo(pts[0])
         for p in pts[1:]:
             pen.lineTo(p)
         pen.closePath()
-    lime.simplify(fix_winding=True)
-    b = pathops.op(white, lime, pathops.PathOp.UNION).bounds
-    return white, lime, b
+        path.simplify(fix_winding=True)
+        pieces[f"C{i + 1}"] = path
+    allp = pathops.Path()
+    for p in pieces.values():
+        allp = pathops.op(allp, p, pathops.PathOp.UNION)
+    return pieces, allp.bounds
 
 
 def d_attr(path):
