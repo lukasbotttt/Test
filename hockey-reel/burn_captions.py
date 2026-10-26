@@ -161,6 +161,21 @@ if len(sys.argv) > 1 and sys.argv[1] == "40m":
         "cta": "NHL or Europe? Which is fairer?",
     }
 
+if len(sys.argv) > 1 and sys.argv[1] == "41":
+    import reel41_icing as IC41
+    SRC, DST = "reel41_icing.mp4", "reel41_icing_cap.mp4"
+    CAP_Y = 1710                                  # dunkler Motion-Look
+    VO, TIMING, END = IC41, "reel41_timing.json", IC41.DUR - 0.1
+    WORDS = {
+        "q": "Three shots. Only ONE is icing.",
+        "lock": "Which one?",
+        "r1": "One touches the red line. No icing.",
+        "r3": "Three is over it. No icing.",
+        "r2": "But two never touched it. Icing!",
+        "twist": "For a goal? The whole puck. For icing? Just a touch.",
+        "cta": "Did you get it? Follow for part four.",
+    }
+
 
 def chunks():
     """-> Liste (t0, t1, [(wort, t_wort)])"""
