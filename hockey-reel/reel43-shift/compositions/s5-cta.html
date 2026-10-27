@@ -1,0 +1,147 @@
+<template id="s5-cta-template">
+  <!-- S5 CTA · global 15,3–18,5 s (F459–554), lokal = global − 459. "How many seconds would YOU last?" -> Zahl kommentieren. -->
+  <div data-composition-id="s5-cta" data-width="1080" data-height="1920" data-duration="3.2">
+    <div class="scn">
+      <div class="cam" id="s5cam" data-layout-allow-overflow>
+        <div class="sky"></div>
+        <div id="s5bokeh" class="bokeh"></div>
+        <div id="s5watchwrap" class="watchwrap">
+          <svg class="watch" viewBox="0 0 600 680">
+            <defs>
+              <radialGradient id="s5face" cx="0.5" cy="0.42" r="0.6">
+                <stop offset="0" stop-color="#1b1830"/><stop offset="1" stop-color="#05040b"/>
+              </radialGradient>
+            </defs>
+            <rect x="262" y="8" width="76" height="44" rx="10" fill="#14121f" stroke="#c6ff2e" stroke-width="6"/>
+            <rect x="284" y="50" width="32" height="44" fill="#14121f" stroke="#c6ff2e" stroke-width="6"/>
+            <rect x="470" y="96" width="56" height="34" rx="8" fill="#14121f" stroke="#c6ff2e" stroke-width="6" transform="rotate(42 498 113)"/>
+            <circle cx="300" cy="380" r="272" fill="url(#s5face)" stroke="#c6ff2e" stroke-width="14"/>
+            <circle cx="300" cy="380" r="236" fill="none" stroke="#ffffff" stroke-opacity="0.12" stroke-width="4"/>
+            <g id="s5ticks"></g>
+            <text id="s5read" x="300" y="440" text-anchor="middle" class="read">00</text>
+            <text x="300" y="520" text-anchor="middle" class="unit">SEC</text>
+          </svg>
+        </div>
+        <div class="vig" data-layout-ignore></div>
+      </div>
+      <div id="s5how" class="how">HOW MANY SECONDS</div>
+      <div id="s5last" class="last">WOULD <u>YOU</u> LAST?</div>
+      <div id="s5bubble" class="bubble">DROP A NUMBER</div>
+      <svg id="s5arrow" class="arrow" viewBox="0 0 220 200"><g fill="none" stroke="#c6ff2e" stroke-width="22" stroke-linecap="round" stroke-linejoin="round">
+        <polyline points="30,40 110,120 190,40"/><polyline points="30,100 110,180 190,100" opacity="0.55"/></g></svg>
+      <div id="s5field" class="field"><div class="avatar"></div><div class="ph">Add comment…</div><i id="s5cursor"></i></div>
+      <div class="handle">@BLADESANDPUCKS</div>
+      <div id="s5flash" class="flash"></div>
+    </div>
+
+    <style>
+      @font-face { font-family: "Anton"; src: url("fonts/Anton.ttf"); }
+      @font-face { font-family: "ArchivoX"; src: url("fonts/ArchivoX900.ttf"); }
+      @font-face { font-family: "JBMono"; src: url("fonts/JBMono700.ttf"); }
+      [data-composition-id="s5-cta"] .scn { position: relative; width: 1080px; height: 1920px; overflow: hidden; background: #03060f; }
+      [data-composition-id="s5-cta"] .cam { position: absolute; left: 0; top: 0; width: 1080px; height: 1920px; }
+      [data-composition-id="s5-cta"] .sky { position: absolute; inset: 0;
+        background: radial-gradient(ellipse 60% 40% at 25% 35%, rgba(0,140,255,0.35), rgba(0,0,0,0) 70%),
+                    radial-gradient(ellipse 60% 40% at 80% 75%, rgba(198,255,46,0.18), rgba(0,0,0,0) 70%), #03060f; }
+      [data-composition-id="s5-cta"] .bokeh { position: absolute; inset: 0; }
+      [data-composition-id="s5-cta"] .bk { position: absolute; border-radius: 50%; }
+      [data-composition-id="s5-cta"] .watchwrap { position: absolute; left: 320px; top: 560px; width: 440px; height: 499px; }
+      [data-composition-id="s5-cta"] .watch { width: 440px; height: 499px;
+        filter: drop-shadow(0 0 24px rgba(198,255,46,0.7)) drop-shadow(0 40px 50px rgba(0,0,0,0.9)); }
+      [data-composition-id="s5-cta"] .read { font-family: "Anton", sans-serif; font-size: 220px; fill: #ffffff; }
+      [data-composition-id="s5-cta"] .unit { font-family: "JBMono", monospace; font-size: 48px; fill: #c6ff2e; letter-spacing: 6px; }
+      [data-composition-id="s5-cta"] .vig { position: absolute; inset: 0; background: radial-gradient(ellipse at center, rgba(0,0,0,0) 50%, rgba(0,0,0,0.78) 100%); }
+      [data-composition-id="s5-cta"] .how { position: absolute; left: 0; top: 150px; width: 1080px; text-align: center; white-space: nowrap;
+        font-family: "Anton", sans-serif; font-size: 128px; line-height: 1; color: #fff; text-shadow: 0 10px 40px rgba(0,0,0,0.85); }
+      [data-composition-id="s5-cta"] .last { position: absolute; left: 0; top: 300px; width: 1080px; text-align: center; white-space: nowrap; opacity: 0;
+        font-family: "Anton", sans-serif; font-size: 150px; line-height: 1; color: #00f0ff;
+        text-shadow: 0 0 22px rgba(0,240,255,0.85), 0 10px 40px rgba(0,0,0,0.85); }
+      [data-composition-id="s5-cta"] .last u { text-decoration: none; color: #c6ff2e; text-shadow: 0 0 22px rgba(198,255,46,0.9), 0 10px 40px rgba(0,0,0,0.85); }
+      [data-composition-id="s5-cta"] .bubble { position: absolute; left: 110px; top: 1150px; width: 860px; height: 170px; border-radius: 85px;
+        background: rgba(12,20,0,0.9); border: 5px solid #c6ff2e;
+        box-shadow: 0 0 40px rgba(198,255,46,0.9), inset 0 0 40px rgba(198,255,46,0.3);
+        font-family: "ArchivoX", sans-serif; font-size: 74px; line-height: 170px; color: #fff; text-align: center; white-space: nowrap;
+        text-shadow: 0 0 20px rgba(198,255,46,0.95), 0 0 50px rgba(198,255,46,0.6); transform-origin: 50% 50%; }
+      [data-composition-id="s5-cta"] .arrow { position: absolute; left: 470px; top: 1350px; width: 140px; height: 128px; opacity: 0;
+        filter: drop-shadow(0 0 16px rgba(198,255,46,0.9)); }
+      [data-composition-id="s5-cta"] .field { position: absolute; left: 140px; top: 1520px; width: 800px; height: 110px; border-radius: 55px;
+        background: #121826; border: 3px solid #34405a; }
+      [data-composition-id="s5-cta"] .avatar { position: absolute; left: 18px; top: 18px; width: 68px; height: 68px; border-radius: 50%;
+        background: linear-gradient(135deg, #00f0ff, #c6ff2e); }
+      [data-composition-id="s5-cta"] .ph { position: absolute; left: 110px; top: 0; height: 104px; line-height: 104px; font-family: "JBMono", monospace;
+        font-size: 38px; color: #7d8aa3; }
+      [data-composition-id="s5-cta"] .field i { position: absolute; left: 108px; top: 30px; width: 5px; height: 46px; background: #c6ff2e; }
+      [data-composition-id="s5-cta"] .handle { position: absolute; left: 0; top: 1760px; width: 1080px; text-align: center;
+        font-family: "JBMono", monospace; font-size: 40px; color: #ffffff; letter-spacing: 4px; opacity: 0.85; }
+      [data-composition-id="s5-cta"] .flash { position: absolute; inset: 0; background: #fff; opacity: 0; }
+    </style>
+
+    <script src="vendor/gsap.min.js"></script>
+    <script>
+      (function () {
+        const OFF = 459;
+        const G = (f) => (f - OFF) / 30;
+        const D = (n) => n / 30;
+        const rng = (s) => () => { s |= 0; s = (s + 0x6D2B79F5) | 0; let t = Math.imul(s ^ (s >>> 15), 1 | s);
+          t = (t + Math.imul(t ^ (t >>> 7), 61 | t)) ^ t; return ((t ^ (t >>> 14)) >>> 0) / 4294967296; };
+        const tl = gsap.timeline({ paused: true });
+        const shake = (el, f0, n, amp, seed) => { const r = rng(seed);
+          for (let i = 0; i < n; i++) { const k = amp * (1 - i / n); tl.set(el, { x: (r() * 2 - 1) * k, y: (r() * 2 - 1) * k }, G(f0 + i)); }
+          tl.set(el, { x: 0, y: 0 }, G(f0 + n)); };
+
+        (function () { const g = document.querySelector("#s5ticks"), ns = "http://www.w3.org/2000/svg";
+          for (let i = 0; i < 60; i++) { const a = i * 6 * Math.PI / 180, long = i % 5 === 0;
+            const r1 = long ? 196 : 212, r2 = 230, l = document.createElementNS(ns, "line");
+            l.setAttribute("x1", 300 + Math.sin(a) * r1); l.setAttribute("y1", 380 - Math.cos(a) * r1);
+            l.setAttribute("x2", 300 + Math.sin(a) * r2); l.setAttribute("y2", 380 - Math.cos(a) * r2);
+            l.setAttribute("stroke", long ? "#c6ff2e" : "#5d6b80"); l.setAttribute("stroke-width", long ? 8 : 4);
+            g.appendChild(l); } })();
+        (function () { const box = document.querySelector("#s5bokeh"), r = rng(19);
+          const cols = ["rgba(0,240,255,0.35)", "rgba(198,255,46,0.28)", "rgba(0,140,255,0.3)"];
+          for (let i = 0; i < 18; i++) {
+            const d = document.createElement("div"); d.className = "bk";
+            const s = 30 + r() * 110; d.style.width = s + "px"; d.style.height = s + "px";
+            d.style.left = Math.round(r() * 1080) + "px"; d.style.top = Math.round(r() * 1920) + "px";
+            d.style.background = cols[i % 3]; d.style.filter = "blur(" + Math.round(4 + r() * 10) + "px)";
+            box.appendChild(d);
+            tl.fromTo(d, { y: 0 }, { y: -120 - r() * 160, duration: D(96), ease: "none" }, G(459));
+          } })();
+
+        // F465 Schnitt rein: Frage schießt von unten rein, Uhr fährt hoch
+        tl.fromTo("#s5how", { y: 1700 }, { y: 0, duration: D(10), ease: "expo.out" }, G(465));
+        tl.fromTo("#s5watchwrap", { y: 900, rotation: 8 }, { y: 0, rotation: 0, duration: D(14), ease: "expo.out" }, G(466));
+        tl.to("#s5watchwrap", { scale: 1.06, duration: D(80), ease: "none" }, G(480));
+        tl.fromTo("#s5field", { y: 500 }, { y: 0, duration: D(12), ease: "expo.out" }, G(470));
+        // F490 WOULD YOU LAST? (auf "would you last")
+        tl.fromTo("#s5last", { opacity: 0, scale: 1.8 }, { opacity: 1, scale: 1, duration: D(5), ease: "power4.in" }, G(488));
+        shake("#s5cam", 493, 8, 24, 91);
+        // Anzeige würfelt Zahlen, bleibt bei "??" stehen (F510)
+        (function () { const r = rng(23);
+          for (let f = 468; f < 510; f += 3) tl.set("#s5read", { textContent: String(5 + Math.floor(r() * 55)).padStart(2, "0") }, G(f));
+          tl.set("#s5read", { textContent: "??", fill: "#c6ff2e" }, G(510));
+        })();
+        tl.fromTo("#s5watchwrap", { filter: "brightness(1.8)" }, { filter: "brightness(1)", duration: D(10), ease: "power2.out" }, G(510));
+        // F494 Bubble DROP A NUMBER (steht ≥ 2 s bis zum Ende), Puls auf "drop" (F514), Pfeil aufs Kommentarfeld, Cursor blinkt
+        tl.fromTo("#s5bubble", { scale: 0 }, { scale: 1, duration: D(8), ease: "back.out(2.6)" }, G(494));
+        tl.set("#s5bubble", { scale: 1.1 }, G(514));
+        tl.to("#s5bubble", { scale: 1, duration: D(8), ease: "power2.out" }, G(514));
+        tl.fromTo("#s5arrow", { opacity: 0, y: -60 }, { opacity: 1, y: 0, duration: D(6), ease: "back.out(2)" }, G(500));
+        [525, 540].forEach((f) => {
+          tl.to("#s5arrow", { y: 30, duration: D(5), ease: "power2.out", yoyo: true, repeat: 1 }, G(f));
+        });
+        for (let f = 466; f < 555; f += 8) tl.set("#s5cursor", { opacity: (f - 466) / 8 % 2 < 1 ? 1 : 0 }, G(f));
+        // F525 Sub-Bass-Impact
+        tl.set("#s5bubble", { scale: 1.18 }, G(525));
+        tl.to("#s5bubble", { scale: 1, duration: D(12), ease: "power3.out" }, G(525));
+        tl.set("#s5flash", { opacity: 0.35 }, G(525));
+        tl.to("#s5flash", { opacity: 0, duration: D(5), ease: "power2.in" }, G(525));
+        shake("#s5cam", 525, 10, 32, 92);
+        tl.set("#s5bubble", { scale: 1.07 }, G(540));
+        tl.to("#s5bubble", { scale: 1, duration: D(8), ease: "power2.out" }, G(540));
+
+        window.__timelines = window.__timelines || {};
+        window.__timelines["s5-cta"] = tl;
+      })();
+    </script>
+  </div>
+</template>

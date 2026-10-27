@@ -1,0 +1,195 @@
+<template id="s2-sprint-template">
+  <!-- S2 SPRINT · global 3,3–8,7 s (F99–260), lokal = global − 99. Jeder Wechsel = Sprint, Akku leer nach 30–40 s. -->
+  <div data-composition-id="s2-sprint" data-width="1080" data-height="1920" data-duration="5.4">
+    <div class="scn">
+      <div class="cam" id="s2cam" data-layout-allow-overflow>
+        <div class="sky"></div>
+        <div id="s2streaks" class="streaks"></div>
+        <!-- Vordergrund: Akku (Vektor/CSS) -->
+        <div id="s2bat" class="bat">
+          <div class="cap"></div>
+          <div class="body"><div id="s2fill" class="fill"></div>
+            <i style="top:20%"></i><i style="top:40%"></i><i style="top:60%"></i><i style="top:80%"></i></div>
+        </div>
+        <div class="col">
+          <div class="lab">SHIFT CLOCK</div>
+          <div id="s2clock" class="clock">0:00</div>
+          <div class="lab lab2">ENERGY</div>
+          <div id="s2pct" class="pct">100%</div>
+        </div>
+        <svg class="ekg" viewBox="0 0 1080 160" data-layout-allow-overflow>
+          <g id="s2ekg"><path id="s2ekgpath" d="" fill="none" stroke="#ff2b6a" stroke-width="7" stroke-linejoin="round"/></g>
+        </svg>
+        <div id="s2red" class="red" data-layout-ignore></div>
+        <div class="vig" data-layout-ignore></div>
+      </div>
+      <div id="s2a" class="grp">
+        <div class="every">EVERY SHIFT IS AN</div>
+        <div id="s2allout" class="allout">ALL-OUT</div>
+        <div id="s2sprint" class="big">
+          <span class="lay r" aria-hidden="true" data-layout-allow-overlap>SPRINT</span><span class="lay c" aria-hidden="true" data-layout-allow-overlap>SPRINT</span><span class="lay main" data-layout-allow-overlap>SPRINT</span></div>
+      </div>
+      <div id="s2b" class="grp">
+        <div id="s2range" class="range">30–40 SEC</div>
+        <div id="s2full" class="full">AT FULL SPEED</div>
+      </div>
+      <div id="s2ex" class="ex">
+        <span class="lay r" aria-hidden="true" data-layout-allow-overlap>EXHAUSTED</span><span class="lay c" aria-hidden="true" data-layout-allow-overlap>EXHAUSTED</span><span class="lay main" data-layout-allow-overlap>EXHAUSTED</span></div>
+      <div id="s2quote" class="quote">“…for 30 to 40 seconds, you’re going to get tired and it’s time for a change.”<b>JT BROWN, EX-NHL FORWARD · NHL.COM</b></div>
+      <div id="s2flash" class="flash"></div>
+    </div>
+
+    <style>
+      @font-face { font-family: "Anton"; src: url("fonts/Anton.ttf"); }
+      @font-face { font-family: "JBMono"; src: url("fonts/JBMono700.ttf"); }
+      [data-composition-id="s2-sprint"] .scn { position: relative; width: 1080px; height: 1920px; overflow: hidden; background: #020611; }
+      [data-composition-id="s2-sprint"] .cam { position: absolute; left: 0; top: 0; width: 1080px; height: 1920px; }
+      [data-composition-id="s2-sprint"] .sky { position: absolute; inset: 0;
+        background: radial-gradient(ellipse 80% 40% at 50% 55%, rgba(0,200,255,0.22), rgba(0,0,0,0) 70%),
+                    radial-gradient(ellipse 60% 30% at 50% 15%, rgba(255,214,0,0.12), rgba(0,0,0,0) 70%), #020611; }
+      [data-composition-id="s2-sprint"] .streaks { position: absolute; inset: 0; }
+      [data-composition-id="s2-sprint"] .st { position: absolute; left: 1100px; height: 6px; border-radius: 3px; }
+      [data-composition-id="s2-sprint"] .bat { position: absolute; left: 160px; top: 660px; width: 300px; height: 620px; }
+      [data-composition-id="s2-sprint"] .cap { position: absolute; left: 90px; top: 0; width: 120px; height: 44px; border-radius: 12px 12px 0 0; background: #c9f3ff;
+        box-shadow: 0 0 20px rgba(0,240,255,0.8); }
+      [data-composition-id="s2-sprint"] .body { position: absolute; left: 0; top: 40px; width: 300px; height: 580px; border-radius: 36px;
+        border: 12px solid #c9f3ff; background: rgba(4,10,24,0.9); overflow: hidden;
+        box-shadow: 0 0 30px rgba(0,240,255,0.7), 0 30px 60px rgba(0,0,0,0.8); }
+      [data-composition-id="s2-sprint"] .fill { position: absolute; left: 14px; bottom: 14px; width: 248px; height: 528px; border-radius: 18px;
+        background: #c6ff2e; box-shadow: 0 0 30px rgba(198,255,46,0.9); }
+      [data-composition-id="s2-sprint"] .body i { position: absolute; left: 0; width: 276px; height: 8px; background: rgba(4,10,24,0.9); }
+      [data-composition-id="s2-sprint"] .col { position: absolute; left: 540px; top: 690px; width: 460px; }
+      [data-composition-id="s2-sprint"] .lab { font-family: "JBMono", monospace; font-size: 40px; color: #00f0ff; letter-spacing: 3px;
+        text-shadow: 0 0 14px rgba(0,240,255,0.8); }
+      [data-composition-id="s2-sprint"] .lab2 { margin-top: 40px; }
+      [data-composition-id="s2-sprint"] .clock { font-family: "Anton", sans-serif; font-size: 200px; line-height: 1.05; color: #fff;
+        text-shadow: 0 0 24px rgba(255,255,255,0.5); }
+      [data-composition-id="s2-sprint"] .pct { font-family: "Anton", sans-serif; font-size: 150px; line-height: 1.05; color: #c6ff2e;
+        text-shadow: 0 0 24px rgba(198,255,46,0.7); }
+      [data-composition-id="s2-sprint"] .ekg { position: absolute; left: 0; top: 1380px; width: 1080px; height: 160px; overflow: visible;
+        filter: drop-shadow(0 0 10px rgba(255,43,106,0.95)); }
+      [data-composition-id="s2-sprint"] .red { position: absolute; inset: 0; opacity: 0;
+        background: radial-gradient(ellipse at center, rgba(255,0,40,0) 35%, rgba(255,0,40,0.55) 100%); }
+      [data-composition-id="s2-sprint"] .vig { position: absolute; inset: 0; background: radial-gradient(ellipse at center, rgba(0,0,0,0) 55%, rgba(0,0,0,0.75) 100%); }
+      [data-composition-id="s2-sprint"] .grp { position: absolute; left: 0; top: 0; width: 1080px; height: 640px; }
+      [data-composition-id="s2-sprint"] .every { position: absolute; left: 0; top: 140px; width: 1080px; text-align: center; opacity: 0;
+        font-family: "Anton", sans-serif; font-size: 96px; line-height: 1; color: #fff; text-shadow: 0 10px 40px rgba(0,0,0,0.9); }
+      [data-composition-id="s2-sprint"] .allout { position: absolute; left: 0; top: 262px; width: 1080px; text-align: center; opacity: 0;
+        font-family: "JBMono", monospace; font-size: 64px; color: #00f0ff; letter-spacing: 14px; text-shadow: 0 0 18px rgba(0,240,255,0.9); }
+      [data-composition-id="s2-sprint"] .big { position: absolute; left: 0; top: 330px; width: 1080px; height: 300px; opacity: 0;
+        font-family: "Anton", sans-serif; font-size: 270px; line-height: 1; text-align: center; }
+      [data-composition-id="s2-sprint"] .lay { position: absolute; left: 0; top: 0; width: 1080px; text-align: center; }
+      [data-composition-id="s2-sprint"] .lay.r { color: #ff0050; mix-blend-mode: screen; }
+      [data-composition-id="s2-sprint"] .lay.c { color: #00f0ff; mix-blend-mode: screen; }
+      [data-composition-id="s2-sprint"] .big .lay.main { color: #ffffff; -webkit-text-stroke: 5px #00121a; paint-order: stroke fill;
+        text-shadow: 0 0 20px rgba(0,240,255,0.9), 0 0 70px rgba(0,240,255,0.55), 0 12px 40px rgba(0,0,0,0.9); }
+      [data-composition-id="s2-sprint"] .range { position: absolute; left: 0; top: 170px; width: 1080px; text-align: center; opacity: 0;
+        font-family: "Anton", sans-serif; font-size: 230px; line-height: 1; color: #ffd600;
+        text-shadow: 0 0 22px rgba(255,214,0,0.85), 0 12px 40px rgba(0,0,0,0.9); }
+      [data-composition-id="s2-sprint"] .full { position: absolute; left: 0; top: 430px; width: 1080px; text-align: center; opacity: 0;
+        font-family: "Anton", sans-serif; font-size: 110px; line-height: 1; color: #fff; text-shadow: 0 10px 40px rgba(0,0,0,0.9); }
+      [data-composition-id="s2-sprint"] .ex { position: absolute; left: 0; top: 230px; width: 1080px; height: 240px; opacity: 0;
+        font-family: "Anton", sans-serif; font-size: 210px; line-height: 1; text-align: center; }
+      [data-composition-id="s2-sprint"] .ex .lay.main { color: #ff1744; -webkit-text-stroke: 5px #14000a; paint-order: stroke fill;
+        text-shadow: 0 0 20px rgba(255,23,68,0.95), 0 0 70px rgba(255,23,68,0.6), 0 12px 40px rgba(0,0,0,0.9); }
+      [data-composition-id="s2-sprint"] .quote { position: absolute; left: 70px; top: 1620px; width: 940px; padding: 26px 34px; border-radius: 26px; opacity: 0;
+        background: rgba(6,14,30,0.86); border: 3px solid rgba(0,240,255,0.55);
+        font-family: "JBMono", monospace; font-size: 33px; line-height: 1.35; color: #e6f7ff; }
+      [data-composition-id="s2-sprint"] .quote b { display: block; margin-top: 12px; font-size: 28px; color: #00f0ff; letter-spacing: 2px; }
+      [data-composition-id="s2-sprint"] .flash { position: absolute; inset: 0; background: #fff; opacity: 0; }
+    </style>
+
+    <script src="vendor/gsap.min.js"></script>
+    <script>
+      (function () {
+        const OFF = 99;
+        const G = (f) => (f - OFF) / 30;
+        const D = (n) => n / 30;
+        const rng = (s) => () => { s |= 0; s = (s + 0x6D2B79F5) | 0; let t = Math.imul(s ^ (s >>> 15), 1 | s);
+          t = (t + Math.imul(t ^ (t >>> 7), 61 | t)) ^ t; return ((t ^ (t >>> 14)) >>> 0) / 4294967296; };
+        const tl = gsap.timeline({ paused: true });
+        const shake = (el, f0, n, amp, seed) => { const r = rng(seed);
+          for (let i = 0; i < n; i++) { const k = amp * (1 - i / n); tl.set(el, { x: (r() * 2 - 1) * k, y: (r() * 2 - 1) * k }, G(f0 + i)); }
+          tl.set(el, { x: 0, y: 0 }, G(f0 + n)); };
+        const split = (sel, f0, n, amp, seed) => { const r = rng(seed);
+          for (let i = 0; i < n; i++) { const a = amp * (0.4 + 0.6 * r());
+            tl.set(sel + " .r", { x: -a, y: (r() - 0.5) * 6 }, G(f0 + i)); tl.set(sel + " .c", { x: a, y: (r() - 0.5) * 6 }, G(f0 + i)); }
+          tl.set([sel + " .r", sel + " .c"], { x: 0, y: 0 }, G(f0 + n)); };
+
+        // Speed-Streifen: rasen nach links, werden zum Ende hin schneller (Sprint)
+        (function () { const box = document.querySelector("#s2streaks"), r = rng(5);
+          const cols = ["rgba(0,240,255,0.55)", "rgba(255,255,255,0.35)", "rgba(255,214,0,0.4)", "rgba(0,140,255,0.5)"];
+          for (let i = 0; i < 34; i++) {
+            const d = document.createElement("div"); d.className = "st";
+            const w = 160 + r() * 520; d.style.width = w + "px"; d.style.top = Math.round(r() * 1920) + "px";
+            d.style.background = cols[i % 4]; d.style.opacity = (0.35 + r() * 0.65).toFixed(2);
+            box.appendChild(d);
+            let f = 99 + Math.floor(r() * 14);
+            while (f < 261) { const dur = Math.max(4, Math.round((12 + r() * 10) * (1 - 0.55 * (f - 99) / 162)));
+              tl.fromTo(d, { x: 0 }, { x: -1100 - w - 40, duration: D(dur), ease: "none" }, G(f)); f += dur; }
+          } })();
+
+        // EKG-Linie: Zacken werden immer dichter (Puls rast), Linie scrollt nach links
+        (function () { let x = 0, d = "M0 80", gap = 300;
+          while (x < 4400) { d += " L" + (x + gap * 0.55) + " 80 L" + (x + gap * 0.6) + " 100 L" + (x + gap * 0.66) + " 10 L" + (x + gap * 0.72) + " 150 L" + (x + gap * 0.78) + " 80 L" + (x + gap) + " 80";
+            x += gap; gap = Math.max(70, gap * 0.9); }
+          document.querySelector("#s2ekgpath").setAttribute("d", d); })();
+        tl.fromTo("#s2ekg", { x: 0 }, { x: -3300, duration: D(162), ease: "power1.in" }, G(99));
+
+        // F105 Schnitt rein · F110 "EVERY SHIFT IS AN" · F141 ALL-OUT · F150 SPRINT-Slam (Kamera-Stoß)
+        tl.fromTo("#s2bat", { y: 900, rotation: -8 }, { y: 0, rotation: 0, duration: D(12), ease: "expo.out" }, G(105));
+        tl.fromTo('[data-composition-id="s2-sprint"] .col', { x: 600 }, { x: 0, duration: D(12), ease: "expo.out" }, G(108));
+        tl.fromTo('[data-composition-id="s2-sprint"] .every', { opacity: 0, y: -60 }, { opacity: 1, y: 0, duration: D(6), ease: "power3.out" }, G(110));
+        tl.fromTo("#s2allout", { opacity: 0, scale: 1.6 }, { opacity: 1, scale: 1, duration: D(5), ease: "power3.out" }, G(140));
+        tl.fromTo("#s2sprint", { opacity: 0, scale: 2.4 }, { opacity: 1, scale: 1, duration: D(5), ease: "power4.in" }, G(146));
+        split("#s2sprint", 151, 10, 20, 41);
+        shake("#s2cam", 151, 10, 40, 42);
+        tl.set("#s2flash", { opacity: 0.5 }, G(151));
+        tl.to("#s2flash", { opacity: 0, duration: D(5), ease: "power2.in" }, G(151));
+        tl.set("#s2sprint", { scale: 1.06 }, G(165));
+        tl.to("#s2sprint", { scale: 1, duration: D(8), ease: "power2.out" }, G(165));
+
+        // Uhr + Akku: 0:00 -> 0:30 bis F179, 0:30 -> 0:40 bis F239; Energie 100 % -> 70 % -> 0 %
+        for (let f = 105; f <= 239; f += 2) {
+          const s = f <= 179 ? 30 * (f - 105) / 74 : 30 + 10 * (f - 179) / 60;
+          const e = f <= 179 ? 100 - 30 * (f - 105) / 74 : 70 * (1 - Math.pow((f - 179) / 60, 0.8));
+          tl.set("#s2clock", { textContent: "0:" + String(Math.floor(s)).padStart(2, "0") }, G(f));
+          tl.set("#s2pct", { textContent: Math.max(0, Math.round(e)) + "%" }, G(f));
+        }
+        tl.fromTo("#s2fill", { height: 528 }, { height: 528 * 0.7, duration: D(74), ease: "none" }, G(105));
+        tl.to("#s2fill", { height: 6, duration: D(60), ease: "power1.out" }, G(179));
+        tl.to("#s2fill", { backgroundColor: "#ffd600", boxShadow: "0 0 30px rgba(255,214,0,0.9)", duration: D(20), ease: "none" }, G(179));
+        tl.to("#s2pct", { color: "#ffd600", duration: D(20), ease: "none" }, G(179));
+        tl.to("#s2fill", { backgroundColor: "#ff1744", boxShadow: "0 0 30px rgba(255,23,68,0.95)", duration: D(24), ease: "none" }, G(212));
+        tl.to("#s2pct", { color: "#ff1744", duration: D(24), ease: "none" }, G(212));
+        tl.to("#s2clock", { color: "#ff1744", duration: D(24), ease: "none" }, G(212));
+
+        // F176: Gruppe A fliegt raus, F179 "30–40 SEC" (auf "thirty"), F204 "AT FULL SPEED"
+        tl.to("#s2a", { y: -520, opacity: 0, duration: D(6), ease: "power3.in" }, G(174));
+        tl.fromTo("#s2range", { opacity: 0, scale: 2.2 }, { opacity: 1, scale: 1, duration: D(5), ease: "power4.in" }, G(175));
+        shake("#s2cam", 180, 8, 26, 43);
+        tl.fromTo("#s2full", { opacity: 0, x: -800 }, { opacity: 1, x: 0, duration: D(7), ease: "expo.out" }, G(203));
+        [195, 210, 225].forEach((f) => {
+          tl.set("#s2range", { scale: 1.07 }, G(f));
+          tl.to("#s2range", { scale: 1, duration: D(8), ease: "power2.out" }, G(f));
+        });
+        tl.fromTo("#s2quote", { opacity: 0, y: 40 }, { opacity: 1, y: 0, duration: D(8), ease: "power2.out" }, G(158));
+
+        // F239 EXHAUSTED (Herzschlag): rote Vignette pulsiert, Akku blinkt, alles wackelt
+        tl.to("#s2b", { y: -520, opacity: 0, duration: D(5), ease: "power3.in" }, G(234));
+        tl.fromTo("#s2ex", { opacity: 0, scale: 2.4 }, { opacity: 1, scale: 1, duration: D(4), ease: "power4.in" }, G(235));
+        split("#s2ex", 239, 16, 24, 44);
+        shake("#s2cam", 239, 14, 46, 45);
+        [239, 247, 254].forEach((f, i) => {
+          tl.set("#s2red", { opacity: i === 1 ? 0.6 : 1 }, G(f));
+          tl.to("#s2red", { opacity: 0.25, duration: D(6), ease: "power2.out" }, G(f));
+          tl.set("#s2bat", { opacity: 0.35 }, G(f + 3));
+          tl.set("#s2bat", { opacity: 1 }, G(f + 5));
+        });
+
+        window.__timelines = window.__timelines || {};
+        window.__timelines["s2-sprint"] = tl;
+      })();
+    </script>
+  </div>
+</template>
