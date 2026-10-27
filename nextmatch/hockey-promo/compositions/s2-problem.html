@@ -1,0 +1,145 @@
+<template id="s2-problem-template">
+  <!-- S2 PROBLEM · global 2,8–7,2 s (F84–215), lokal = global − 84. Langweilige Spieltagsgrafik schmilzt, Reichweite stürzt ab. -->
+  <div data-composition-id="s2-problem" data-width="1080" data-height="1920" data-duration="4.4">
+    <div class="scn">
+      <div class="cam" id="s2cam">
+        <div class="sky"></div>
+        <div id="s2rain" class="rain" data-layout-ignore></div>
+        <div id="s2card" class="card">
+          <div class="c1">GAME DAY</div>
+          <div class="c2">Team A vs Team B</div>
+          <div class="c3">Sunday · 7 pm · Ice Arena</div>
+          <svg class="drips" viewBox="0 0 640 400" preserveAspectRatio="none">
+            <rect id="s2d1" x="70" y="0" width="46" height="10" rx="23" fill="#b9b9b9"/>
+            <rect id="s2d2" x="210" y="0" width="34" height="10" rx="17" fill="#b9b9b9"/>
+            <rect id="s2d3" x="380" y="0" width="54" height="10" rx="27" fill="#b9b9b9"/>
+            <rect id="s2d4" x="520" y="0" width="30" height="10" rx="15" fill="#b9b9b9"/>
+          </svg>
+          <div class="likes"><span class="heart">♥</span> <span id="s2likes3">3</span><span id="s2likes0" class="zero">0</span></div>
+        </div>
+        <div id="s2curve" class="curve" data-layout-allow-overflow data-layout-ignore>
+          <svg width="1080" height="1920" viewBox="0 0 1080 1920">
+            <defs><filter id="s2glow"><feGaussianBlur stdDeviation="8" result="b"/><feMerge><feMergeNode in="b"/><feMergeNode in="SourceGraphic"/></feMerge></filter></defs>
+            <polyline filter="url(#s2glow)" fill="none" stroke="#ff1744" stroke-width="16" stroke-linejoin="round"
+              points="40,1560 120,1530 200,1550 280,1515 360,1535 440,1510 520,1525 600,1505 650,1515 700,1640 760,1760 820,1880 860,1960"/>
+          </svg>
+          <div class="reach">REACH</div>
+        </div>
+        <div class="vig" data-layout-ignore></div>
+      </div>
+      <div id="s2boring" class="txt" style="top:300px; font-size:220px">
+        <span class="lay r" aria-hidden="true" data-layout-allow-overlap>BORING</span><span class="lay c" aria-hidden="true" data-layout-allow-overlap>BORING</span><span class="lay main w" data-layout-allow-overlap>BORING</span></div>
+      <div id="s2inv" class="txt" style="top:540px; font-size:150px">
+        <span class="lay r" aria-hidden="true" data-layout-allow-overlap>= INVISIBLE</span><span class="lay c" aria-hidden="true" data-layout-allow-overlap>= INVISIBLE</span><span class="lay main red" data-layout-allow-overlap>= INVISIBLE</span></div>
+      <svg id="s2crack1" class="crack" viewBox="0 0 1080 1920"><g fill="none" stroke="#ffffff" stroke-width="5">
+        <polyline points="840,1840 780,1700 805,1610 720,1470 750,1350"/><polyline points="840,1840 950,1720 1000,1590 1080,1540"/>
+        <polyline points="840,1840 660,1830 580,1750 440,1780 340,1700"/><polyline points="805,1610 910,1560 970,1440"/>
+        <polyline points="580,1750 560,1620 480,1560"/></g></svg>
+      <svg id="s2crack2" class="crack" viewBox="0 0 1080 1920"><g fill="none" stroke="#ff4d6d" stroke-width="4">
+        <polyline points="840,1840 720,1900 560,1920"/><polyline points="750,1350 660,1240 680,1120"/>
+        <polyline points="440,1780 320,1860 180,1840 50,1900"/></g></svg>
+      <div id="s2pulse" class="pulse"></div>
+    </div>
+
+    <style>
+      @font-face { font-family: "Anton"; src: url("fonts/Anton.ttf"); }
+      @font-face { font-family: "JBMono"; src: url("fonts/JBMono700.ttf"); }
+      [data-composition-id="s2-problem"] .scn { position: relative; width: 1080px; height: 1920px; overflow: hidden; background: #01040c; }
+      [data-composition-id="s2-problem"] .cam { position: absolute; left: 0; top: 0; width: 1080px; height: 1920px; }
+      [data-composition-id="s2-problem"] .sky { position: absolute; inset: 0;
+        background: radial-gradient(ellipse 70% 45% at 30% 30%, rgba(0,90,255,0.35), rgba(0,0,0,0) 70%),
+                    radial-gradient(ellipse 60% 40% at 80% 80%, rgba(110,0,255,0.25), rgba(0,0,0,0) 70%), #01040c; }
+      [data-composition-id="s2-problem"] .rain { position: absolute; inset: 0; }
+      [data-composition-id="s2-problem"] .drop { position: absolute; top: -200px; width: 3px; height: 120px; border-radius: 2px;
+        background: linear-gradient(180deg, rgba(120,190,255,0), rgba(120,190,255,0.7)); }
+      [data-composition-id="s2-problem"] .card { position: absolute; left: 220px; top: 860px; width: 640px; height: 520px;
+        background: #c9c9c9; border-radius: 6px; box-shadow: 0 0 60px rgba(0,120,255,0.35); font-family: Arial, Helvetica, sans-serif; color: #333; }
+      [data-composition-id="s2-problem"] .c1 { position: absolute; left: 0; top: 70px; width: 640px; text-align: center; font-size: 64px; }
+      [data-composition-id="s2-problem"] .c2 { position: absolute; left: 0; top: 190px; width: 640px; text-align: center; font-size: 42px; }
+      [data-composition-id="s2-problem"] .c3 { position: absolute; left: 0; top: 270px; width: 640px; text-align: center; font-size: 32px; color: #555; }
+      [data-composition-id="s2-problem"] .drips { position: absolute; left: 0; top: 515px; width: 640px; height: 400px; }
+      [data-composition-id="s2-problem"] .likes { position: absolute; left: 30px; top: 430px; font-size: 40px; color: #666; }
+      [data-composition-id="s2-problem"] .heart { color: #999; }
+      [data-composition-id="s2-problem"] .zero { opacity: 0; margin-left: -24px; }
+      [data-composition-id="s2-problem"] .curve { position: absolute; left: 0; top: 0; width: 0px; height: 1920px; overflow: hidden; }
+      [data-composition-id="s2-problem"] .reach { position: absolute; left: 40px; top: 1440px; font-family: "JBMono", monospace; font-size: 34px;
+        color: #ff1744; letter-spacing: 3px; text-shadow: 0 0 14px rgba(255,23,68,0.9); }
+      [data-composition-id="s2-problem"] .vig { position: absolute; inset: 0; background: radial-gradient(ellipse at center, rgba(0,0,0,0) 50%, rgba(0,0,0,0.78) 100%); }
+      [data-composition-id="s2-problem"] .txt { position: absolute; left: 0; width: 1080px; height: 240px; opacity: 0;
+        font-family: "Anton", sans-serif; line-height: 1; text-align: center; }
+      [data-composition-id="s2-problem"] .lay { position: absolute; left: 0; top: 0; width: 1080px; text-align: center; white-space: nowrap; }
+      [data-composition-id="s2-problem"] .lay.r { color: #ff0050; mix-blend-mode: screen; }
+      [data-composition-id="s2-problem"] .lay.c { color: #00f0ff; mix-blend-mode: screen; }
+      [data-composition-id="s2-problem"] .lay.w { color: #fff; text-shadow: 0 10px 40px rgba(0,0,0,0.85); }
+      [data-composition-id="s2-problem"] .lay.red { color: #ff1744; -webkit-text-stroke: 4px #14000a; paint-order: stroke fill;
+        text-shadow: 0 0 18px rgba(255,23,68,0.9), 0 0 60px rgba(255,23,68,0.6); }
+      [data-composition-id="s2-problem"] .crack { position: absolute; left: 0; top: 0; width: 1080px; height: 1920px; opacity: 0;
+        filter: drop-shadow(0 0 8px rgba(255,255,255,0.8)); }
+      [data-composition-id="s2-problem"] .pulse { position: absolute; inset: 0; opacity: 0;
+        background: radial-gradient(ellipse at center, rgba(255,0,40,0) 35%, rgba(255,0,40,0.6) 100%); }
+    </style>
+
+    <script src="vendor/gsap.min.js"></script>
+    <script>
+      (function () {
+        const OFF = 84;
+        const G = (f) => (f - OFF) / 30;
+        const D = (n) => n / 30;
+        const rng = (s) => () => { s |= 0; s = (s + 0x6D2B79F5) | 0; let t = Math.imul(s ^ (s >>> 15), 1 | s);
+          t = (t + Math.imul(t ^ (t >>> 7), 61 | t)) ^ t; return ((t ^ (t >>> 14)) >>> 0) / 4294967296; };
+        const tl = gsap.timeline({ paused: true });
+        const shake = (el, f0, n, amp, seed) => { const r = rng(seed);
+          for (let i = 0; i < n; i++) { const k = amp * (1 - i / n); tl.set(el, { x: (r() * 2 - 1) * k, y: (r() * 2 - 1) * k }, G(f0 + i)); }
+          tl.set(el, { x: 0, y: 0 }, G(f0 + n)); };
+        const split = (sel, f0, n, amp, seed) => { const r = rng(seed);
+          for (let i = 0; i < n; i++) { const a = amp * (0.4 + 0.6 * r());
+            tl.set(sel + " .r", { x: -a, y: (r() - 0.5) * 6 }, G(f0 + i)); tl.set(sel + " .c", { x: a, y: (r() - 0.5) * 6 }, G(f0 + i)); }
+          tl.set([sel + " .r", sel + " .c"], { x: 0, y: 0 }, G(f0 + n)); };
+
+        // Regen: 40 Striche, deterministisch verteilt, fallen durchgehend (endliche Wiederholungen)
+        (function () { const box = document.querySelector("#s2rain"), r = rng(5);
+          for (let i = 0; i < 40; i++) {
+            const d = document.createElement("div"); d.className = "drop";
+            d.style.left = Math.round(r() * 1080) + "px"; d.style.opacity = (0.25 + 0.5 * r()).toFixed(2);
+            box.appendChild(d);
+            const dur = 0.45 + 0.3 * r();                 // Start versetzt (0..dur), vorher liegt der Tropfen oberhalb des Bildes
+            tl.fromTo(d, { y: 0 }, { y: 2200, duration: dur, ease: "none", repeat: Math.ceil(4.4 / dur) }, r() * dur);
+          } })();
+        // Langweilige Grafik: sinkt, kippt, "schmilzt" (Tropfen wachsen)
+        tl.fromTo("#s2card", { y: -40, rotation: 0 }, { y: 70, rotation: -4, duration: D(130), ease: "sine.in" }, G(84));
+        [["#s2d1", 260], ["#s2d2", 170], ["#s2d3", 340], ["#s2d4", 120]].forEach(([id, h], i) => {
+          tl.fromTo(id, { attr: { height: 10 } }, { attr: { height: h }, duration: D(110), ease: "power1.in" }, G(96 + i * 4));
+        });
+        // F96–160: Reichweiten-Kurve zeichnet Plateau
+        tl.fromTo("#s2curve", { width: 0 }, { width: 650, duration: D(64), ease: "none" }, G(96));
+        // F120 Vinyl-Scratch: BORING · F150: = INVISIBLE
+        tl.fromTo("#s2boring", { scale: 1.8, opacity: 0 }, { scale: 1, opacity: 1, duration: D(6), ease: "back.out(2)" }, G(120));
+        tl.fromTo("#s2inv", { scale: 1.8, opacity: 0 }, { scale: 1, opacity: 1, duration: D(6), ease: "back.out(2)" }, G(150));
+        (function () { const r = rng(31);
+          for (let f = 126; f < 206; f += 2) { const a = r() < 0.25 ? 12 : 3;
+            tl.set(["#s2boring", "#s2inv"], { x: (r() * 2 - 1) * a, rotation: (r() * 2 - 1) * 0.6 }, G(f)); }
+          tl.set(["#s2boring", "#s2inv"], { x: 0, rotation: 0 }, G(206)); })();
+        split("#s2boring", 120, 86, 9, 32);
+        split("#s2inv", 150, 56, 9, 33);
+        // F165–180: Kurve stürzt durch den unteren Rand; Likes fallen 3 -> 0
+        tl.to("#s2curve", { width: 1080, duration: D(15), ease: "power3.in" }, G(165));
+        tl.set("#s2likes3", { opacity: 0 }, G(172));
+        tl.set("#s2likes0", { opacity: 1 }, G(172));
+        // F180 / F188 Herzschlag: Risse, rote Vignette, Wackler
+        tl.set("#s2crack1", { opacity: 1, scale: 0.7, transformOrigin: "840px 1840px" }, G(180));
+        tl.to("#s2crack1", { scale: 1, duration: D(5), ease: "power4.out" }, G(180));
+        tl.set("#s2pulse", { opacity: 0.9 }, G(180));
+        tl.to("#s2pulse", { opacity: 0.15, duration: D(7), ease: "power2.out" }, G(180));
+        shake("#s2cam", 180, 8, 30, 34);
+        tl.set("#s2crack2", { opacity: 1, scale: 0.8, transformOrigin: "840px 1840px" }, G(188));
+        tl.to("#s2crack2", { scale: 1, duration: D(4), ease: "power4.out" }, G(188));
+        tl.set("#s2pulse", { opacity: 0.75 }, G(188));
+        tl.to("#s2pulse", { opacity: 0.1, duration: D(10), ease: "power2.out" }, G(188));
+        shake("#s2cam", 188, 6, 18, 35);
+
+        window.__timelines = window.__timelines || {};
+        window.__timelines["s2-problem"] = tl;
+      })();
+    </script>
+  </div>
+</template>

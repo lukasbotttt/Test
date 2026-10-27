@@ -1,0 +1,139 @@
+<template id="s3-solution-template">
+  <!-- S3 LÖSUNG · global 6,8–11,2 s (F204–335), lokal = global − 204. NEXT MATCH baut die Gameday-Karte live zusammen. -->
+  <div data-composition-id="s3-solution" data-width="1080" data-height="1920" data-duration="4.4">
+    <div class="scn">
+      <div class="cam" id="s3cam">
+        <div class="sky"></div>
+        <svg id="s3rays" class="rays" viewBox="-1000 -1000 2000 2000">
+          <g fill="#c6ff2e" opacity="0.10">
+            <path d="M0 0 L-70 -1000 L70 -1000 Z"/><path d="M0 0 L-70 -1000 L70 -1000 Z" transform="rotate(30)"/>
+            <path d="M0 0 L-70 -1000 L70 -1000 Z" transform="rotate(60)"/><path d="M0 0 L-70 -1000 L70 -1000 Z" transform="rotate(90)"/>
+            <path d="M0 0 L-70 -1000 L70 -1000 Z" transform="rotate(120)"/><path d="M0 0 L-70 -1000 L70 -1000 Z" transform="rotate(150)"/>
+            <path d="M0 0 L-70 -1000 L70 -1000 Z" transform="rotate(180)"/><path d="M0 0 L-70 -1000 L70 -1000 Z" transform="rotate(210)"/>
+            <path d="M0 0 L-70 -1000 L70 -1000 Z" transform="rotate(240)"/><path d="M0 0 L-70 -1000 L70 -1000 Z" transform="rotate(270)"/>
+            <path d="M0 0 L-70 -1000 L70 -1000 Z" transform="rotate(300)"/><path d="M0 0 L-70 -1000 L70 -1000 Z" transform="rotate(330)"/>
+          </g>
+        </svg>
+        <div class="ringwrap" data-layout-ignore style="top:690px"><svg id="s3ring1" class="ring" viewBox="0 0 900 900">
+          <circle cx="450" cy="450" r="440" fill="none" stroke="#c6ff2e" stroke-width="10" stroke-dasharray="220 60 40 60" stroke-linecap="round"/></svg></div>
+        <div class="ringwrap" data-layout-ignore style="top:640px"><svg id="s3ring3" class="ring" viewBox="0 0 900 900">
+          <circle cx="450" cy="450" r="446" fill="none" stroke="#f2ffd0" stroke-width="4" stroke-dasharray="30 50" stroke-linecap="round"/></svg></div>
+        <!-- Vordergrund-Objekt: Gameday-Karte -->
+        <div id="s3card" class="card">
+          <div id="s3gd" class="gd"><span class="gdr" aria-hidden="true" data-layout-allow-overlap>GAMEDAY</span><span class="gdw" data-layout-allow-overlap>GAMEDAY</span></div>
+          <svg id="s3home" class="crest home" viewBox="0 0 220 250">
+            <path d="M10 15 L110 0 L210 15 L210 135 C210 195 160 225 110 250 C60 225 10 195 10 135 Z" fill="#e1101e"/>
+            <path d="M24 26 L110 13 L196 26 L196 133 C196 186 152 212 110 234 C68 212 24 186 24 133 Z" fill="#0e0e12" stroke="#f6f7fa" stroke-width="3"/>
+            <rect x="24" y="52" width="172" height="32" fill="#e1101e"/>
+            <text x="110" y="74" text-anchor="middle" font-family="JBMono" font-size="17" fill="#fff" letter-spacing="3">FALKENSTADT</text>
+            <text x="110" y="170" text-anchor="middle" font-family="Anton" font-size="78" fill="#fff">ECF</text>
+          </svg>
+          <svg id="s3away" class="crest away" viewBox="0 0 240 240">
+            <circle cx="120" cy="120" r="116" fill="#1446d8"/>
+            <circle cx="120" cy="120" r="104" fill="none" stroke="#ffc400" stroke-width="5"/>
+            <circle cx="120" cy="120" r="76" fill="#ffc400"/>
+            <text x="120" y="152" text-anchor="middle" font-family="Anton" font-size="96" fill="#1446d8">W</text>
+          </svg>
+          <div id="s3vs" class="vs">VS</div>
+          <div id="s3bar" class="bar"><div class="barin">FR 30.10. · BULLY 20:00</div></div>
+        </div>
+        <div class="ringwrap" data-layout-ignore style="top:760px"><svg id="s3ring2" class="ring" viewBox="0 0 900 900">
+          <circle cx="450" cy="450" r="410" fill="none" stroke="#9cff00" stroke-width="7" stroke-dasharray="120 80 300 90" stroke-linecap="round"/></svg></div>
+        <div class="vig" data-layout-ignore></div>
+      </div>
+      <div id="s3pill" class="pill"><img src="assets/nm_symbol.svg" alt=""><span>NEXT MATCH</span></div>
+      <div id="s3max" class="t lime" style="top:340px; font-size:170px">MAXIMUM</div>
+      <div id="s3hype" class="t white" style="top:520px; font-size:230px">HYPE</div>
+      <div id="s3flash" class="lflash"></div>
+    </div>
+
+    <style>
+      @font-face { font-family: "Anton"; src: url("fonts/Anton.ttf"); }
+      @font-face { font-family: "JBMono"; src: url("fonts/JBMono700.ttf"); }
+      @font-face { font-family: "ArchivoX"; src: url("fonts/ArchivoX900.ttf"); }
+      [data-composition-id="s3-solution"] .scn { position: relative; width: 1080px; height: 1920px; overflow: hidden; background: #050801; }
+      [data-composition-id="s3-solution"] .cam { position: absolute; left: 0; top: 0; width: 1080px; height: 1920px; }
+      [data-composition-id="s3-solution"] .sky { position: absolute; inset: 0;
+        background: radial-gradient(ellipse 60% 40% at 50% 59%, rgba(198,255,46,0.32), rgba(0,0,0,0) 70%),
+                    radial-gradient(ellipse 80% 30% at 50% 10%, rgba(120,255,60,0.12), rgba(0,0,0,0) 70%), #050801; }
+      [data-composition-id="s3-solution"] .rays { position: absolute; left: -460px; top: 140px; width: 2000px; height: 2000px; }
+      [data-composition-id="s3-solution"] .ringwrap { position: absolute; left: 90px; width: 900px; height: 900px; transform: scaleY(0.30) rotate(-12deg); }
+      [data-composition-id="s3-solution"] .ring { position: absolute; left: 0; top: 0; width: 900px; height: 900px;
+        filter: drop-shadow(0 0 14px rgba(198,255,46,0.9)); }
+      [data-composition-id="s3-solution"] .card { position: absolute; left: 170px; top: 800px; width: 740px; height: 680px; border-radius: 30px;
+        background: linear-gradient(160deg, #15171f 0%, #07080b 100%); border: 4px solid #c6ff2e;
+        box-shadow: 0 0 50px rgba(198,255,46,0.55), 0 40px 80px rgba(0,0,0,0.8); overflow: hidden; }
+      [data-composition-id="s3-solution"] .gd { position: absolute; left: 0; top: 40px; width: 740px; height: 170px;
+        font-family: "Anton", sans-serif; font-size: 160px; line-height: 1; text-align: center; opacity: 0; }
+      [data-composition-id="s3-solution"] .gd span { position: absolute; left: 0; top: 0; width: 740px; text-align: center; }
+      [data-composition-id="s3-solution"] .gdr { color: #e1101e; transform: translate(10px, 9px); }
+      [data-composition-id="s3-solution"] .gdw { color: #f6f7fa; }
+      [data-composition-id="s3-solution"] .crest { position: absolute; top: 250px; filter: drop-shadow(0 0 22px rgba(255,255,255,0.25)); }
+      [data-composition-id="s3-solution"] .home { left: 50px; width: 220px; height: 250px; opacity: 0; }
+      [data-composition-id="s3-solution"] .away { left: 470px; width: 240px; height: 240px; opacity: 0; }
+      [data-composition-id="s3-solution"] .vs { position: absolute; left: 0; top: 300px; width: 740px; text-align: center; font-family: "Anton", sans-serif;
+        font-size: 130px; line-height: 1; color: #fff; text-shadow: 6px 6px 0 #e1101e, 0 0 30px rgba(255,255,255,0.5); opacity: 0; }
+      [data-composition-id="s3-solution"] .bar { position: absolute; left: 40px; top: 560px; width: 0px; height: 80px; overflow: hidden;
+        background: #0f1117; border-top: 5px solid #e1101e; }
+      [data-composition-id="s3-solution"] .barin { position: absolute; left: 0; top: 0; width: 660px; height: 75px; line-height: 75px; text-align: center;
+        font-family: "ArchivoX", sans-serif; font-size: 34px; color: #fff; letter-spacing: 1px; }
+      [data-composition-id="s3-solution"] .vig { position: absolute; inset: 0; background: radial-gradient(ellipse at center, rgba(0,0,0,0) 50%, rgba(0,0,0,0.75) 100%); }
+      [data-composition-id="s3-solution"] .pill { position: absolute; left: 300px; top: 240px; width: 480px; height: 80px; border-radius: 40px;
+        background: rgba(10,14,2,0.85); border: 3px solid #c6ff2e; box-shadow: 0 0 30px rgba(198,255,46,0.6); opacity: 0; }
+      [data-composition-id="s3-solution"] .pill img { position: absolute; left: 34px; top: 22px; width: 136px; height: 36px; }
+      [data-composition-id="s3-solution"] .pill span { position: absolute; left: 186px; top: 0; line-height: 80px; font-family: "JBMono", monospace;
+        font-size: 34px; color: #c6ff2e; letter-spacing: 3px; }
+      [data-composition-id="s3-solution"] .t { position: absolute; left: 0; width: 1080px; text-align: center; white-space: nowrap;
+        font-family: "Anton", sans-serif; line-height: 1; opacity: 0; }
+      [data-composition-id="s3-solution"] .lime { color: #c6ff2e; text-shadow: 0 0 20px rgba(198,255,46,0.95), 0 0 70px rgba(150,255,0,0.7); }
+      [data-composition-id="s3-solution"] .white { color: #fff; text-shadow: 0 0 30px rgba(198,255,46,1), 0 0 90px rgba(150,255,0,0.9); }
+      [data-composition-id="s3-solution"] .lflash { position: absolute; inset: 0; background: #d8ff6a; mix-blend-mode: screen; opacity: 0; }
+    </style>
+
+    <script src="vendor/gsap.min.js"></script>
+    <script>
+      (function () {
+        const OFF = 204;
+        const G = (f) => (f - OFF) / 30;
+        const D = (n) => n / 30;
+        const rng = (s) => () => { s |= 0; s = (s + 0x6D2B79F5) | 0; let t = Math.imul(s ^ (s >>> 15), 1 | s);
+          t = (t + Math.imul(t ^ (t >>> 7), 61 | t)) ^ t; return ((t ^ (t >>> 14)) >>> 0) / 4294967296; };
+        const tl = gsap.timeline({ paused: true });
+        const shake = (el, f0, n, amp, seed) => { const r = rng(seed);
+          for (let i = 0; i < n; i++) { const k = amp * (1 - i / n); tl.set(el, { x: (r() * 2 - 1) * k, y: (r() * 2 - 1) * k }, G(f0 + i)); }
+          tl.set(el, { x: 0, y: 0 }, G(f0 + n)); };
+
+        // Lichtstrahlen drehen langsam, Karte (Vordergrund) kommt nach vorn
+        tl.fromTo("#s3rays", { rotation: 0 }, { rotation: 40, duration: D(132), ease: "none" }, G(204));
+        tl.fromTo("#s3card", { scale: 0.86, y: 60 }, { scale: 1, y: 0, duration: D(20), ease: "power3.out" }, G(210));
+        tl.to("#s3card", { scale: 1.06, duration: D(100), ease: "none" }, G(230));
+        // Speed-Ringe (Lime) beschleunigen bis F270, dann Vollgas; Ring 2 liegt vor der Karte
+        tl.fromTo("#s3ring1", { rotation: 0 }, { rotation: 540, duration: D(60), ease: "power2.in" }, G(210));
+        tl.to("#s3ring1", { rotation: 1980, duration: D(60), ease: "none" }, G(270));
+        tl.fromTo("#s3ring2", { rotation: 0 }, { rotation: -720, duration: D(60), ease: "power2.in" }, G(210));
+        tl.to("#s3ring2", { rotation: -2520, duration: D(60), ease: "none" }, G(270));
+        tl.fromTo("#s3ring3", { rotation: 0 }, { rotation: 360, duration: D(60), ease: "power2.in" }, G(210));
+        tl.to("#s3ring3", { rotation: 1440, duration: D(60), ease: "none" }, G(270));
+        // F212: Pille NEXT MATCH
+        tl.fromTo("#s3pill", { opacity: 0, x: -300 }, { opacity: 1, x: 0, duration: D(8), ease: "expo.out" }, G(212));
+        // Gameday-Karte baut sich im Beat auf: F216 GAMEDAY, F225 Heim, F232 Gast, F240 VS, F252 Infoleiste
+        tl.fromTo("#s3gd", { opacity: 0, scale: 1.6 }, { opacity: 1, scale: 1, duration: D(6), ease: "power4.out" }, G(216));
+        tl.fromTo("#s3home", { opacity: 0, x: -420, rotation: -25 }, { opacity: 1, x: 0, rotation: 0, duration: D(8), ease: "back.out(1.6)" }, G(225));
+        tl.fromTo("#s3away", { opacity: 0, x: 420, rotation: 25 }, { opacity: 1, x: 0, rotation: 0, duration: D(8), ease: "back.out(1.6)" }, G(232));
+        tl.fromTo("#s3vs", { opacity: 0, scale: 2.6 }, { opacity: 1, scale: 1, duration: D(5), ease: "power4.in" }, G(240));
+        shake("#s3cam", 245, 7, 20, 40);
+        tl.fromTo("#s3bar", { width: 0 }, { width: 660, duration: D(9), ease: "expo.out" }, G(252));
+        // F270 Laser-Zap: Lime-Blitz + Glow-In MAXIMUM, F276 HYPE
+        tl.set("#s3flash", { opacity: 0.6 }, G(270));
+        tl.to("#s3flash", { opacity: 0, duration: D(8), ease: "power2.out" }, G(270));
+        tl.fromTo("#s3max", { opacity: 0, scale: 1.35 }, { opacity: 1, scale: 1, duration: D(8), ease: "power3.out" }, G(270));
+        tl.fromTo("#s3hype", { opacity: 0, scale: 1.5 }, { opacity: 1, scale: 1, duration: D(8), ease: "power3.out" }, G(276));
+        tl.to("#s3hype", { scale: 1.06, duration: D(4), ease: "power2.out", yoyo: true, repeat: 1 }, G(300));
+        shake("#s3cam", 270, 8, 22, 41);
+
+        window.__timelines = window.__timelines || {};
+        window.__timelines["s3-solution"] = tl;
+      })();
+    </script>
+  </div>
+</template>

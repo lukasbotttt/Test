@@ -1,0 +1,134 @@
+<template id="s1-hook-template">
+  <!-- S1 HOOK · global 0,0–3,2 s (F0–95), lokal = global. Neon-Eishalle (Vektor), Puck schlägt auf den Bass-Drop ein. -->
+  <div data-composition-id="s1-hook" data-width="1080" data-height="1920" data-duration="3.2">
+    <div class="scn">
+      <div class="cam" id="s1cam">
+        <div class="sky"></div>
+        <div class="lights">
+          <i style="left:90px;top:120px"></i><i style="left:250px;top:70px"></i><i style="left:430px;top:140px"></i>
+          <i style="left:610px;top:80px"></i><i style="left:790px;top:130px"></i><i style="left:950px;top:60px"></i>
+        </div>
+        <div class="floorwrap">
+          <div class="floor"><div id="s1floor" class="floorin">
+            <svg width="1400" height="3200" viewBox="0 0 1400 3200">
+              <g fill="none" stroke-linecap="round">
+                <rect x="40" y="40" width="1320" height="3120" rx="300" stroke="#00f0ff" stroke-width="10" opacity="0.8"/>
+                <line x1="40" y1="1600" x2="1360" y2="1600" stroke="#ff1744" stroke-width="22"/>
+                <line x1="40" y1="1060" x2="1360" y2="1060" stroke="#2f7bff" stroke-width="26"/>
+                <line x1="40" y1="2140" x2="1360" y2="2140" stroke="#2f7bff" stroke-width="26"/>
+                <circle cx="700" cy="1600" r="260" stroke="#2f7bff" stroke-width="10"/>
+                <circle cx="700" cy="1600" r="16" fill="#2f7bff"/>
+                <circle cx="340" cy="700" r="200" stroke="#ff1744" stroke-width="8"/>
+                <circle cx="1060" cy="700" r="200" stroke="#ff1744" stroke-width="8"/>
+                <circle cx="340" cy="2500" r="200" stroke="#ff1744" stroke-width="8"/>
+                <circle cx="1060" cy="2500" r="200" stroke="#ff1744" stroke-width="8"/>
+              </g>
+            </svg>
+          </div></div>
+        </div>
+        <div class="haze"></div>
+        <div id="s1puckwrap" class="puckwrap">
+          <svg id="s1puck" class="puck" viewBox="0 0 400 260">
+            <defs>
+              <linearGradient id="s1side" x1="0" x2="1"><stop offset="0" stop-color="#050507"/><stop offset="0.4" stop-color="#2a2a33"/><stop offset="1" stop-color="#040405"/></linearGradient>
+              <linearGradient id="s1top" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#34343e"/><stop offset="1" stop-color="#0d0d12"/></linearGradient>
+            </defs>
+            <path d="M20 100 L20 160 A180 62 0 0 0 380 160 L380 100 Z" fill="url(#s1side)"/>
+            <ellipse cx="200" cy="100" rx="180" ry="62" fill="url(#s1top)" stroke="#ff2bd6" stroke-width="5"/>
+            <path d="M20 160 A180 62 0 0 0 380 160" fill="none" stroke="#00f0ff" stroke-width="5"/>
+            <ellipse cx="200" cy="100" rx="120" ry="38" fill="none" stroke="#ffffff" stroke-opacity="0.12" stroke-width="3"/>
+          </svg>
+        </div>
+        <div class="vig" data-layout-ignore></div>
+      </div>
+      <div id="s1stop" class="word">
+        <span class="lay r" aria-hidden="true" data-layout-allow-overlap>STOP</span><span class="lay c" aria-hidden="true" data-layout-allow-overlap>STOP</span><span class="lay main" data-layout-allow-overlap>STOP</span></div>
+      <div id="s1scroll" class="scroll" data-layout-allow-overflow>SCROLLING</div>
+      <div id="s1sub" class="sub">HOCKEY CLUBS, LISTEN UP.</div>
+      <div id="s1flash" class="flash"></div>
+    </div>
+
+    <style>
+      @font-face { font-family: "Anton"; src: url("fonts/Anton.ttf"); }
+      @font-face { font-family: "JBMono"; src: url("fonts/JBMono700.ttf"); }
+      [data-composition-id="s1-hook"] .scn { position: relative; width: 1080px; height: 1920px; overflow: hidden; background: #04010a; }
+      [data-composition-id="s1-hook"] .cam { position: absolute; left: 0; top: 0; width: 1080px; height: 1920px; }
+      [data-composition-id="s1-hook"] .sky { position: absolute; inset: 0;
+        background: radial-gradient(ellipse 70% 40% at 50% 38%, rgba(255,43,214,0.35), rgba(0,0,0,0) 70%),
+                    radial-gradient(ellipse 60% 35% at 50% 60%, rgba(0,240,255,0.22), rgba(0,0,0,0) 70%), #04010a; }
+      [data-composition-id="s1-hook"] .lights i { position: absolute; width: 46px; height: 46px; border-radius: 50%;
+        background: radial-gradient(circle, #fff 0%, rgba(255,220,250,0.9) 25%, rgba(255,43,214,0.0) 70%); }
+      [data-composition-id="s1-hook"] .floorwrap { position: absolute; left: -160px; top: 760px; width: 1400px; height: 1700px;
+        perspective: 900px; perspective-origin: 50% 0%; overflow: hidden; }
+      [data-composition-id="s1-hook"] .floor { position: absolute; left: 0; top: 0; width: 1400px; height: 3200px;
+        transform-origin: 50% 0%; transform: rotateX(68deg); filter: drop-shadow(0 0 12px rgba(0,240,255,0.8)); }
+      [data-composition-id="s1-hook"] .floorin { position: absolute; left: 0; top: 0; width: 1400px; height: 3200px;
+        background-image: linear-gradient(rgba(0,240,255,0.16) 3px, transparent 3px), linear-gradient(90deg, rgba(255,43,214,0.12) 3px, transparent 3px);
+        background-size: 140px 140px; }
+      [data-composition-id="s1-hook"] .haze { position: absolute; left: 0; top: 700px; width: 1080px; height: 360px;
+        background: linear-gradient(180deg, rgba(4,1,10,1) 0%, rgba(4,1,10,0) 100%); }
+      [data-composition-id="s1-hook"] .puckwrap { position: absolute; left: 290px; top: 1080px; width: 500px; height: 325px; }
+      [data-composition-id="s1-hook"] .puck { width: 500px; height: 325px; filter: drop-shadow(0 0 26px rgba(255,43,214,0.85)) drop-shadow(0 30px 40px rgba(0,0,0,0.9)); }
+      [data-composition-id="s1-hook"] .vig { position: absolute; inset: 0; background: radial-gradient(ellipse at center, rgba(0,0,0,0) 50%, rgba(0,0,0,0.8) 100%); }
+      [data-composition-id="s1-hook"] .word { position: absolute; left: 0; top: 300px; width: 1080px; height: 330px;
+        font-family: "Anton", sans-serif; font-size: 300px; line-height: 1; text-align: center; }
+      [data-composition-id="s1-hook"] .lay { position: absolute; left: 0; top: 0; width: 1080px; text-align: center; }
+      [data-composition-id="s1-hook"] .lay.r { color: #ff0050; mix-blend-mode: screen; }
+      [data-composition-id="s1-hook"] .lay.c { color: #00f0ff; mix-blend-mode: screen; }
+      [data-composition-id="s1-hook"] .lay.main { color: #ff1744; -webkit-text-stroke: 5px #14000a; paint-order: stroke fill;
+        text-shadow: 0 0 18px rgba(255,23,68,0.9), 0 0 60px rgba(255,23,68,0.6), 0 12px 40px rgba(0,0,0,0.9); }
+      [data-composition-id="s1-hook"] .scroll { position: absolute; left: 0; top: 660px; width: 1080px; text-align: center;
+        font-family: "Anton", sans-serif; font-size: 120px; line-height: 1; color: #fff; text-shadow: 0 10px 40px rgba(0,0,0,0.9); }
+      [data-composition-id="s1-hook"] .sub { position: absolute; left: 0; top: 1470px; width: 1080px; text-align: center;
+        font-family: "JBMono", monospace; font-size: 42px; color: #00f0ff; letter-spacing: 4px; opacity: 0;
+        text-shadow: 0 0 16px rgba(0,240,255,0.8); }
+      [data-composition-id="s1-hook"] .flash { position: absolute; inset: 0; background: #fff; opacity: 0; }
+    </style>
+
+    <script src="vendor/gsap.min.js"></script>
+    <script>
+      (function () {
+        const OFF = 0;
+        const G = (f) => (f - OFF) / 30;
+        const D = (n) => n / 30;
+        const rng = (s) => () => { s |= 0; s = (s + 0x6D2B79F5) | 0; let t = Math.imul(s ^ (s >>> 15), 1 | s);
+          t = (t + Math.imul(t ^ (t >>> 7), 61 | t)) ^ t; return ((t ^ (t >>> 14)) >>> 0) / 4294967296; };
+        const tl = gsap.timeline({ paused: true });
+        const shake = (el, f0, n, amp, seed) => { const r = rng(seed);
+          for (let i = 0; i < n; i++) { const k = amp * (1 - i / n); tl.set(el, { x: (r() * 2 - 1) * k, y: (r() * 2 - 1) * k }, G(f0 + i)); }
+          tl.set(el, { x: 0, y: 0 }, G(f0 + n)); };
+        const split = (sel, f0, n, amp, seed) => { const r = rng(seed);
+          for (let i = 0; i < n; i++) { const a = amp * (0.4 + 0.6 * r());
+            tl.set(sel + " .r", { x: -a, y: (r() - 0.5) * 6 }, G(f0 + i)); tl.set(sel + " .c", { x: a, y: (r() - 0.5) * 6 }, G(f0 + i)); }
+          tl.set([sel + " .r", sel + " .c"], { x: 0, y: 0 }, G(f0 + n)); };
+
+        // Eisfläche rast auf die Kamera zu (Ebene läuft nach unten), Hallenlichter flackern
+        tl.fromTo("#s1floor", { y: -700 }, { y: 120, duration: D(96), ease: "power1.out" }, G(0));
+        document.querySelectorAll('[data-composition-id="s1-hook"] .lights i').forEach((el, i) => {
+          const r = rng(100 + i);
+          for (let f = 0; f < 96; f += 3) tl.set(el, { opacity: 0.45 + 0.55 * r(), scale: 0.8 + 0.5 * r() }, G(f));
+        });
+        // F0 Bass-Drop: STOP ab Bild 0, Puck schlägt aus Kamerarichtung auf (Objekt vor der Halle), Wackler
+        tl.fromTo("#s1stop", { scale: 1.18 }, { scale: 1, duration: D(5), ease: "power4.out" }, G(0));
+        split("#s1stop", 0, 10, 16, 12);
+        tl.fromTo("#s1puckwrap", { scale: 3.2, y: 300, rotation: -18 }, { scale: 1.0, y: 0, rotation: -6, duration: D(7), ease: "power3.in" }, G(0));
+        shake("#s1cam", 7, 12, 46, 11);
+        // Objekt-Separation: Puck kommt danach langsam auf den Zuschauer zu, dreht sich leicht
+        tl.to("#s1puckwrap", { scale: 1.35, y: -40, rotation: 4, duration: D(89), ease: "power1.in" }, G(7));
+        // F15 (Beat 2): SCROLLING von 0 auf 150 %
+        tl.fromTo("#s1scroll", { scale: 0 }, { scale: 1.5, duration: D(9), ease: "back.out(2.2)" }, G(15));
+        shake("#s1cam", 15, 6, 16, 14);
+        // F40: Unterzeile
+        tl.fromTo("#s1sub", { opacity: 0, y: 30 }, { opacity: 1, y: 0, duration: D(6), ease: "power2.out" }, G(40));
+        // F60 Kamera-Shutter
+        tl.set("#s1flash", { opacity: 0.95 }, G(60));
+        tl.to("#s1flash", { opacity: 0, duration: D(4), ease: "power2.in" }, G(60));
+        tl.set("#s1cam", { scale: 1.05 }, G(60));
+        tl.to("#s1cam", { scale: 1.0, duration: D(6), ease: "power3.out" }, G(60));
+
+        window.__timelines = window.__timelines || {};
+        window.__timelines["s1-hook"] = tl;
+      })();
+    </script>
+  </div>
+</template>
