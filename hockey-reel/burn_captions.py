@@ -177,6 +177,21 @@ if len(sys.argv) > 1 and sys.argv[1] == "41":
     }
 
 
+if len(sys.argv) > 1 and sys.argv[1] == "42":
+    import reel42_ninth as NI42
+    SRC, DST = "reel42_ninth.mp4", "reel42_ninth_cap.mp4"
+    CAP_Y = 1710                                  # dunkle Halle, unter den Perioden-Kästchen
+    VO, TIMING, END = NI42, "reel42_timing.json", NI42.DUR - 0.1
+    WORDS = {
+        "q": "This NHL game had nine periods.",
+        "rule": "Playoffs have no shootout. You play until somebody scores.",
+        "story": "Detroit versus the Montreal Maroons. Zero to zero, into the sixth overtime.",
+        "goal": "At 2:25 in the morning, Bruneteau scored.",
+        "stat": "176 minutes.",
+        "cta": "Should the regular season ditch the shootout? Yes or no?",
+    }
+
+
 def chunks():
     """-> Liste (t0, t1, [(wort, t_wort)])"""
     with open(os.path.join(L.HERE, "voice", TIMING)) as f:
