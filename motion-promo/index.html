@@ -1,0 +1,102 @@
+<!doctype html>
+<!--
+  MOTION-PROMO · 1080x1920 · 30 fps · 15,0 s (Frame 0–449) · 120 BPM (1 Beat = 15 Frames)
+  Szenen (Unter-Kompositionen): S1 Hook F0–89 · S2 Problem F90–209 · S3 Lösung F210–329 · S4 CTA F330–449
+  Übergänge (diese Datei): Glitch-Schnitt F84–96 · Snap-Swoosh rechts F204–216 · Glitch-Schnitt F324–336
+  KI-Bilder: assets/sN_bg.jpg (Hintergrund ohne Hauptobjekt) + assets/sN_fg.png (Hauptobjekt freigestellt, Alpha)
+  Sprache: audio/vo/s1..s4.wav (Platzhalter = Stille). Vollständige Frame-Tabelle: SKRIPT.md
+-->
+<html lang="de" data-resolution="portrait">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=1080, height=1920" />
+<title>Motion-Promo</title>
+<script src="vendor/gsap.min.js"></script>
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  html, body { margin: 0; width: 1080px; height: 1920px; overflow: hidden; background: #000; }
+  .scene { position: absolute; top: 0; left: 0; width: 100%; height: 100%; }
+  #glitch { position: absolute; left: 0; top: 0; width: 1080px; height: 1920px; z-index: 50; pointer-events: none; }
+  .gbar { position: absolute; left: 0; width: 1080px; height: 0px; opacity: 0; mix-blend-mode: difference; }
+</style>
+</head>
+<body>
+<div id="root" data-composition-id="main" data-start="0" data-duration="15" data-width="1080" data-height="1920">
+
+  <div id="h1" class="scene clip" data-composition-id="s1-hook" data-composition-src="compositions/s1-hook.html"
+       data-start="0" data-duration="3.2" data-track-index="1" data-width="1080" data-height="1920" style="z-index:1"></div>
+  <div id="h2" class="scene clip" data-composition-id="s2-problem" data-composition-src="compositions/s2-problem.html"
+       data-start="2.8" data-duration="4.4" data-track-index="2" data-width="1080" data-height="1920" style="z-index:2; opacity:0"></div>
+  <div id="h3" class="scene clip" data-composition-id="s3-solution" data-composition-src="compositions/s3-solution.html"
+       data-start="6.8" data-duration="4.4" data-track-index="3" data-width="1080" data-height="1920" style="z-index:3; opacity:0"></div>
+  <div id="h4" class="scene clip" data-composition-id="s4-cta" data-composition-src="compositions/s4-cta.html"
+       data-start="10.8" data-duration="4.2" data-track-index="4" data-width="1080" data-height="1920" style="z-index:4; opacity:0"></div>
+
+  <!-- Glitch-Balken für die Übergänge -->
+  <div id="glitch">
+    <div class="gbar" id="g0" style="background:#ff0050"></div><div class="gbar" id="g1" style="background:#00f0ff"></div>
+    <div class="gbar" id="g2" style="background:#ffffff"></div><div class="gbar" id="g3" style="background:#ff0050"></div>
+    <div class="gbar" id="g4" style="background:#00f0ff"></div><div class="gbar" id="g5" style="background:#7a00ff"></div>
+  </div>
+
+  <!-- Audio: Musik 120 BPM · Sprache (Platzhalter) · SFX auf den Frames aus SKRIPT.md -->
+  <audio id="a_music" src="audio/music_120bpm.wav" data-start="0" data-duration="15" data-volume="0.45" data-track-index="10"></audio>
+  <audio id="a_vo1" src="audio/vo/s1.wav" data-start="0" data-duration="2.8" data-volume="1" data-track-index="11"></audio>
+  <audio id="a_vo2" src="audio/vo/s2.wav" data-start="3.05" data-duration="3.7" data-volume="1" data-track-index="11"></audio>
+  <audio id="a_vo3" src="audio/vo/s3.wav" data-start="7.05" data-duration="3.9" data-volume="1" data-track-index="11"></audio>
+  <audio id="a_vo4" src="audio/vo/s4.wav" data-start="11.05" data-duration="3.5" data-volume="1" data-track-index="11"></audio>
+  <audio id="x_drop" src="audio/sfx/bass_drop.wav" data-start="0" data-duration="1.6" data-volume="0.9" data-track-index="12"></audio>
+  <audio id="x_gl1" src="audio/sfx/glitch_swoosh.wav" data-start="0" data-duration="0.45" data-volume="0.6" data-track-index="13"></audio>
+  <audio id="x_shut" src="audio/sfx/shutter.wav" data-start="2" data-duration="0.25" data-volume="0.7" data-track-index="13"></audio>
+  <audio id="x_gl2" src="audio/sfx/glitch_swoosh.wav" data-start="2.8" data-duration="0.45" data-volume="0.6" data-track-index="12"></audio>
+  <audio id="x_vinyl" src="audio/sfx/vinyl_scratch.wav" data-start="4" data-duration="0.7" data-volume="0.55" data-track-index="13"></audio>
+  <audio id="x_heart" src="audio/sfx/heartbeat.wav" data-start="6" data-duration="1" data-volume="0.9" data-track-index="12"></audio>
+  <audio id="x_whoosh" src="audio/sfx/whoosh_right.wav" data-start="6.85" data-duration="0.35" data-volume="0.7" data-track-index="13"></audio>
+  <audio id="x_riser" src="audio/sfx/riser.wav" data-start="7" data-duration="2" data-volume="0.45" data-track-index="12"></audio>
+  <audio id="x_zap" src="audio/sfx/laser_zap.wav" data-start="9" data-duration="0.5" data-volume="0.6" data-track-index="13"></audio>
+  <audio id="x_gl3" src="audio/sfx/glitch_swoosh.wav" data-start="10.8" data-duration="0.45" data-volume="0.6" data-track-index="12"></audio>
+  <audio id="x_coin" src="audio/sfx/coin.wav" data-start="11" data-duration="0.9" data-volume="0.55" data-track-index="13"></audio>
+  <audio id="x_impact" src="audio/sfx/sub_impact.wav" data-start="14" data-duration="1" data-volume="0.95" data-track-index="12"></audio>
+</div>
+
+<script>
+  (function () {
+    const F = (n) => n / 30;                           // Frame -> Sekunde (global)
+    const rng = (s) => () => { s |= 0; s = (s + 0x6D2B79F5) | 0; let t = Math.imul(s ^ (s >>> 15), 1 | s);
+      t = (t + Math.imul(t ^ (t >>> 7), 61 | t)) ^ t; return ((t ^ (t >>> 14)) >>> 0) / 4294967296; };
+    const tl = gsap.timeline({ paused: true });
+
+    // Glitch-Schnitt: 6 Frames vor bis 6 Frames nach dem Schnitt flackern alte/neue Szene, Farbbalken, Versatz
+    function glitchCut(outSel, inSel, cutF, seed) {
+      const r = rng(seed);
+      for (let f = cutF - 6; f < cutF + 6; f++) {
+        const showNew = f >= cutF ? r() > 0.2 : r() > 0.75;
+        tl.set(inSel, { opacity: showNew ? 1 : 0, x: (r() * 2 - 1) * 40 }, F(f));
+        tl.set(outSel, { x: (r() * 2 - 1) * 60 }, F(f));
+        for (let b = 0; b < 6; b++) {
+          tl.set("#g" + b, { y: r() * 1920, height: r() < 0.6 ? 6 + r() * 70 : 0, opacity: 0.85 }, F(f));
+        }
+      }
+      tl.set(inSel, { opacity: 1, x: 0 }, F(cutF + 6));
+      tl.set(outSel, { opacity: 0, x: 0 }, F(cutF + 6));
+      for (let b = 0; b < 6; b++) tl.set("#g" + b, { height: 0, opacity: 0 }, F(cutF + 6));
+    }
+
+    // S1 -> S2: Glitch-Schnitt bei Frame 90
+    glitchCut("#h1", "#h2", 90, 21);
+    // S2 -> S3: Snap-Swoosh nach rechts (S2 fliegt rechts raus, S3 kommt von links), Schnitt bei Frame 210
+    tl.to("#h2", { x: 1080, duration: F(6), ease: "power3.in" }, F(204));
+    tl.set("#h2", { filter: "blur(14px)" }, F(206));
+    tl.set("#h3", { opacity: 1, x: -1080, filter: "blur(14px)" }, F(210));
+    tl.set("#h2", { opacity: 0, filter: "blur(0px)" }, F(210));
+    tl.to("#h3", { x: 0, duration: F(6), ease: "power3.out" }, F(210));
+    tl.set("#h3", { filter: "blur(0px)" }, F(214));
+    // S3 -> S4: Glitch-Schnitt bei Frame 330
+    glitchCut("#h3", "#h4", 330, 51);
+
+    window.__timelines = window.__timelines || {};
+    window.__timelines["main"] = tl;
+  })();
+</script>
+</body>
+</html>
