@@ -17,28 +17,28 @@ HERE = os.path.dirname(os.path.abspath(__file__))
 SR = 48000
 BPM = 120
 BEAT = 60 / BPM
-DUR = 18.5
+DUR = 26.0
 rng = np.random.default_rng(43)
 
-# Sprecher-Einsätze (s) und SFX-Zeitpunkte – Frame-Tabelle in SKRIPT.md
-VO_START = {"q": 0.10, "sprint": 3.60, "mistakes": 8.60, "proof": 10.60, "cta": 15.60}
+# Sprecher-Einsätze (s) und SFX-Zeitpunkte – ruhige Version (v2), Frame-Tabelle in SKRIPT.md
+VO_START = {"q": 0.10, "sprint": 4.70, "gassed": 7.70, "mistakes": 12.20, "proof": 15.20, "goals": 19.30,
+            "cta": 21.70, "drop": 23.60}
 SFX = [  # (name, zeit, lautstärke)
-    ("bass_drop", 0.0, 0.8), ("glitch_swoosh", 0.0, 0.45),
-    ("tick", 0.5, 0.35), ("tick", 1.0, 0.35), ("tick", 1.5, 0.35), ("tick", 2.0, 0.35),
-    ("tick", 2.25, 0.3), ("tick", 2.5, 0.4), ("tick", 2.625, 0.3), ("tick", 2.75, 0.4), ("tick", 2.875, 0.3),
-    ("buzzer", 2.67, 0.5),                                          # Uhr springt auf 00:40
-    ("glitch_swoosh", 3.3, 0.55),                                   # Schnitt S1 -> S2 (F105)
-    ("slam", 5.0, 0.7),                                             # SPRINT
-    ("riser", 6.0, 0.4),                                            # 30–40 SEC … voller Sprint
-    ("heartbeat", 7.95, 0.85), ("heartbeat", 8.45, 0.6),            # EXHAUSTED
-    ("error", 8.5, 0.5),                                            # roter Schnitt S2 -> S3 (F255)
-    ("error", 9.73, 0.45), ("error", 10.0, 0.45), ("error", 10.27, 0.45),  # MISTAKES PILE UP
-    ("whoosh_right", 10.38, 0.6),                                   # Snap S3 -> S4 (F315)
-    ("slam", 12.3, 0.5),                                            # 44
-    ("coin", 13.0, 0.45),                                           # 41
-    ("slam", 14.55, 0.7),                                           # FEWER GOALS ALLOWED
-    ("glitch_swoosh", 15.3, 0.55),                                  # Schnitt S4 -> S5 (F465)
-    ("sub_impact", 17.5, 0.85),                                     # DROP A NUMBER
+    ("bass_drop", 0.0, 0.8), ("glitch_swoosh", 0.0, 0.4),
+    ("tick", 0.5, 0.3), ("tick", 1.0, 0.3), ("tick", 1.5, 0.3), ("tick", 2.0, 0.3), ("tick", 2.5, 0.35),
+    ("buzzer", 2.87, 0.4),                                          # Uhr steht auf 00:40 (F86)
+    ("glitch_swoosh", 4.3, 0.5),                                    # Schnitt S1 -> S2 (F135)
+    ("slam", 6.26, 0.45),                                           # SPRINT
+    ("riser", 8.3, 0.35),                                           # Akku läuft leer
+    ("heartbeat", 10.3, 0.8), ("heartbeat", 10.85, 0.55),           # EXHAUSTED
+    ("error", 12.0, 0.45),                                          # roter Schnitt S2 -> S3 (F360)
+    ("error", 13.4, 0.33), ("error", 13.7, 0.33), ("error", 14.03, 0.33),  # MISTAKES PILE UP
+    ("whoosh_right", 14.85, 0.55),                                  # Snap S3 -> S4 (F450)
+    ("slam", 17.06, 0.4),                                           # 44
+    ("coin", 17.86, 0.38),                                          # 41
+    ("slam", 19.86, 0.5),                                           # FEWER GOALS ALLOWED
+    ("glitch_swoosh", 21.3, 0.5),                                   # Schnitt S4 -> S5 (F645)
+    ("sub_impact", 24.0, 0.8),                                      # DROP A NUMBER
 ]
 
 
@@ -126,7 +126,7 @@ def music():
         t = b * BEAT
         bar = b // 4
         pos = b % 4
-        breath = b in (16, 17)                    # 8,0–9,0 s: Atemzug bei EXHAUSTED (nur Herzschlag)
+        breath = b in (20, 21)                    # 10,0–11,0 s: Atemzug bei EXHAUSTED (nur Herzschlag)
         if not breath:
             put(buf, kick(1.0), t)
             if pos in (1, 3):

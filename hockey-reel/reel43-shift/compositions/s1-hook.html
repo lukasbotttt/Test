@@ -1,6 +1,6 @@
 <template id="s1-hook-template">
-  <!-- S1 HOOK · global 0–3,7 s (F0–110), lokal = global. Frage ab Bild 0, Neon-Stoppuhr rast auf 00:40. -->
-  <div data-composition-id="s1-hook" data-width="1080" data-height="1920" data-duration="3.7">
+  <!-- S1 HOOK · global 0–4,7 s (F0–140), lokal = global. Frage ab Bild 0, Neon-Stoppuhr läuft auf 00:40, dann steht alles still. -->
+  <div data-composition-id="s1-hook" data-width="1080" data-height="1920" data-duration="4.7">
     <div class="scn">
       <div class="cam" id="s1cam">
         <div class="sky"></div>
@@ -56,7 +56,6 @@
       <div id="s1forty" class="forty" data-layout-allow-overflow>
         <span class="lay r" aria-hidden="true" data-layout-allow-overlap>40</span><span class="lay c" aria-hidden="true" data-layout-allow-overlap>40</span><span class="lay main" data-layout-allow-overlap>40</span></div>
       <div id="s1sec" class="sec">SECONDS?</div>
-      <div id="s1sub" class="sub">TYPICAL NHL SHIFT: 35–45 SEC</div>
       <div id="s1flash" class="flash"></div>
     </div>
 
@@ -95,9 +94,6 @@
         text-shadow: 0 0 18px rgba(255,23,68,0.9), 0 0 70px rgba(255,23,68,0.6), 0 12px 40px rgba(0,0,0,0.9); }
       [data-composition-id="s1-hook"] .sec { position: absolute; left: 0; top: 670px; width: 1080px; text-align: center;
         font-family: "Anton", sans-serif; font-size: 150px; line-height: 1; color: #fff; text-shadow: 0 10px 40px rgba(0,0,0,0.9); }
-      [data-composition-id="s1-hook"] .sub { position: absolute; left: 0; top: 1530px; width: 1080px; text-align: center;
-        font-family: "JBMono", monospace; font-size: 46px; color: #00f0ff; letter-spacing: 2px; opacity: 0;
-        text-shadow: 0 0 16px rgba(0,240,255,0.8); }
       [data-composition-id="s1-hook"] .flash { position: absolute; inset: 0; background: #fff; opacity: 0; }
     </style>
 
@@ -128,40 +124,37 @@
             g.appendChild(l); } })();
 
         // Eisfläche rast auf die Kamera zu, Hallenlichter flackern
-        tl.fromTo("#s1floor", { y: -700 }, { y: 120, duration: D(111), ease: "power1.out" }, G(0));
+        tl.fromTo("#s1floor", { y: -700 }, { y: 120, duration: D(141), ease: "power1.out" }, G(0));
         document.querySelectorAll('[data-composition-id="s1-hook"] .lights i').forEach((el, i) => {
           const r = rng(100 + i);
-          for (let f = 0; f < 111; f += 3) tl.set(el, { opacity: 0.45 + 0.55 * r(), scale: 0.8 + 0.5 * r() }, G(f));
+          for (let f = 0; f < 141; f += 4) tl.set(el, { opacity: 0.55 + 0.45 * r(), scale: 0.85 + 0.35 * r() }, G(f));
         });
         // F0 Bass-Drop: Frage steht ab Bild 0, "40" mit RGB-Split, Stoppuhr schlägt aus Kamerarichtung ein
         tl.fromTo("#s1forty", { scale: 1.2 }, { scale: 1, duration: D(5), ease: "power4.out" }, G(0));
-        split("#s1forty", 0, 10, 18, 12);
+        split("#s1forty", 0, 6, 14, 12);
         tl.fromTo("#s1watchwrap", { scale: 3, y: 300, rotation: -16 }, { scale: 1, y: 0, rotation: -4, duration: D(7), ease: "power3.in" }, G(0));
-        shake("#s1cam", 7, 12, 44, 11);
+        shake("#s1cam", 7, 8, 30, 11);
         // Objekt-Separation: Uhr kommt danach langsam auf den Zuschauer zu
-        tl.to("#s1watchwrap", { scale: 1.18, y: -30, rotation: 3, duration: D(100), ease: "power1.in" }, G(7));
-        // Zeiger + Anzeige: 0 -> 40 s bis F80 ("seconds"), Bogen läuft mit
-        tl.fromTo("#s1hand", { rotation: 0, svgOrigin: "300 380" }, { rotation: 240, svgOrigin: "300 380", duration: D(78), ease: "power2.in" }, G(2));
-        tl.fromTo("#s1arc", { attr: { "stroke-dashoffset": 1395 } }, { attr: { "stroke-dashoffset": 1395 - 1395 * 40 / 60 }, duration: D(78), ease: "power2.in" }, G(2));
-        for (let f = 2; f <= 80; f += 2) {
-          const s = Math.round(40 * Math.pow((f - 2) / 78, 2));
+        tl.to("#s1watchwrap", { scale: 1.15, y: -30, rotation: 3, duration: D(134), ease: "power1.inOut" }, G(7));
+        // Zeiger + Anzeige: 0 -> 40 s bis F86 ("seconds"), Bogen läuft mit
+        tl.fromTo("#s1hand", { rotation: 0, svgOrigin: "300 380" }, { rotation: 240, svgOrigin: "300 380", duration: D(84), ease: "power2.in" }, G(2));
+        tl.fromTo("#s1arc", { attr: { "stroke-dashoffset": 1395 } }, { attr: { "stroke-dashoffset": 1395 - 1395 * 40 / 60 }, duration: D(84), ease: "power2.in" }, G(2));
+        for (let f = 2; f <= 86; f += 2) {
+          const s = Math.round(40 * Math.pow((f - 2) / 84, 2));
           tl.set("#s1read", { textContent: "00:" + String(s).padStart(2, "0") }, G(f));
         }
-        tl.set("#s1read", { fill: "#ff1744" }, G(80));
-        tl.fromTo("#s1watchwrap", { filter: "brightness(1.8)" }, { filter: "brightness(1)", duration: D(10), ease: "power2.out" }, G(80));
-        // Beat-Pulse auf "40" (F15, F30, F45, F60) und großer Puls auf das gesprochene "forty" (F72)
-        [15, 30, 45, 60].forEach((f) => {
-          tl.set("#s1forty", { scale: 1.06 }, G(f));
+        tl.set("#s1read", { fill: "#ff1744" }, G(86));
+        tl.fromTo("#s1watchwrap", { filter: "brightness(1.8)" }, { filter: "brightness(1)", duration: D(10), ease: "power2.out" }, G(86));
+        // sanfte Beat-Pulse auf "40", großer Puls auf das gesprochene "forty" (F79), Blitz wenn die Uhr steht (F86)
+        [15, 30, 45, 60, 105, 120].forEach((f) => {
+          tl.set("#s1forty", { scale: 1.04 }, G(f));
           tl.to("#s1forty", { scale: 1, duration: D(8), ease: "power2.out" }, G(f));
         });
-        tl.set("#s1forty", { scale: 1.16 }, G(72));
-        tl.to("#s1forty", { scale: 1, duration: D(10), ease: "power3.out" }, G(72));
-        split("#s1forty", 72, 8, 22, 31);
-        tl.set("#s1flash", { opacity: 0.6 }, G(80));
-        tl.to("#s1flash", { opacity: 0, duration: D(5), ease: "power2.in" }, G(80));
-        shake("#s1cam", 80, 10, 30, 14);
-        // F36: Fakt-Zeile
-        tl.fromTo("#s1sub", { opacity: 0, y: 30 }, { opacity: 1, y: 0, duration: D(6), ease: "power2.out" }, G(36));
+        tl.set("#s1forty", { scale: 1.12 }, G(79));
+        tl.to("#s1forty", { scale: 1, duration: D(10), ease: "power3.out" }, G(79));
+        tl.set("#s1flash", { opacity: 0.45 }, G(86));
+        tl.to("#s1flash", { opacity: 0, duration: D(5), ease: "power2.in" }, G(86));
+        shake("#s1cam", 86, 6, 18, 14);
 
         window.__timelines = window.__timelines || {};
         window.__timelines["s1-hook"] = tl;

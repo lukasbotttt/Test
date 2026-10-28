@@ -11,16 +11,16 @@ import tts_kokoro  # noqa: E402
 
 VO_LINES = [
     ("q", "Why do NHL players only play about forty seconds at a time?"),
-    ("sprint", "Because every shift is an all-out sprint. Thirty to forty seconds at full speed, and you're exhausted."),
+    ("sprint", "Because every shift is an all-out sprint."),
+    ("gassed", "Thirty to forty seconds at full speed, and you're exhausted."),
     ("mistakes", "Stay out longer, and the mistakes pile up."),
-    ("proof", "The Flyers cut their forwards' shifts from forty-four to forty-one seconds, and allowed fewer goals."),
-    ("cta", "How many seconds would you last? Drop a number."),
+    ("proof", "The Flyers cut their forwards' shifts from forty-four to forty-one seconds."),
+    ("goals", "And they allowed fewer goals."),
+    ("cta", "How many seconds would you last?"),
+    ("drop", "Drop a number."),
 ]
 
-TEMPO = 1.08          # danach noch etwas straffen (Tonhöhe bleibt), damit das Reel unter 19 s bleibt
 
 if __name__ == "__main__":
     prefix = os.path.join(HERE, "audio", "vo", "vo")
-    tts_kokoro.synth(VO_LINES, prefix, speed=1.25)
-    for key, _ in VO_LINES:
-        tts_kokoro.stretch(f"{prefix}_{key}.wav", TEMPO)
+    tts_kokoro.synth(VO_LINES, prefix, speed=1.2)       # ruhige Version: Grundtempo 1,2, nicht gestaucht

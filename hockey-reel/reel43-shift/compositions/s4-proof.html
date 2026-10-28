@@ -1,6 +1,6 @@
 <template id="s4-proof-template">
-  <!-- S4 PROOF · global 10,3–15,7 s (F309–470), lokal = global − 309. Flyers: 44 s -> 41 s pro Wechsel, weniger Gegentore. -->
-  <div data-composition-id="s4-proof" data-width="1080" data-height="1920" data-duration="5.4">
+  <!-- S4 PROOF · global 14,8–21,7 s (F444–650), lokal = global − 444. Flyers: 44 s -> 41 s pro Wechsel, weniger Gegentore. -->
+  <div data-composition-id="s4-proof" data-width="1080" data-height="1920" data-duration="6.9">
     <div class="scn">
       <div class="cam" id="s4cam" data-layout-allow-overflow>
         <div class="sky"></div>
@@ -20,13 +20,11 @@
         <div class="vig" data-layout-ignore></div>
       </div>
       <div id="s4pill" class="pill">PHILADELPHIA FLYERS</div>
-      <div id="s4sub" class="sub">FORWARDS · AVG TIME PER SHIFT</div>
       <div class="badgewrap"><div id="s4badge" class="badge">−3 SEC</div></div>
       <div id="s4fewer" class="fewer">
         <svg class="chk" viewBox="0 0 100 100"><polyline points="14,54 40,80 88,22" fill="none" stroke="#c6ff2e" stroke-width="16" stroke-linecap="round" stroke-linejoin="round"/></svg>
         <div class="f1">FEWER GOALS</div><div class="f2">ALLOWED</div>
       </div>
-      <div id="s4src" class="src">SOURCE: NHL.COM (FLYERS, APRIL 2020)</div>
       <div id="s4flash" class="flash"></div>
     </div>
 
@@ -63,8 +61,6 @@
       [data-composition-id="s4-proof"] .pill { position: absolute; left: 140px; top: 140px; width: 800px; height: 120px; border-radius: 60px; opacity: 0;
         border: 5px solid #ff6a00; background: rgba(30,10,0,0.85); box-shadow: 0 0 34px rgba(255,106,0,0.8);
         font-family: "Anton", sans-serif; font-size: 74px; line-height: 110px; text-align: center; color: #fff; }
-      [data-composition-id="s4-proof"] .sub { position: absolute; left: 0; top: 290px; width: 1080px; text-align: center; opacity: 0;
-        font-family: "JBMono", monospace; font-size: 40px; color: #00f0ff; letter-spacing: 2px; text-shadow: 0 0 14px rgba(0,240,255,0.8); }
       [data-composition-id="s4-proof"] .badgewrap { position: absolute; left: 330px; top: 395px; width: 420px; height: 140px; transform: rotate(-6deg); }
       [data-composition-id="s4-proof"] .badge { width: 420px; height: 140px; border-radius: 30px; opacity: 0;
         background: #c6ff2e; color: #0b1000; font-family: "Anton", sans-serif; font-size: 110px; line-height: 140px; text-align: center;
@@ -75,15 +71,13 @@
         color: #fff; text-shadow: 0 10px 40px rgba(0,0,0,0.9); }
       [data-composition-id="s4-proof"] .f2 { position: absolute; left: 250px; top: 160px; width: 800px; font-family: "Anton", sans-serif; font-size: 110px; line-height: 1;
         color: #c6ff2e; text-shadow: 0 0 20px rgba(198,255,46,0.8), 0 10px 40px rgba(0,0,0,0.9); }
-      [data-composition-id="s4-proof"] .src { position: absolute; left: 0; top: 1790px; width: 1080px; text-align: center; opacity: 0;
-        font-family: "JBMono", monospace; font-size: 28px; color: #8f9bab; letter-spacing: 1px; }
       [data-composition-id="s4-proof"] .flash { position: absolute; inset: 0; background: #fff; opacity: 0; }
     </style>
 
     <script src="vendor/gsap.min.js"></script>
     <script>
       (function () {
-        const OFF = 309;
+        const OFF = 444;
         const G = (f) => (f - OFF) / 30;
         const D = (n) => n / 30;
         const rng = (s) => () => { s |= 0; s = (s + 0x6D2B79F5) | 0; let t = Math.imul(s ^ (s >>> 15), 1 | s);
@@ -95,49 +89,46 @@
         const PX = 14;                                   // 1 Sekunde Wechsellänge = 14 px Balkenhöhe (Achse ab 0, ehrlich)
 
         // Lichtstrahlen drehen, Funken steigen
-        tl.fromTo("#s4rays", { rotation: 0 }, { rotation: 40, duration: D(162), ease: "none" }, G(309));
+        tl.fromTo("#s4rays", { rotation: 0 }, { rotation: 45, duration: D(207), ease: "none" }, G(444));
         (function () { const box = document.querySelector("#s4dust"), r = rng(13);
-          for (let i = 0; i < 26; i++) {
+          for (let i = 0; i < 22; i++) {
             const d = document.createElement("div"); d.className = "dt";
             d.style.left = Math.round(r() * 1080) + "px"; d.style.top = Math.round(600 + r() * 1300) + "px";
             d.style.opacity = (0.3 + r() * 0.6).toFixed(2); box.appendChild(d);
-            tl.fromTo(d, { y: 0 }, { y: -300 - r() * 400, duration: D(162), ease: "none" }, G(309));
+            tl.fromTo(d, { y: 0 }, { y: -300 - r() * 400, duration: D(207), ease: "none" }, G(444));
           } })();
 
-        // F322 Pille FLYERS (auf "Flyers"), F350 Unterzeile (auf "shifts")
-        tl.fromTo("#s4pill", { opacity: 0, scale: 0.4 }, { opacity: 1, scale: 1, duration: D(7), ease: "back.out(2.2)" }, G(320));
-        tl.fromTo("#s4sub", { opacity: 0, y: 24 }, { opacity: 1, y: 0, duration: D(6), ease: "power2.out" }, G(350));
-        tl.fromTo('[data-composition-id="s4-proof"] .base', { scaleX: 0 }, { scaleX: 1, duration: D(10), ease: "expo.out" }, G(318));
-
-        // F326 leere Balken-Rahmen (gestrichelt) stehen schon, "?" wartet auf die Zahlen
-        tl.fromTo(["#s4ghL", "#s4ghR"], { scaleY: 0 }, { scaleY: 1, duration: D(10), ease: "expo.out", stagger: D(3) }, G(326));
-        tl.fromTo('[data-composition-id="s4-proof"] .yr', { opacity: 0 }, { opacity: 1, duration: D(6), ease: "none" }, G(328));
-        // F360–369 Balken 44 s wächst (auf "forty-four"), F381–390 Balken 41 s (auf "forty-one")
-        tl.fromTo("#s4barL", { height: 0 }, { height: 44 * PX, duration: D(10), ease: "power3.out" }, G(359));
-        tl.fromTo("#s4valL", { opacity: 0, y: 40 }, { opacity: 1, y: 0, duration: D(5), ease: "power2.out" }, G(360));
-        for (let f = 360; f <= 369; f++) tl.set("#s4valL", { textContent: Math.round(44 * (f - 359) / 10) + "s" }, G(f));
-        shake("#s4cam", 369, 6, 18, 81);
-        tl.fromTo("#s4barR", { height: 0 }, { height: 41 * PX, duration: D(10), ease: "power3.out" }, G(380));
-        tl.fromTo("#s4valR", { opacity: 0, y: 40 }, { opacity: 1, y: 0, duration: D(5), ease: "power2.out" }, G(381));
-        for (let f = 381; f <= 390; f++) tl.set("#s4valR", { textContent: Math.round(41 * (f - 380) / 10) + "s" }, G(f));
-        tl.set("#s4barR", { filter: "brightness(1.7)" }, G(390));
-        tl.to("#s4barR", { filter: "brightness(1)", duration: D(8), ease: "power2.out" }, G(390));
-        // F403 Badge −3 SEC (auf "seconds")
-        tl.fromTo("#s4badge", { opacity: 0, scale: 2.6 }, { opacity: 1, scale: 1, duration: D(5), ease: "power4.in" }, G(399));
-        shake("#s4cam", 404, 8, 26, 82);
-        [420, 435, 450].forEach((f) => {
-          tl.set("#s4badge", { scale: 1.08 }, G(f));
+        // F456 Pille FLYERS (auf "Flyers"), Achse + leere Balken-Rahmen warten auf die Zahlen
+        tl.fromTo("#s4pill", { opacity: 0, scale: 0.4 }, { opacity: 1, scale: 1, duration: D(7), ease: "back.out(2.2)" }, G(456));
+        tl.fromTo('[data-composition-id="s4-proof"] .base', { scaleX: 0 }, { scaleX: 1, duration: D(10), ease: "expo.out" }, G(454));
+        tl.fromTo(["#s4ghL", "#s4ghR"], { scaleY: 0 }, { scaleY: 1, duration: D(10), ease: "expo.out", stagger: D(3) }, G(462));
+        tl.fromTo('[data-composition-id="s4-proof"] .yr', { opacity: 0 }, { opacity: 1, duration: D(6), ease: "none" }, G(464));
+        // F506–516 Balken 44 s (auf "forty-four", F511), F530–540 Balken 41 s (auf "forty-one", F537)
+        tl.fromTo("#s4barL", { height: 0 }, { height: 44 * PX, duration: D(10), ease: "power3.out" }, G(506));
+        tl.fromTo("#s4valL", { opacity: 0, y: 40 }, { opacity: 1, y: 0, duration: D(5), ease: "power2.out" }, G(507));
+        for (let f = 507; f <= 516; f++) tl.set("#s4valL", { textContent: Math.round(44 * (f - 506) / 10) + "s" }, G(f));
+        tl.fromTo("#s4barR", { height: 0 }, { height: 41 * PX, duration: D(10), ease: "power3.out" }, G(530));
+        tl.fromTo("#s4valR", { opacity: 0, y: 40 }, { opacity: 1, y: 0, duration: D(5), ease: "power2.out" }, G(531));
+        for (let f = 531; f <= 540; f++) tl.set("#s4valR", { textContent: Math.round(41 * (f - 530) / 10) + "s" }, G(f));
+        tl.set("#s4barR", { filter: "brightness(1.7)" }, G(540));
+        tl.to("#s4barR", { filter: "brightness(1)", duration: D(8), ease: "power2.out" }, G(540));
+        // F548 Badge −3 SEC (auf "seconds", F551)
+        tl.fromTo("#s4badge", { opacity: 0, scale: 1.8 }, { opacity: 1, scale: 1, duration: D(6), ease: "power4.out" }, G(548));
+        shake("#s4cam", 551, 5, 14, 82);
+        [570, 615, 630].forEach((f) => {
+          tl.set("#s4badge", { scale: 1.05 }, G(f));
           tl.to("#s4badge", { scale: 1, duration: D(8), ease: "power2.out" }, G(f));
         });
-        tl.fromTo("#s4src", { opacity: 0 }, { opacity: 1, duration: D(8), ease: "none" }, G(400));
 
-        // F437 FEWER GOALS ALLOWED (auf "fewer"), Haken zeichnet sich, Blitz + Wackler
-        tl.fromTo("#s4fewer", { opacity: 0, scale: 1.9 }, { opacity: 1, scale: 1, duration: D(5), ease: "power4.in" }, G(432));
+        // F580 FEWER GOALS ALLOWED (auf "allowed"), Haken zeichnet sich, Puls + Blitz auf "fewer" (F595)
+        tl.fromTo("#s4fewer", { opacity: 0, y: 120 }, { opacity: 1, y: 0, duration: D(7), ease: "expo.out" }, G(580));
         tl.fromTo('[data-composition-id="s4-proof"] .chk polyline', { attr: { "stroke-dasharray": 140, "stroke-dashoffset": 140 } },
-          { attr: { "stroke-dasharray": 140, "stroke-dashoffset": 0 }, duration: D(6), ease: "power2.out" }, G(437));
-        tl.set("#s4flash", { opacity: 0.45 }, G(437));
-        tl.to("#s4flash", { opacity: 0, duration: D(5), ease: "power2.in" }, G(437));
-        shake("#s4cam", 437, 12, 36, 83);
+          { attr: { "stroke-dasharray": 140, "stroke-dashoffset": 0 }, duration: D(8), ease: "power2.out" }, G(584));
+        tl.set("#s4fewer", { scale: 1.06 }, G(595));
+        tl.to("#s4fewer", { scale: 1, duration: D(10), ease: "power3.out" }, G(595));
+        tl.set("#s4flash", { opacity: 0.3 }, G(595));
+        tl.to("#s4flash", { opacity: 0, duration: D(5), ease: "power2.in" }, G(595));
+        shake("#s4cam", 595, 7, 18, 83);
 
         window.__timelines = window.__timelines || {};
         window.__timelines["s4-proof"] = tl;

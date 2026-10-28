@@ -1,8 +1,8 @@
 <!doctype html>
 <!--
-  BLADES AND PUCKS · REEL 43 "Why only 40 seconds?" (Full Motion, keine Bilder) · 1080x1920 · 30 fps · 18,5 s (F0–554) · 120 BPM
-  Szenen (Unter-Kompositionen): S1 Hook F0–104 · S2 Sprint F105–254 · S3 Mistakes F255–314 · S4 Proof F315–464 · S5 CTA F465–554
-  Übergänge (diese Datei): Glitch F105 · roter Blitz-Schnitt F255 · Snap-Swoosh rechts F309–321 · Glitch F465
+  BLADES AND PUCKS · REEL 43 v2 "Why only 40 seconds?" (ruhige Version: ein Text-Block pro Bild) · 1080x1920 · 30 fps · 26,0 s (F0–779) · 120 BPM
+  Szenen (Unter-Kompositionen): S1 Hook F0–134 · S2 Sprint F135–359 · S3 Mistakes F360–449 · S4 Proof F450–644 · S5 CTA F645–779
+  Übergänge (diese Datei): Glitch F135 · roter Blitz-Schnitt F360 · Snap-Swoosh rechts F444–456 · Glitch F645
   Ton: eine fertige Mischung (Beat + SFX + Sprecher Kokoro am_michael) aus make_audio.py. Frame-Tabelle: SKRIPT.md
 -->
 <html lang="en" data-resolution="portrait">
@@ -21,18 +21,18 @@
 </style>
 </head>
 <body>
-<div id="root" data-composition-id="main" data-start="0" data-duration="18.5" data-width="1080" data-height="1920">
+<div id="root" data-composition-id="main" data-start="0" data-duration="26" data-width="1080" data-height="1920">
 
   <div id="h1" class="scene clip" data-composition-id="s1-hook" data-composition-src="compositions/s1-hook.html"
-       data-start="0" data-duration="3.7" data-track-index="1" data-width="1080" data-height="1920" style="z-index:1"></div>
+       data-start="0" data-duration="4.7" data-track-index="1" data-width="1080" data-height="1920" style="z-index:1"></div>
   <div id="h2" class="scene clip" data-composition-id="s2-sprint" data-composition-src="compositions/s2-sprint.html"
-       data-start="3.3" data-duration="5.4" data-track-index="2" data-width="1080" data-height="1920" style="z-index:2; opacity:0"></div>
+       data-start="4.3" data-duration="7.9" data-track-index="2" data-width="1080" data-height="1920" style="z-index:2; opacity:0"></div>
   <div id="h3" class="scene clip" data-composition-id="s3-mistakes" data-composition-src="compositions/s3-mistakes.html"
-       data-start="8.3" data-duration="2.4" data-track-index="3" data-width="1080" data-height="1920" style="z-index:3; opacity:0"></div>
+       data-start="11.8" data-duration="3.4" data-track-index="3" data-width="1080" data-height="1920" style="z-index:3; opacity:0"></div>
   <div id="h4" class="scene clip" data-composition-id="s4-proof" data-composition-src="compositions/s4-proof.html"
-       data-start="10.3" data-duration="5.4" data-track-index="4" data-width="1080" data-height="1920" style="z-index:4; opacity:0"></div>
+       data-start="14.8" data-duration="6.9" data-track-index="4" data-width="1080" data-height="1920" style="z-index:4; opacity:0"></div>
   <div id="h5" class="scene clip" data-composition-id="s5-cta" data-composition-src="compositions/s5-cta.html"
-       data-start="15.3" data-duration="3.2" data-track-index="5" data-width="1080" data-height="1920" style="z-index:5; opacity:0"></div>
+       data-start="21.3" data-duration="4.7" data-track-index="5" data-width="1080" data-height="1920" style="z-index:5; opacity:0"></div>
 
   <!-- Glitch-Balken + roter Blitz für die Übergänge -->
   <div id="glitch">
@@ -43,7 +43,7 @@
   <div id="cutflash"></div>
 
   <!-- Ton: Beat + SFX + Sprecher als eine Mischung (make_audio.py) -->
-  <audio id="a_mix" src="audio/mix_vo.wav" data-start="0" data-duration="18.5" data-volume="1" data-track-index="10"></audio>
+  <audio id="a_mix" src="audio/mix_vo.wav" data-start="0" data-duration="26" data-volume="1" data-track-index="10"></audio>
 </div>
 
 <script>
@@ -69,23 +69,23 @@
       for (let b = 0; b < 6; b++) tl.set("#g" + b, { height: 0, opacity: 0 }, F(cutF + 6));
     }
 
-    // S1 -> S2: Glitch-Schnitt bei Frame 105
-    glitchCut("#h1", "#h2", 105, 21);
-    // S2 -> S3: harter Schnitt mit rotem Blitz + Zoom-Stoß bei Frame 255 (Fehler-Ton)
-    tl.set("#cutflash", { opacity: 0.85 }, F(254));
-    tl.set("#h3", { opacity: 1, scale: 1.12 }, F(255));
-    tl.set("#h2", { opacity: 0 }, F(255));
-    tl.to("#cutflash", { opacity: 0, duration: F(5), ease: "power2.in" }, F(255));
-    tl.to("#h3", { scale: 1, duration: F(8), ease: "power3.out" }, F(255));
-    // S3 -> S4: Snap-Swoosh nach rechts (S3 fliegt rechts raus, S4 kommt von links), Schnitt bei Frame 315
-    tl.to("#h3", { x: 1080, duration: F(6), ease: "power3.in" }, F(309));
-    tl.set("#h3", { filter: "blur(14px)" }, F(311));
-    tl.set("#h4", { opacity: 1, x: -1080, filter: "blur(14px)" }, F(315));
-    tl.set("#h3", { opacity: 0, filter: "blur(0px)" }, F(315));
-    tl.to("#h4", { x: 0, duration: F(6), ease: "power3.out" }, F(315));
-    tl.set("#h4", { filter: "blur(0px)" }, F(319));
-    // S4 -> S5: Glitch-Schnitt bei Frame 465
-    glitchCut("#h4", "#h5", 465, 51);
+    // S1 -> S2: Glitch-Schnitt bei Frame 135
+    glitchCut("#h1", "#h2", 135, 21);
+    // S2 -> S3: harter Schnitt mit rotem Blitz + Zoom-Stoß bei Frame 360 (Fehler-Ton)
+    tl.set("#cutflash", { opacity: 0.8 }, F(359));
+    tl.set("#h3", { opacity: 1, scale: 1.1 }, F(360));
+    tl.set("#h2", { opacity: 0 }, F(360));
+    tl.to("#cutflash", { opacity: 0, duration: F(5), ease: "power2.in" }, F(360));
+    tl.to("#h3", { scale: 1, duration: F(8), ease: "power3.out" }, F(360));
+    // S3 -> S4: Snap-Swoosh nach rechts (S3 fliegt rechts raus, S4 kommt von links), Schnitt bei Frame 450
+    tl.to("#h3", { x: 1080, duration: F(6), ease: "power3.in" }, F(444));
+    tl.set("#h3", { filter: "blur(14px)" }, F(446));
+    tl.set("#h4", { opacity: 1, x: -1080, filter: "blur(14px)" }, F(450));
+    tl.set("#h3", { opacity: 0, filter: "blur(0px)" }, F(450));
+    tl.to("#h4", { x: 0, duration: F(6), ease: "power3.out" }, F(450));
+    tl.set("#h4", { filter: "blur(0px)" }, F(454));
+    // S4 -> S5: Glitch-Schnitt bei Frame 645
+    glitchCut("#h4", "#h5", 645, 51);
 
     window.__timelines = window.__timelines || {};
     window.__timelines["main"] = tl;
