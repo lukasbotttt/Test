@@ -1,0 +1,92 @@
+<template id="s5-seventy-template">
+  <!-- S5 70 % · global 18,8–22,7 s (F564–680), lokal = global − 564. Vergleich: 4-on-4 44 % -> 3-on-3 70 % endeten in der OT. -->
+  <div data-composition-id="s5-seventy" data-width="1080" data-height="1920" data-duration="3.9">
+    <div class="scn">
+      <div class="cam" id="s5cam" data-layout-allow-overflow>
+        <div class="sky"></div>
+        <div id="s5rays" class="rays" data-layout-ignore></div>
+        <div class="vig" data-layout-ignore></div>
+      </div>
+      <div id="s5title" class="title">ENDED IN OVERTIME</div>
+      <div id="s5row1" class="row r1">
+        <div class="lab">4-ON-4 <small>2014-15</small></div>
+        <div class="track"><div class="fill f1"></div></div>
+        <div class="val v1">44%</div>
+      </div>
+      <div id="s5row2" class="row r2">
+        <div class="lab">3-ON-3 <small>2023-24</small></div>
+        <div class="track"><div id="s5fill2" class="fill f2"></div></div>
+        <div id="s5val2" class="val v2">0%</div>
+      </div>
+      <div id="s5flash" class="flash"></div>
+    </div>
+
+    <style>
+      @font-face { font-family: "Anton"; src: url("fonts/Anton.ttf"); }
+      @font-face { font-family: "JBMono"; src: url("fonts/JBMono700.ttf"); }
+      [data-composition-id="s5-seventy"] .scn { position: relative; width: 1080px; height: 1920px; overflow: hidden; background: #040a04; }
+      [data-composition-id="s5-seventy"] .cam { position: absolute; left: 0; top: 0; width: 1080px; height: 1920px; }
+      [data-composition-id="s5-seventy"] .sky { position: absolute; inset: 0;
+        background: radial-gradient(ellipse 70% 40% at 50% 55%, rgba(198,255,46,0.20), rgba(0,0,0,0) 70%), #040a04; }
+      [data-composition-id="s5-seventy"] .rays { position: absolute; left: -460px; top: -40px; width: 2000px; height: 2000px; opacity: 0.45;
+        background: repeating-conic-gradient(from 0deg at 50% 50%, rgba(198,255,46,0.16) 0deg 7deg, rgba(0,0,0,0) 7deg 22deg);
+        -webkit-mask-image: radial-gradient(circle, #000 0%, rgba(0,0,0,0) 62%); }
+      [data-composition-id="s5-seventy"] .vig { position: absolute; inset: 0; background: radial-gradient(ellipse at center, rgba(0,0,0,0) 55%, rgba(0,0,0,0.75) 100%); }
+      [data-composition-id="s5-seventy"] .title { position: absolute; left: 0; top: 400px; width: 1080px; text-align: center;
+        font-family: "Anton", sans-serif; font-size: 110px; line-height: 1; color: #fff; text-shadow: 0 10px 40px rgba(0,0,0,0.9); }
+      [data-composition-id="s5-seventy"] .row { position: absolute; left: 0; width: 1080px; height: 330px; }
+      [data-composition-id="s5-seventy"] .r1 { top: 680px; }
+      [data-composition-id="s5-seventy"] .r2 { top: 1090px; opacity: 0; }
+      [data-composition-id="s5-seventy"] .lab { position: absolute; left: 110px; top: 0; font-family: "Anton", sans-serif; font-size: 110px; line-height: 1; }
+      [data-composition-id="s5-seventy"] .lab small { font-family: "JBMono", monospace; font-size: 40px; color: #8f9bab; margin-left: 18px; }
+      [data-composition-id="s5-seventy"] .r1 .lab { color: #00f0ff; text-shadow: 0 0 18px rgba(0,240,255,0.7); }
+      [data-composition-id="s5-seventy"] .r2 .lab { color: #c6ff2e; text-shadow: 0 0 18px rgba(198,255,46,0.8); }
+      [data-composition-id="s5-seventy"] .track { position: absolute; left: 110px; top: 150px; width: 860px; height: 110px; border-radius: 55px;
+        background: rgba(255,255,255,0.08); border: 3px solid rgba(255,255,255,0.18); overflow: hidden; }
+      [data-composition-id="s5-seventy"] .fill { position: absolute; left: 0; top: 0; height: 104px; border-radius: 52px; }
+      [data-composition-id="s5-seventy"] .f1 { width: 378px; background: linear-gradient(90deg, #8792a3, #e9eef5); }
+      [data-composition-id="s5-seventy"] .f2 { width: 0px; background: linear-gradient(90deg, #7fb800, #c6ff2e); box-shadow: 0 0 30px rgba(198,255,46,0.9); }
+      [data-composition-id="s5-seventy"] .val { position: absolute; top: 140px; font-family: "Anton", sans-serif; line-height: 1; text-shadow: 0 10px 40px rgba(0,0,0,0.9); }
+      [data-composition-id="s5-seventy"] .v1 { left: 512px; top: 150px; font-size: 110px; color: #fff; }
+      [data-composition-id="s5-seventy"] .v2 { left: 732px; top: 136px; font-size: 136px; color: #c6ff2e;
+        text-shadow: 0 0 24px rgba(198,255,46,0.85), 0 10px 40px rgba(0,0,0,0.9); }
+      [data-composition-id="s5-seventy"] .flash { position: absolute; inset: 0; background: #fff; opacity: 0; }
+    </style>
+
+    <script src="vendor/gsap.min.js"></script>
+    <script>
+      (function () {
+        const OFF = 564;
+        const G = (f) => (f - OFF) / 30;
+        const D = (n) => n / 30;
+        const rng = (s) => () => { s |= 0; s = (s + 0x6D2B79F5) | 0; let t = Math.imul(s ^ (s >>> 15), 1 | s);
+          t = (t + Math.imul(t ^ (t >>> 7), 61 | t)) ^ t; return ((t ^ (t >>> 14)) >>> 0) / 4294967296; };
+        const tl = gsap.timeline({ paused: true });
+        const shake = (el, f0, n, amp, seed) => { const r = rng(seed);
+          for (let i = 0; i < n; i++) { const k = amp * (1 - i / n); tl.set(el, { x: (r() * 2 - 1) * k, y: (r() * 2 - 1) * k }, G(f0 + i)); }
+          tl.set(el, { x: 0, y: 0 }, G(f0 + n)); };
+
+        tl.fromTo("#s5rays", { rotation: 0 }, { rotation: 30, duration: D(117), ease: "none" }, G(564));
+        // Titel + bekannte Zeile 44 % stehen sofort, Zeile 3-on-3 fährt rein und füllt sich auf 70 % (auf "seventy", F589)
+        tl.fromTo("#s5title", { y: -60 }, { y: 0, duration: D(8), ease: "power3.out" }, G(570));
+        tl.fromTo("#s5row1", { x: -300 }, { x: 0, duration: D(10), ease: "expo.out" }, G(570));
+        tl.fromTo("#s5row2", { opacity: 0, x: 300 }, { opacity: 1, x: 0, duration: D(10), ease: "expo.out" }, G(578));
+        tl.fromTo("#s5fill2", { width: 0 }, { width: 602, duration: D(12), ease: "power2.out" }, G(583));
+        for (let f = 583; f <= 594; f++) tl.set("#s5val2", { textContent: Math.round(70 * Math.min(1, (f - 582) / 12)) + "%" }, G(f));
+        tl.set("#s5val2", { textContent: "70%" }, G(595));
+        tl.set("#s5row2", { scale: 1.05 }, G(595));
+        tl.to("#s5row2", { scale: 1, duration: D(10), ease: "power3.out" }, G(595));
+        tl.set("#s5flash", { opacity: 0.22 }, G(595));
+        tl.to("#s5flash", { opacity: 0, duration: D(5), ease: "power2.in" }, G(595));
+        shake("#s5cam", 595, 5, 12, 51);
+        [615, 630, 645, 660].forEach((f) => {
+          tl.set("#s5val2", { scale: 1.05 }, G(f));
+          tl.to("#s5val2", { scale: 1, duration: D(8), ease: "power2.out" }, G(f));
+        });
+
+        window.__timelines = window.__timelines || {};
+        window.__timelines["s5-seventy"] = tl;
+      })();
+    </script>
+  </div>
+</template>

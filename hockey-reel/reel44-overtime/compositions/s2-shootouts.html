@@ -1,0 +1,93 @@
+<template id="s2-shootouts-template">
+  <!-- S2 SHOOTOUTS · global 3,3–6,7 s (F99–200), lokal = global − 99. "TOO MANY SHOOTOUTS": Puck um Puck fliegt ins Tor. -->
+  <div data-composition-id="s2-shootouts" data-width="1080" data-height="1920" data-duration="3.4">
+    <div class="scn">
+      <div class="cam" id="s2cam" data-layout-allow-overflow>
+        <div class="sky"></div>
+        <div class="floor"></div>
+        <div id="s2lamp" class="lamp"></div>
+        <svg id="s2net" class="net" viewBox="0 0 760 520" data-layout-allow-overflow>
+          <defs>
+            <pattern id="s2mesh" width="34" height="34" patternUnits="userSpaceOnUse" patternTransform="rotate(45)">
+              <path d="M0 0 L0 34 M0 0 L34 0" stroke="#dfe9f5" stroke-opacity="0.45" stroke-width="3" fill="none"/></pattern>
+          </defs>
+          <rect x="30" y="30" width="700" height="467" fill="#050912"/>
+          <rect x="30" y="30" width="700" height="467" fill="url(#s2mesh)"/>
+          <path d="M30 497 L30 30 L730 30 L730 497" fill="none" stroke="#ff1744" stroke-width="26" stroke-linejoin="round"/>
+        </svg>
+        <div id="s2pucks" class="pucks"></div>
+        <div class="vig" data-layout-ignore></div>
+      </div>
+      <div id="s2too" class="too">TOO MANY</div>
+      <div id="s2so" class="so">SHOOTOUTS</div>
+      <div id="s2flash" class="flash"></div>
+    </div>
+
+    <style>
+      @font-face { font-family: "Anton"; src: url("fonts/Anton.ttf"); }
+      [data-composition-id="s2-shootouts"] .scn { position: relative; width: 1080px; height: 1920px; overflow: hidden; background: #03040c; }
+      [data-composition-id="s2-shootouts"] .cam { position: absolute; left: 0; top: 0; width: 1080px; height: 1920px; }
+      [data-composition-id="s2-shootouts"] .sky { position: absolute; inset: 0;
+        background: radial-gradient(ellipse 70% 35% at 50% 52%, rgba(255,23,68,0.22), rgba(0,0,0,0) 70%), #03040c; }
+      [data-composition-id="s2-shootouts"] .floor { position: absolute; left: 0; top: 1300px; width: 1080px; height: 620px;
+        background: linear-gradient(180deg, #0d2547 0%, #071426 100%); border-top: 8px solid #ff1744; box-shadow: 0 -6px 30px rgba(255,23,68,0.6); }
+      [data-composition-id="s2-shootouts"] .lamp { position: absolute; left: 480px; top: 690px; width: 120px; height: 70px; border-radius: 60px 60px 8px 8px;
+        background: #3a0610; border: 4px solid #ff5a76; }
+      [data-composition-id="s2-shootouts"] .net { position: absolute; left: 160px; top: 800px; width: 760px; height: 520px; transform-origin: 50% 100%;
+        filter: drop-shadow(0 0 18px rgba(255,23,68,0.7)); }
+      [data-composition-id="s2-shootouts"] .pucks { position: absolute; inset: 0; }
+      [data-composition-id="s2-shootouts"] .pk { position: absolute; left: 490px; top: 1700px; width: 100px; height: 64px; }
+      [data-composition-id="s2-shootouts"] .vig { position: absolute; inset: 0; background: radial-gradient(ellipse at center, rgba(0,0,0,0) 55%, rgba(0,0,0,0.75) 100%); }
+      [data-composition-id="s2-shootouts"] .too { position: absolute; left: 0; top: 170px; width: 1080px; text-align: center; opacity: 0;
+        font-family: "Anton", sans-serif; font-size: 130px; line-height: 1; color: #fff; text-shadow: 0 10px 40px rgba(0,0,0,0.9); }
+      [data-composition-id="s2-shootouts"] .so { position: absolute; left: 0; top: 320px; width: 1080px; text-align: center; opacity: 0;
+        font-family: "Anton", sans-serif; font-size: 200px; line-height: 1; color: #00f0ff;
+        text-shadow: 0 0 22px rgba(0,240,255,0.85), 0 10px 40px rgba(0,0,0,0.9); }
+      [data-composition-id="s2-shootouts"] .flash { position: absolute; inset: 0; background: #ff1744; opacity: 0; }
+    </style>
+
+    <script src="vendor/gsap.min.js"></script>
+    <script>
+      (function () {
+        const OFF = 99;
+        const G = (f) => (f - OFF) / 30;
+        const D = (n) => n / 30;
+        const rng = (s) => () => { s |= 0; s = (s + 0x6D2B79F5) | 0; let t = Math.imul(s ^ (s >>> 15), 1 | s);
+          t = (t + Math.imul(t ^ (t >>> 7), 61 | t)) ^ t; return ((t ^ (t >>> 14)) >>> 0) / 4294967296; };
+        const tl = gsap.timeline({ paused: true });
+        const shake = (el, f0, n, amp, seed) => { const r = rng(seed);
+          for (let i = 0; i < n; i++) { const k = amp * (1 - i / n); tl.set(el, { x: (r() * 2 - 1) * k, y: (r() * 2 - 1) * k }, G(f0 + i)); }
+          tl.set(el, { x: 0, y: 0 }, G(f0 + n)); };
+
+        // Text steht direkt nach dem Schnitt, Puls auf "shootouts" (F160)
+        tl.fromTo("#s2too", { opacity: 0, y: -60 }, { opacity: 1, y: 0, duration: D(6), ease: "power3.out" }, G(106));
+        tl.fromTo("#s2so", { opacity: 0, scale: 1.5 }, { opacity: 1, scale: 1, duration: D(6), ease: "power4.out" }, G(109));
+        tl.set("#s2so", { scale: 1.07 }, G(160));
+        tl.to("#s2so", { scale: 1, duration: D(10), ease: "power3.out" }, G(160));
+        tl.fromTo("#s2cam", { scale: 1.08 }, { scale: 1, duration: D(96), ease: "power1.out" }, G(105));
+
+        // Vier Schüsse auf den Beats (F120/135/150/165): Puck fliegt aus Kamerarichtung ins Netz, Lampe leuchtet
+        const targets = [[330, 1010], [640, 1120], [470, 1180], [560, 960]];
+        const box = document.querySelector("#s2pucks");
+        targets.forEach(([x, y], i) => {
+          const f = 120 + i * 15;
+          const d = document.createElement("div"); d.className = "pk";
+          d.innerHTML = '<svg viewBox="0 0 100 64" width="100" height="64"><path d="M6 22 L6 40 A44 16 0 0 0 94 40 L94 22 Z" fill="#111"/>' +
+            '<ellipse cx="50" cy="22" rx="44" ry="16" fill="#2a2a33" stroke="#e8f6ff" stroke-width="3"/></svg>';
+          box.appendChild(d);
+          tl.fromTo(d, { x: (i % 2 ? 160 : -160), y: 260, scale: 2.4, opacity: 0 },
+            { x: x - 540, y: y - 1732, scale: 0.6, opacity: 1, duration: D(7), ease: "power2.in" }, G(f - 7));
+          tl.set("#s2lamp", { backgroundColor: "#ff1744", boxShadow: "0 0 60px 20px rgba(255,23,68,0.9)" }, G(f));
+          tl.to("#s2lamp", { backgroundColor: "#3a0610", boxShadow: "0 0 0px 0px rgba(255,23,68,0)", duration: D(10), ease: "power2.in" }, G(f + 3));
+          tl.fromTo("#s2net", { scaleY: 1.03, scaleX: 0.99 }, { scaleY: 1, scaleX: 1, duration: D(8), ease: "elastic.out(1, 0.4)" }, G(f));
+          tl.set("#s2flash", { opacity: 0.12 }, G(f));
+          tl.to("#s2flash", { opacity: 0, duration: D(4), ease: "power2.in" }, G(f));
+          shake("#s2cam", f, 4, 8 + i * 2, 21 + i);
+        });
+
+        window.__timelines = window.__timelines || {};
+        window.__timelines["s2-shootouts"] = tl;
+      })();
+    </script>
+  </div>
+</template>

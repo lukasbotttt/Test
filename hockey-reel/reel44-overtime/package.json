@@ -1,0 +1,14 @@
+{
+  "name": "bp-reel44-overtime",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "dev": "npx --yes hyperframes@0.8.209 preview",
+    "check": "npx --yes hyperframes@0.8.209 check",
+    "render": "npx --yes hyperframes@0.8.209 render -o renders/reel44_raw.mp4"
+  },
+  "dependencies": {
+    "gsap": "^3.12.5",
+    "hyperframes": "^0.8.209"
+  }
+}

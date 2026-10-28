@@ -1,0 +1,103 @@
+<template id="s6-cta-template">
+  <!-- S6 CTA · global 22,3–27,0 s (F669–809), lokal = global − 669. "3-ON-3 OR SHOOTOUT?" -> ein Wort kommentieren. -->
+  <div data-composition-id="s6-cta" data-width="1080" data-height="1920" data-duration="4.7">
+    <div class="scn">
+      <div class="cam" id="s6cam" data-layout-allow-overflow>
+        <div class="sky"></div>
+        <div id="s6bokeh" class="bokeh"></div>
+        <div class="vig" data-layout-ignore></div>
+      </div>
+      <div id="s6a" class="qa">3-ON-3</div>
+      <div id="s6or" class="qor">OR</div>
+      <div id="s6b" class="qb">SHOOTOUT?</div>
+      <div id="s6bubble" class="bubble">COMMENT ONE WORD</div>
+      <svg id="s6arrow" class="arrow" viewBox="0 0 220 200"><g fill="none" stroke="#c6ff2e" stroke-width="22" stroke-linecap="round" stroke-linejoin="round">
+        <polyline points="30,40 110,120 190,40"/><polyline points="30,100 110,180 190,100" opacity="0.55"/></g></svg>
+      <div class="handle">@BLADESANDPUCKS</div>
+      <div id="s6flash" class="flash"></div>
+    </div>
+
+    <style>
+      @font-face { font-family: "Anton"; src: url("fonts/Anton.ttf"); }
+      @font-face { font-family: "ArchivoX"; src: url("fonts/ArchivoX900.ttf"); }
+      @font-face { font-family: "JBMono"; src: url("fonts/JBMono700.ttf"); }
+      [data-composition-id="s6-cta"] .scn { position: relative; width: 1080px; height: 1920px; overflow: hidden; background: #03060f; }
+      [data-composition-id="s6-cta"] .cam { position: absolute; left: 0; top: 0; width: 1080px; height: 1920px; }
+      [data-composition-id="s6-cta"] .sky { position: absolute; inset: 0;
+        background: radial-gradient(ellipse 60% 40% at 25% 30%, rgba(198,255,46,0.20), rgba(0,0,0,0) 70%),
+                    radial-gradient(ellipse 60% 40% at 80% 60%, rgba(0,180,255,0.28), rgba(0,0,0,0) 70%), #03060f; }
+      [data-composition-id="s6-cta"] .bokeh { position: absolute; inset: 0; }
+      [data-composition-id="s6-cta"] .bk { position: absolute; border-radius: 50%; }
+      [data-composition-id="s6-cta"] .vig { position: absolute; inset: 0; background: radial-gradient(ellipse at center, rgba(0,0,0,0) 50%, rgba(0,0,0,0.78) 100%); }
+      [data-composition-id="s6-cta"] .qa { position: absolute; left: 0; top: 230px; width: 1080px; text-align: center; opacity: 0;
+        font-family: "Anton", sans-serif; font-size: 240px; line-height: 1; color: #c6ff2e;
+        text-shadow: 0 0 24px rgba(198,255,46,0.9), 0 10px 40px rgba(0,0,0,0.85); }
+      [data-composition-id="s6-cta"] .qor { position: absolute; left: 0; top: 500px; width: 1080px; text-align: center; opacity: 0;
+        font-family: "Anton", sans-serif; font-size: 110px; line-height: 1; color: #fff; text-shadow: 0 10px 40px rgba(0,0,0,0.85); }
+      [data-composition-id="s6-cta"] .qb { position: absolute; left: 0; top: 630px; width: 1080px; text-align: center; opacity: 0;
+        font-family: "Anton", sans-serif; font-size: 210px; line-height: 1; color: #00f0ff;
+        text-shadow: 0 0 24px rgba(0,240,255,0.9), 0 10px 40px rgba(0,0,0,0.85); }
+      [data-composition-id="s6-cta"] .bubble { position: absolute; left: 90px; top: 1060px; width: 900px; height: 170px; border-radius: 85px;
+        background: rgba(12,20,0,0.9); border: 5px solid #c6ff2e;
+        box-shadow: 0 0 40px rgba(198,255,46,0.9), inset 0 0 40px rgba(198,255,46,0.3);
+        font-family: "ArchivoX", sans-serif; font-size: 52px; line-height: 170px; color: #fff; text-align: center; white-space: nowrap;
+        text-shadow: 0 0 20px rgba(198,255,46,0.95), 0 0 50px rgba(198,255,46,0.6); transform-origin: 50% 50%; }
+      [data-composition-id="s6-cta"] .arrow { position: absolute; left: 470px; top: 1280px; width: 140px; height: 128px; opacity: 0;
+        filter: drop-shadow(0 0 16px rgba(198,255,46,0.9)); }
+      [data-composition-id="s6-cta"] .handle { position: absolute; left: 0; top: 1720px; width: 1080px; text-align: center;
+        font-family: "JBMono", monospace; font-size: 40px; color: #ffffff; letter-spacing: 4px; opacity: 0.85; }
+      [data-composition-id="s6-cta"] .flash { position: absolute; inset: 0; background: #fff; opacity: 0; }
+    </style>
+
+    <script src="vendor/gsap.min.js"></script>
+    <script>
+      (function () {
+        const OFF = 669;
+        const G = (f) => (f - OFF) / 30;
+        const D = (n) => n / 30;
+        const rng = (s) => () => { s |= 0; s = (s + 0x6D2B79F5) | 0; let t = Math.imul(s ^ (s >>> 15), 1 | s);
+          t = (t + Math.imul(t ^ (t >>> 7), 61 | t)) ^ t; return ((t ^ (t >>> 14)) >>> 0) / 4294967296; };
+        const tl = gsap.timeline({ paused: true });
+        const shake = (el, f0, n, amp, seed) => { const r = rng(seed);
+          for (let i = 0; i < n; i++) { const k = amp * (1 - i / n); tl.set(el, { x: (r() * 2 - 1) * k, y: (r() * 2 - 1) * k }, G(f0 + i)); }
+          tl.set(el, { x: 0, y: 0 }, G(f0 + n)); };
+
+        (function () { const box = document.querySelector("#s6bokeh"), r = rng(29);
+          const cols = ["rgba(0,240,255,0.32)", "rgba(198,255,46,0.26)", "rgba(0,140,255,0.3)"];
+          for (let i = 0; i < 16; i++) {
+            const d = document.createElement("div"); d.className = "bk";
+            const s = 30 + r() * 110; d.style.width = s + "px"; d.style.height = s + "px";
+            d.style.left = Math.round(r() * 1080) + "px"; d.style.top = Math.round(r() * 1920) + "px";
+            d.style.background = cols[i % 3]; d.style.filter = "blur(" + Math.round(4 + r() * 10) + "px)";
+            box.appendChild(d);
+            tl.fromTo(d, { y: 0 }, { y: -120 - r() * 160, duration: D(141), ease: "none" }, G(669));
+          } })();
+
+        // F676 ganze Frage steht (3-ON-3 / OR / SHOOTOUT?), Pulse auf "three-on-three" (F681) und "shootout" (F706)
+        tl.fromTo("#s6a", { opacity: 0, x: -500 }, { opacity: 1, x: 0, duration: D(8), ease: "expo.out" }, G(676));
+        tl.fromTo("#s6or", { opacity: 0, scale: 0.4 }, { opacity: 1, scale: 1, duration: D(6), ease: "back.out(2)" }, G(680));
+        tl.fromTo("#s6b", { opacity: 0, x: 500 }, { opacity: 1, x: 0, duration: D(8), ease: "expo.out" }, G(682));
+        tl.set("#s6b", { scale: 1.06 }, G(706));
+        tl.to("#s6b", { scale: 1, duration: D(8), ease: "power2.out" }, G(706));
+        // F728 Bubble COMMENT ONE WORD (auf "comment", F732), Pfeil darunter, Sub-Impact F732
+        tl.fromTo("#s6bubble", { scale: 0 }, { scale: 1, duration: D(8), ease: "back.out(2.2)" }, G(726));
+        tl.fromTo("#s6arrow", { opacity: 0, y: -60 }, { opacity: 1, y: 0, duration: D(6), ease: "back.out(2)" }, G(736));
+        tl.set("#s6bubble", { scale: 1.1 }, G(732));
+        tl.to("#s6bubble", { scale: 1, duration: D(12), ease: "power3.out" }, G(732));
+        tl.set("#s6flash", { opacity: 0.22 }, G(732));
+        tl.to("#s6flash", { opacity: 0, duration: D(5), ease: "power2.in" }, G(732));
+        shake("#s6cam", 732, 6, 14, 61);
+        [750, 765, 780, 795].forEach((f) => {
+          tl.to("#s6arrow", { y: 26, duration: D(5), ease: "power2.out", yoyo: true, repeat: 1 }, G(f));
+        });
+        [765, 795].forEach((f) => {
+          tl.set("#s6bubble", { scale: 1.05 }, G(f));
+          tl.to("#s6bubble", { scale: 1, duration: D(8), ease: "power2.out" }, G(f));
+        });
+
+        window.__timelines = window.__timelines || {};
+        window.__timelines["s6-cta"] = tl;
+      })();
+    </script>
+  </div>
+</template>

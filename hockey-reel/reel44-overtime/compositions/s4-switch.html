@@ -1,0 +1,143 @@
+<template id="s4-switch-template">
+  <!-- S4 SWITCH · global 11,8–19,2 s (F354–575), lokal = global − 354. 2015-16: je ein Spieler runter -> mehr Platz -> Tor. -->
+  <div data-composition-id="s4-switch" data-width="1080" data-height="1920" data-duration="7.4">
+    <div class="scn">
+      <div class="cam" id="s4cam" data-layout-allow-overflow>
+        <div class="sky"></div>
+        <div class="rinkwrap" data-layout-allow-overflow>
+          <div id="s4rinkcam" class="rinkcam" data-layout-allow-overflow>
+            <div id="s4plane" class="plane" data-layout-allow-overflow></div>
+          </div>
+        </div>
+        <div class="vig" data-layout-ignore></div>
+      </div>
+      <div id="s4a" class="blk">
+        <div id="s4year" class="year">2015-16</div>
+        <div id="s4minus" class="minus">−1 SKATER</div>
+      </div>
+      <div id="s4b" class="blk">
+        <div id="s4space" class="l1">MORE SPACE</div>
+        <div id="s4goals" class="l2">MORE GOALS</div>
+      </div>
+      <div id="s4flash" class="flash"></div>
+    </div>
+
+    <style>
+      @font-face { font-family: "Anton"; src: url("fonts/Anton.ttf"); }
+      [data-composition-id="s4-switch"] .scn { position: relative; width: 1080px; height: 1920px; overflow: hidden; background: #02040c; }
+      [data-composition-id="s4-switch"] .cam { position: absolute; left: 0; top: 0; width: 1080px; height: 1920px; }
+      [data-composition-id="s4-switch"] .sky { position: absolute; inset: 0;
+        background: radial-gradient(ellipse 80% 40% at 50% 70%, rgba(0,140,255,0.25), rgba(0,0,0,0) 70%), #02040c; }
+      [data-composition-id="s4-switch"] .rinkwrap { position: absolute; left: 0; top: 200px; width: 1080px; height: 1720px; overflow: hidden; }
+      [data-composition-id="s4-switch"] .rinkcam { position: absolute; left: 0; top: 0; width: 1080px; height: 1360px;
+        perspective: 2400px; perspective-origin: 50% 100%; transform-origin: 50% 55%; }
+      [data-composition-id="s4-switch"] .plane { position: absolute; left: 110px; top: -720px; width: 860px; height: 2021px;
+        transform-origin: 50% 100%; transform: rotateX(44deg); }
+      [data-composition-id="s4-switch"] .plane svg { position: absolute; left: 0; top: 0; filter: drop-shadow(0 0 10px rgba(0,240,255,0.7)); }
+      [data-composition-id="s4-switch"] .chip { position: absolute; width: 84px; height: 84px; border-radius: 50%; border: 6px solid #ffffff;
+        font-family: "Anton", sans-serif; font-size: 40px; line-height: 72px; text-align: center; color: #fff; }
+      [data-composition-id="s4-switch"] .chip.h { background: #ff1744; box-shadow: 0 0 26px rgba(255,23,68,0.95); }
+      [data-composition-id="s4-switch"] .chip.a { background: #0095ff; box-shadow: 0 0 26px rgba(0,180,255,0.95); }
+      [data-composition-id="s4-switch"] .puck { position: absolute; width: 34px; height: 34px; border-radius: 50%; background: #0a0a0f;
+        border: 4px solid #e8f6ff; box-shadow: 0 0 14px rgba(255,255,255,0.8); }
+      [data-composition-id="s4-switch"] .glow { position: absolute; width: 300px; height: 300px; border-radius: 50%; opacity: 0;
+        background: radial-gradient(circle, rgba(255,255,255,0.95) 0%, rgba(255,23,68,0.85) 30%, rgba(255,23,68,0) 70%); }
+      [data-composition-id="s4-switch"] .vig { position: absolute; inset: 0; background: radial-gradient(ellipse at center, rgba(0,0,0,0) 55%, rgba(0,0,0,0.75) 100%); }
+      [data-composition-id="s4-switch"] .blk { position: absolute; left: 0; top: 0; width: 1080px; height: 560px; }
+      [data-composition-id="s4-switch"] .year { position: absolute; left: 0; top: 140px; width: 1080px; text-align: center; opacity: 0;
+        font-family: "Anton", sans-serif; font-size: 200px; line-height: 1; color: #c6ff2e;
+        text-shadow: 0 0 22px rgba(198,255,46,0.85), 0 10px 40px rgba(0,0,0,0.9); }
+      [data-composition-id="s4-switch"] .minus { position: absolute; left: 0; top: 370px; width: 1080px; text-align: center; opacity: 0;
+        font-family: "Anton", sans-serif; font-size: 140px; line-height: 1; color: #fff; text-shadow: 0 10px 40px rgba(0,0,0,0.9); }
+      [data-composition-id="s4-switch"] .l1 { position: absolute; left: 0; top: 140px; width: 1080px; text-align: center; opacity: 0;
+        font-family: "Anton", sans-serif; font-size: 180px; line-height: 1; color: #fff; text-shadow: 0 10px 40px rgba(0,0,0,0.9); }
+      [data-composition-id="s4-switch"] .l2 { position: absolute; left: 0; top: 340px; width: 1080px; text-align: center; opacity: 0;
+        font-family: "Anton", sans-serif; font-size: 180px; line-height: 1; color: #c6ff2e;
+        text-shadow: 0 0 22px rgba(198,255,46,0.85), 0 10px 40px rgba(0,0,0,0.9); }
+      [data-composition-id="s4-switch"] .flash { position: absolute; inset: 0; background: #fff; opacity: 0; }
+    </style>
+
+    <script src="vendor/gsap.min.js"></script>
+    <script>
+      (function () {
+        const OFF = 354;
+        const G = (f) => (f - OFF) / 30;
+        const D = (n) => n / 30;
+        const rng = (s) => () => { s |= 0; s = (s + 0x6D2B79F5) | 0; let t = Math.imul(s ^ (s >>> 15), 1 | s);
+          t = (t + Math.imul(t ^ (t >>> 7), 61 | t)) ^ t; return ((t ^ (t >>> 14)) >>> 0) / 4294967296; };
+        const tl = gsap.timeline({ paused: true });
+        const shake = (el, f0, n, amp, seed) => { const r = rng(seed);
+          for (let i = 0; i < n; i++) { const k = amp * (1 - i / n); tl.set(el, { x: (r() * 2 - 1) * k, y: (r() * 2 - 1) * k }, G(f0 + i)); }
+          tl.set(el, { x: 0, y: 0 }, G(f0 + n)); };
+
+        // Eisfläche (Draufsicht, NHL-Maße 200 x 85 ft; Einheiten 760 x 1786, gezeichnet in 860 x 2021 px)
+        const K = 860 / 760, plane = document.querySelector("#s4plane");
+        plane.innerHTML = '<svg width="860" height="2021" viewBox="0 0 760 1786"><defs><linearGradient id="s4ice" x1="0" y1="0" x2="0" y2="1">' +
+          '<stop offset="0" stop-color="#0a1a33"/><stop offset="1" stop-color="#0d2547"/></linearGradient></defs>' +
+          '<rect x="6" y="6" width="748" height="1774" rx="250" fill="url(#s4ice)" stroke="#00f0ff" stroke-width="10"/>' +
+          '<g fill="none"><line x1="6" y1="893" x2="754" y2="893" stroke="#ff1744" stroke-width="12"/>' +
+          '<line x1="6" y1="670" x2="754" y2="670" stroke="#2f7bff" stroke-width="12"/><line x1="6" y1="1116" x2="754" y2="1116" stroke="#2f7bff" stroke-width="12"/>' +
+          '<line x1="40" y1="98" x2="720" y2="98" stroke="#ff1744" stroke-width="4"/><line x1="40" y1="1688" x2="720" y2="1688" stroke="#ff1744" stroke-width="4"/>' +
+          '<circle cx="380" cy="893" r="134" stroke="#2f7bff" stroke-width="5"/>' +
+          '<circle cx="184" cy="277" r="134" stroke="#ff1744" stroke-width="5"/><circle cx="576" cy="277" r="134" stroke="#ff1744" stroke-width="5"/>' +
+          '<circle cx="184" cy="1509" r="134" stroke="#ff1744" stroke-width="5"/><circle cx="576" cy="1509" r="134" stroke="#ff1744" stroke-width="5"/></g>' +
+          '<path d="M326 98 A54 54 0 0 0 434 98 Z" fill="rgba(0,160,255,0.35)"/><path d="M326 1688 A54 54 0 0 1 434 1688 Z" fill="rgba(0,160,255,0.35)"/>' +
+          '<rect x="353" y="60" width="54" height="38" fill="none" stroke="#ffffff" stroke-width="4"/><rect x="353" y="1688" width="54" height="38" fill="none" stroke="#ffffff" stroke-width="4"/>' +
+          '<g fill="#ff1744"><circle cx="184" cy="715" r="9"/><circle cx="576" cy="715" r="9"/><circle cx="184" cy="1071" r="9"/><circle cx="576" cy="1071" r="9"/></g></svg>';
+        const chip = (cls, num, x, y) => { const d = document.createElement("div"); d.className = "chip " + cls; d.textContent = num;
+          d.style.left = Math.round(x * K - 42) + "px"; d.style.top = Math.round(y * K - 42) + "px"; plane.appendChild(d); return d; };
+        const mv = (d, x0, y0, x1, y1, f, n, ease) => tl.to(d, { x: (x1 - x0) * K, y: (y1 - y0) * K, duration: D(n), ease: ease || "sine.inOut" }, G(f));
+        // Start: 4 gegen 4 wie in S3 (eng)
+        const P = {
+          h9: ["h", 9, 360, 1010], h27: ["h", 27, 520, 960], h44: ["h", 44, 250, 900], h3: ["h", 3, 430, 1160],
+          a8: ["a", 8, 330, 820], a19: ["a", 19, 480, 860], a71: ["a", 71, 220, 1040], a5: ["a", 5, 560, 1080],
+        };
+        const el = {};
+        Object.entries(P).forEach(([k, [cls, num, x, y]]) => { el[k] = chip(cls, num, x, y); });
+        // leichtes Zappeln bis zum Wechsel
+        Object.keys(P).forEach((k, i) => { const r = rng(400 + i), [, , x, y] = P[k];
+          for (let f = 354; f < 460; f += 30) mv(el[k], x, y, x + (r() * 2 - 1) * 60, y + (r() * 2 - 1) * 60, f, 30); });
+        // F462–476: je ein Spieler (#3 rot, #5 blau) hebt ab und fliegt Richtung Bank vom Eis
+        [["h3", 462], ["a5", 466]].forEach(([k, f]) => {
+          tl.to(el[k], { scale: 1.7, duration: D(6), ease: "back.out(2)" }, G(f));
+          tl.to(el[k], { x: 700, y: -200, opacity: 0, duration: D(12), ease: "power2.in" }, G(f + 6));
+        });
+        // F484–504: die übrigen 3 gegen 3 ziehen auseinander -> viel freies Eis
+        const spread = { h9: [380, 980], h27: [640, 1180], h44: [130, 1260], a8: [560, 620], a19: [170, 700], a71: [380, 1420] };
+        Object.entries(spread).forEach(([k, [x, y]]) => { const [, , x0, y0] = P[k]; mv(el[k], x0, y0, x, y, 484, 20, "power2.inOut"); });
+        // Puck bei #9; F506–536 Alleingang aufs ferne Tor, F540 Tor (auf "goals")
+        const pk = document.createElement("div"); pk.className = "puck";
+        pk.style.left = Math.round(380 * K - 17) + "px"; pk.style.top = Math.round(920 * K - 17) + "px"; plane.appendChild(pk);
+        tl.fromTo(pk, { opacity: 0 }, { opacity: 1, duration: D(4), ease: "none" }, G(500));
+        mv(el.h9, 360, 1010, 400, 330, 506, 30, "power1.in");
+        mv(pk, 380, 920, 410, 260, 506, 28, "power1.in");
+        mv(pk, 380, 920, 380, 80, 534, 6, "power2.out");
+        mv(el.a8, 330, 820, 480, 420, 506, 32, "power1.inOut");
+        mv(el.a19, 480, 860, 260, 520, 506, 32, "power1.inOut");
+        const glow = document.createElement("div"); glow.className = "glow";
+        glow.style.left = Math.round(380 * K - 150) + "px"; glow.style.top = Math.round(80 * K - 150) + "px"; plane.appendChild(glow);
+        tl.set(glow, { opacity: 1, scale: 0.6 }, G(540));
+        tl.to(glow, { opacity: 0, scale: 2.2, duration: D(18), ease: "power2.out" }, G(540));
+        tl.set("#s4flash", { opacity: 0.3 }, G(540));
+        tl.to("#s4flash", { opacity: 0, duration: D(6), ease: "power2.in" }, G(540));
+        shake("#s4cam", 540, 6, 14, 41);
+        // Kamera: langsam näher, beim Alleingang mit nach vorn
+        tl.fromTo("#s4rinkcam", { scale: 1.18, y: 0 }, { scale: 1.12, y: 0, duration: D(130), ease: "sine.inOut" }, G(354));
+        tl.to("#s4rinkcam", { scale: 1.3, y: 220, duration: D(36), ease: "power1.inOut" }, G(504));
+
+        // Text A: F370 "2015-16" (auf "twenty fifteen"), F440 "−1 SKATER" (auf "one more skater"); raus F486
+        tl.fromTo("#s4year", { opacity: 0, scale: 1.4 }, { opacity: 1, scale: 1, duration: D(6), ease: "power4.out" }, G(370));
+        tl.fromTo("#s4minus", { opacity: 0, y: 50 }, { opacity: 1, y: 0, duration: D(6), ease: "power2.out" }, G(436));
+        tl.to("#s4a", { opacity: 0, y: -80, duration: D(5), ease: "power2.in" }, G(486));
+        // Text B: F494 "MORE SPACE", F524 "MORE GOALS" (auf "more overtime goals")
+        tl.fromTo("#s4space", { opacity: 0, scale: 1.3 }, { opacity: 1, scale: 1, duration: D(6), ease: "power4.out" }, G(494));
+        tl.fromTo("#s4goals", { opacity: 0, y: 50 }, { opacity: 1, y: 0, duration: D(6), ease: "power2.out" }, G(524));
+        tl.set("#s4goals", { scale: 1.08 }, G(540));
+        tl.to("#s4goals", { scale: 1, duration: D(10), ease: "power3.out" }, G(540));
+
+        window.__timelines = window.__timelines || {};
+        window.__timelines["s4-switch"] = tl;
+      })();
+    </script>
+  </div>
+</template>
