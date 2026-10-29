@@ -1,0 +1,80 @@
+<template id="s2-halves-template">
+  <!-- S2 HALVES · global 2,8–7,2 s (F84–215), lokal = global − 84. Bis 1910: zwei Halbzeiten à 30 Minuten. -->
+  <div data-composition-id="s2-halves" data-width="1080" data-height="1920" data-duration="4.4">
+    <div class="scn">
+      <div class="cam" id="s2cam" data-layout-allow-overflow>
+        <div class="sky"></div>
+        <div id="s2spotL" class="spot" style="left:60px" data-layout-ignore></div>
+        <div id="s2spotR" class="spot" style="left:600px" data-layout-ignore></div>
+        <div id="s2board" class="board"><div class="bhead">HALF</div><div id="s2clock" class="clock">30:00</div><div class="lamps"><div class="lamp" id="s2l1">1</div><div class="lamp" id="s2l2">2</div></div></div>
+        <div id="s2old" class="old" data-layout-ignore></div>
+        <div class="vig" data-layout-ignore></div>
+      </div>
+      <div id="s2a" class="t cyan" style="top:170px;font-size:120px;opacity:0">UNTIL 1910</div>
+      <div id="s2b" class="t" style="top:330px;font-size:220px;opacity:0">2 × 30 MIN</div>
+      <div id="s2flash" class="flash"></div>
+    </div>
+
+    <style>
+      @font-face { font-family: "Anton"; src: url("fonts/Anton.ttf"); }
+      @font-face { font-family: "JBMono"; src: url("fonts/JBMono700.ttf"); }
+      [data-composition-id="s2-halves"] .scn { position: relative; width: 1080px; height: 1920px; overflow: hidden; background: #02040c; }
+      [data-composition-id="s2-halves"] .cam { position: absolute; left: 0; top: 0; width: 1080px; height: 1920px; }
+      [data-composition-id="s2-halves"] .vig { position: absolute; inset: 0; background: radial-gradient(ellipse at center, rgba(0,0,0,0) 55%, rgba(0,0,0,0.75) 100%); }
+      [data-composition-id="s2-halves"] .flash { position: absolute; inset: 0; background: #fff; opacity: 0; }
+      [data-composition-id="s2-halves"] .t { position: absolute; left: 0; width: 1080px; text-align: center; white-space: nowrap;
+        font-family: "Anton", sans-serif; line-height: 1; color: #fff; text-shadow: 0 10px 40px rgba(0,0,0,0.9); }
+      [data-composition-id="s2-halves"] .lime { color: #c6ff2e; text-shadow: 0 0 22px rgba(198,255,46,0.85), 0 10px 40px rgba(0,0,0,0.9); }
+      [data-composition-id="s2-halves"] .cyan { color: #00f0ff; text-shadow: 0 0 22px rgba(0,240,255,0.85), 0 10px 40px rgba(0,0,0,0.9); }
+      [data-composition-id="s2-halves"] .sky { position: absolute; inset: 0;
+        background: radial-gradient(ellipse 70% 40% at 50% 62%, rgba(0,160,255,0.28), rgba(0,0,0,0) 70%),
+                    radial-gradient(ellipse 50% 30% at 50% 18%, rgba(198,255,46,0.10), rgba(0,0,0,0) 70%), #02040c; }
+      [data-composition-id="s2-halves"] .spot { position: absolute; top: -200px; width: 420px; height: 1500px; transform-origin: 50% 0%;
+        background: linear-gradient(180deg, rgba(200,240,255,0.22) 0%, rgba(200,240,255,0) 85%); filter: blur(10px); }
+      [data-composition-id="s2-halves"] .board { position: absolute; left: 140px; top: 860px; width: 800px; height: 600px; border-radius: 44px;
+        background: linear-gradient(180deg, #0b0f18 0%, #05070c 100%); border: 6px solid #1f2b3d;
+        box-shadow: 0 0 0 3px rgba(0,240,255,0.35), 0 0 60px rgba(0,240,255,0.35), 0 40px 80px rgba(0,0,0,0.85); }
+      [data-composition-id="s2-halves"] .bhead { position: absolute; left: 0; top: 40px; width: 788px; text-align: center; font-family: "JBMono", monospace;
+        font-size: 48px; letter-spacing: 14px; color: #00f0ff; text-shadow: 0 0 14px rgba(0,240,255,0.8); }
+      [data-composition-id="s2-halves"] .clock { position: absolute; left: 0; top: 110px; width: 788px; text-align: center; font-family: "JBMono", monospace;
+        font-size: 190px; line-height: 1.1; color: #ffb020; text-shadow: 0 0 22px rgba(255,176,32,0.85); }
+      [data-composition-id="s2-halves"] .lamps { position: absolute; left: 0; top: 380px; width: 788px; display: flex; justify-content: center; gap: 46px; }
+      [data-composition-id="s2-halves"] .lamp { width: 150px; height: 150px; border-radius: 50%; background: #121722; border: 6px solid #2a3344;
+        font-family: "Anton", sans-serif; font-size: 96px; line-height: 138px; text-align: center; color: #5b6474; }
+      [data-composition-id="s2-halves"] #s2cam { filter: sepia(0.55) saturate(1.2); }
+      [data-composition-id="s2-halves"] .old { position: absolute; inset: 0; background: rgba(255,200,120,0.06); }
+    </style>
+
+    <script src="vendor/gsap.min.js"></script>
+    <script>
+      (function () {
+        const OFF = 84;
+        const G = (f) => (f - OFF) / 30;
+        const D = (n) => n / 30;
+        const rng = (s) => () => { s |= 0; s = (s + 0x6D2B79F5) | 0; let t = Math.imul(s ^ (s >>> 15), 1 | s);
+          t = (t + Math.imul(t ^ (t >>> 7), 61 | t)) ^ t; return ((t ^ (t >>> 14)) >>> 0) / 4294967296; };
+        const tl = gsap.timeline({ paused: true });
+        const shake = (el, f0, n, amp, seed) => { const r = rng(seed);
+          for (let i = 0; i < n; i++) { const k = amp * (1 - i / n); tl.set(el, { x: (r() * 2 - 1) * k, y: (r() * 2 - 1) * k }, G(f0 + i)); }
+          tl.set(el, { x: 0, y: 0 }, G(f0 + n)); };
+        const pulse = (el, f, s) => { tl.set(el, { scale: s }, G(f)); tl.to(el, { scale: 1, duration: D(9), ease: "power2.out" }, G(f)); };
+
+        // Früher: Tafel zeigt "HALF 1 2" und 30:00 (leicht vergilbt, flackert wie alter Film)
+        tl.fromTo("#s2cam", { scale: 1.06 }, { scale: 1, duration: D(126), ease: "power1.out" }, G(90));
+        tl.fromTo("#s2spotL", { rotation: -12 }, { rotation: 14, duration: D(132), ease: "sine.inOut" }, G(84));
+        tl.fromTo("#s2spotR", { rotation: 12 }, { rotation: -14, duration: D(132), ease: "sine.inOut" }, G(84));
+        (function () { const r = rng(5); for (let f = 84; f < 216; f += 3) tl.set("#s2old", { opacity: 0.4 + r() * 0.6 }, G(f)); })();
+        ["29:59", "29:58", "29:57", "29:56"].forEach((t, i) => tl.set("#s2clock", { textContent: t }, G(120 + i * 30)));
+        // F96 "UNTIL 1910", F150 "2 × 30 MIN" (auf "two halves"), Lampen 1/2 auf F151/F157
+        tl.fromTo("#s2a", { opacity: 0, y: -50 }, { opacity: 1, y: 0, duration: D(6), ease: "power3.out" }, G(96));
+        tl.fromTo("#s2b", { opacity: 0, scale: 1.4 }, { opacity: 1, scale: 1, duration: D(6), ease: "power4.out" }, G(148));
+        [151, 157].forEach((f, i) => { tl.to("#s2l" + (i + 1), { ...{ backgroundColor: "#c6ff2e", borderColor: "#f4ffd0", color: "#0b1000", boxShadow: "0 0 40px rgba(198,255,46,0.95)" }, duration: D(3), ease: "none" }, G(f)); pulse("#s2l" + (i + 1), f, 1.15); });
+        shake("#s2cam", 150, 5, 12, 21);
+        pulse("#s2b", 172, 1.05);
+
+        window.__timelines = window.__timelines || {};
+        window.__timelines["s2-halves"] = tl;
+      })();
+    </script>
+  </div>
+</template>

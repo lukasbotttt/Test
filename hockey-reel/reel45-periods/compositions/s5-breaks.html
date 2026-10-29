@@ -1,0 +1,111 @@
+<template id="s5-breaks-template">
+  <!-- S5 BREAKS · global 14,3–18,7 s (F429–560), lokal = global − 429. Zwei Pausen = Eis zweimal sauber; bis heute so. -->
+  <div data-composition-id="s5-breaks" data-width="1080" data-height="1920" data-duration="4.4">
+    <div class="scn">
+      <div class="cam" id="s5cam" data-layout-allow-overflow>
+        <div class="sky"></div>
+        <div class="rinkwrap" data-layout-allow-overflow>
+          <div id="s5rinkcam" class="rinkcam" data-layout-allow-overflow>
+            <div id="s5plane" class="plane" data-layout-allow-overflow></div>
+          </div>
+        </div>
+        <div class="vig" data-layout-ignore></div>
+      </div>
+      <div id="s5a" class="blk">
+        <div id="s5a1" class="t" style="top:150px;font-size:200px;opacity:0">2 BREAKS</div>
+        <div id="s5a2" class="t cyan" style="top:370px;font-size:100px;opacity:0">TO CLEAN THE ICE</div>
+      </div>
+      <div id="s5b" class="t lime" style="top:220px;font-size:210px;opacity:0">STILL TODAY</div>
+      <div id="s5flash" class="flash"></div>
+    </div>
+
+    <style>
+      @font-face { font-family: "Anton"; src: url("fonts/Anton.ttf"); }
+      @font-face { font-family: "JBMono"; src: url("fonts/JBMono700.ttf"); }
+      [data-composition-id="s5-breaks"] .scn { position: relative; width: 1080px; height: 1920px; overflow: hidden; background: #02040c; }
+      [data-composition-id="s5-breaks"] .cam { position: absolute; left: 0; top: 0; width: 1080px; height: 1920px; }
+      [data-composition-id="s5-breaks"] .vig { position: absolute; inset: 0; background: radial-gradient(ellipse at center, rgba(0,0,0,0) 55%, rgba(0,0,0,0.75) 100%); }
+      [data-composition-id="s5-breaks"] .flash { position: absolute; inset: 0; background: #fff; opacity: 0; }
+      [data-composition-id="s5-breaks"] .t { position: absolute; left: 0; width: 1080px; text-align: center; white-space: nowrap;
+        font-family: "Anton", sans-serif; line-height: 1; color: #fff; text-shadow: 0 10px 40px rgba(0,0,0,0.9); }
+      [data-composition-id="s5-breaks"] .lime { color: #c6ff2e; text-shadow: 0 0 22px rgba(198,255,46,0.85), 0 10px 40px rgba(0,0,0,0.9); }
+      [data-composition-id="s5-breaks"] .cyan { color: #00f0ff; text-shadow: 0 0 22px rgba(0,240,255,0.85), 0 10px 40px rgba(0,0,0,0.9); }
+      [data-composition-id="s5-breaks"] .sky { position: absolute; inset: 0;
+        background: radial-gradient(ellipse 80% 40% at 50% 70%, rgba(0,160,255,0.25), rgba(0,0,0,0) 70%), #02040c; }
+      [data-composition-id="s5-breaks"] .blk { position: absolute; left: 0; top: 0; width: 1080px; height: 520px; }
+      [data-composition-id="s5-breaks"] .band { position: absolute; left: -40px; top: -80px; width: 940px; height: 80px;
+        background: linear-gradient(180deg, rgba(255,255,255,0) 0%, rgba(220,250,255,0.95) 60%, rgba(0,240,255,0.6) 100%);
+        box-shadow: 0 0 40px rgba(0,240,255,0.9); opacity: 0; }
+      [data-composition-id="s5-breaks"] .rinkwrap { position: absolute; left: 0; top: 330px; width: 1080px; height: 1590px; overflow: hidden; }
+      [data-composition-id="s5-breaks"] .rinkcam { position: absolute; left: 0; top: 0; width: 1080px; height: 1360px;
+        perspective: 2400px; perspective-origin: 50% 100%; transform-origin: 50% 55%; }
+      [data-composition-id="s5-breaks"] .plane { position: absolute; left: 110px; top: -720px; width: 860px; height: 2021px;
+        transform-origin: 50% 100%; transform: rotateX(44deg); }
+      [data-composition-id="s5-breaks"] .plane svg { position: absolute; left: 0; top: 0; filter: drop-shadow(0 0 10px rgba(0,240,255,0.7)); }
+      [data-composition-id="s5-breaks"] .flake { position: absolute; border-radius: 50%; background: rgba(240,248,255,0.92); opacity: 0;
+        box-shadow: 0 0 8px rgba(255,255,255,0.6); }
+    </style>
+
+    <script src="vendor/gsap.min.js"></script>
+    <script>
+      (function () {
+        const OFF = 429;
+        const G = (f) => (f - OFF) / 30;
+        const D = (n) => n / 30;
+        const rng = (s) => () => { s |= 0; s = (s + 0x6D2B79F5) | 0; let t = Math.imul(s ^ (s >>> 15), 1 | s);
+          t = (t + Math.imul(t ^ (t >>> 7), 61 | t)) ^ t; return ((t ^ (t >>> 14)) >>> 0) / 4294967296; };
+        const tl = gsap.timeline({ paused: true });
+        const shake = (el, f0, n, amp, seed) => { const r = rng(seed);
+          for (let i = 0; i < n; i++) { const k = amp * (1 - i / n); tl.set(el, { x: (r() * 2 - 1) * k, y: (r() * 2 - 1) * k }, G(f0 + i)); }
+          tl.set(el, { x: 0, y: 0 }, G(f0 + n)); };
+        const pulse = (el, f, s) => { tl.set(el, { scale: s }, G(f)); tl.to(el, { scale: 1, duration: D(9), ease: "power2.out" }, G(f)); };
+
+        // Eisfläche (Draufsicht, NHL-Maße 200 x 85 ft; Einheiten 760 x 1786, gezeichnet in 860 x 2021 px)
+        const K = 860 / 760, plane = document.querySelector("#s5plane");
+        plane.innerHTML = '<svg width="860" height="2021" viewBox="0 0 760 1786"><defs><linearGradient id="s5ice" x1="0" y1="0" x2="0" y2="1">' +
+          '<stop offset="0" stop-color="#0a1a33"/><stop offset="1" stop-color="#0d2547"/></linearGradient></defs>' +
+          '<rect x="6" y="6" width="748" height="1774" rx="250" fill="url(#s5ice)" stroke="#00f0ff" stroke-width="10"/>' +
+          '<g fill="none"><line x1="6" y1="893" x2="754" y2="893" stroke="#ff1744" stroke-width="12"/>' +
+          '<line x1="6" y1="670" x2="754" y2="670" stroke="#2f7bff" stroke-width="12"/><line x1="6" y1="1116" x2="754" y2="1116" stroke="#2f7bff" stroke-width="12"/>' +
+          '<line x1="40" y1="98" x2="720" y2="98" stroke="#ff1744" stroke-width="4"/><line x1="40" y1="1688" x2="720" y2="1688" stroke="#ff1744" stroke-width="4"/>' +
+          '<circle cx="380" cy="893" r="134" stroke="#2f7bff" stroke-width="5"/>' +
+          '<circle cx="184" cy="277" r="134" stroke="#ff1744" stroke-width="5"/><circle cx="576" cy="277" r="134" stroke="#ff1744" stroke-width="5"/>' +
+          '<circle cx="184" cy="1509" r="134" stroke="#ff1744" stroke-width="5"/><circle cx="576" cy="1509" r="134" stroke="#ff1744" stroke-width="5"/></g>' +
+          '<path d="M326 98 A54 54 0 0 0 434 98 Z" fill="rgba(0,160,255,0.35)"/><path d="M326 1688 A54 54 0 0 1 434 1688 Z" fill="rgba(0,160,255,0.35)"/>' +
+          '<rect x="353" y="60" width="54" height="38" fill="none" stroke="#ffffff" stroke-width="4"/><rect x="353" y="1688" width="54" height="38" fill="none" stroke="#ffffff" stroke-width="4"/>' +
+          '<g fill="#ff1744"><circle cx="184" cy="715" r="9"/><circle cx="576" cy="715" r="9"/><circle cx="184" cy="1071" r="9"/><circle cx="576" cy="1071" r="9"/></g></svg>';
+        // Schneeschicht: viele weiße Flocken auf dem Eis (Rink-Einheiten), jede mit eigener Erscheinungszeit
+        const snow = [];
+        (function () { const r = rng(77);
+          for (let i = 0; i < 260; i++) {
+            const d = document.createElement("div"); d.className = "flake";
+            const x = 40 + r() * 680, y = 40 + r() * 1706, s = 10 + r() * 26;
+            d.style.left = Math.round(x * K - s / 2) + "px"; d.style.top = Math.round(y * K - s / 2) + "px";
+            d.style.width = Math.round(s) + "px"; d.style.height = Math.round(s * (0.6 + r() * 0.4)) + "px";
+            plane.appendChild(d); snow.push({ d, y, r: r() });
+          } })();
+        // Start: Eis voller Schnee
+        snow.forEach(({ d, r }) => tl.set(d, { opacity: 0.55 + r * 0.4 }, G(429)));
+        // zwei Reinigungen: ein leuchtender Balken fährt übers Eis (F445–470 und F497–520), dahinter ist das Eis sauber
+        const band = document.createElement("div"); band.className = "band"; plane.appendChild(band);
+        [[445, 25], [497, 23]].forEach(([f0, n], k) => {
+          tl.set(band, { opacity: 1, y: 0 }, G(f0));
+          tl.to(band, { y: 2021 + 80, duration: D(n), ease: "none" }, G(f0));
+          tl.set(band, { opacity: 0 }, G(f0 + n));
+          snow.forEach(({ d, y }) => tl.to(d, { opacity: 0, duration: D(2), ease: "none" }, G(f0 + Math.round((y / 1786) * n))));
+          if (k === 0) snow.forEach(({ d, r }) => { if (r < 0.45) tl.to(d, { opacity: 0.35 + r, duration: D(8), ease: "none" }, G(474 + Math.round(r * 30))); });
+        });
+        tl.fromTo("#s5rinkcam", { scale: 1.2 }, { scale: 1.12, duration: D(126), ease: "none" }, G(429));
+        // F438 "2 BREAKS" (auf "two breaks"), F458 "TO CLEAN THE ICE"; F514 Block raus, F518 "STILL TODAY" (auf "still")
+        tl.fromTo("#s5a1", { opacity: 0, scale: 1.4 }, { opacity: 1, scale: 1, duration: D(6), ease: "power4.out" }, G(438));
+        tl.fromTo("#s5a2", { opacity: 0, y: 40 }, { opacity: 1, y: 0, duration: D(6), ease: "power2.out" }, G(458));
+        tl.to("#s5a", { opacity: 0, y: -60, duration: D(5), ease: "power2.in" }, G(513));
+        tl.fromTo("#s5b", { opacity: 0, scale: 1.4 }, { opacity: 1, scale: 1, duration: D(6), ease: "power4.out" }, G(518));
+        pulse("#s5b", 535, 1.05);
+
+        window.__timelines = window.__timelines || {};
+        window.__timelines["s5-breaks"] = tl;
+      })();
+    </script>
+  </div>
+</template>
