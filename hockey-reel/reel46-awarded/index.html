@@ -1,0 +1,99 @@
+<!doctype html>
+<!--
+  BLADES AND PUCKS · REEL 46 "A goal without a shot?" (Awarded Goal, ruhiger Stil) · 1080x1920 · 30 fps · 24,0 s (F0–719) · 120 BPM
+  Szenen: S1 Hook F0–89 · S2 Regel F90–269 · S3 McLeod F270–419 · S4 Hattrick F420–494 · S5 0 Schüsse F495–599 · S6 CTA F600–719
+  Übergänge (diese Datei): Glitch F90 · Snap-Swoosh rechts F264–276 · Blitz-Zoom F420 · Snap-Swoosh rechts F489–501 · Glitch F600
+  Ton: eine fertige Mischung (Beat + SFX + Sprecher Kokoro am_michael) aus make_audio.py. Frame-Tabelle: SKRIPT.md
+-->
+<html lang="en" data-resolution="portrait">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=1080, height=1920" />
+<title>Blades and Pucks Reel 46</title>
+<script src="vendor/gsap.min.js"></script>
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  html, body { margin: 0; width: 1080px; height: 1920px; overflow: hidden; background: #000; }
+  .scene { position: absolute; top: 0; left: 0; width: 100%; height: 100%; }
+  #glitch { position: absolute; left: 0; top: 0; width: 1080px; height: 1920px; z-index: 50; pointer-events: none; }
+  .gbar { position: absolute; left: 0; width: 1080px; height: 0px; opacity: 0; mix-blend-mode: difference; }
+  #cutflash { position: absolute; left: 0; top: 0; width: 1080px; height: 1920px; z-index: 51; background: #ffffff; opacity: 0; pointer-events: none; }
+</style>
+</head>
+<body>
+<div id="root" data-composition-id="main" data-start="0" data-duration="24" data-width="1080" data-height="1920">
+
+  <div id="h1" class="scene clip" data-composition-id="s1-hook" data-composition-src="compositions/s1-hook.html"
+       data-start="0" data-duration="3.2" data-track-index="1" data-width="1080" data-height="1920" style="z-index:1"></div>
+  <div id="h2" class="scene clip" data-composition-id="s2-rule" data-composition-src="compositions/s2-rule.html"
+       data-start="2.8" data-duration="6.4" data-track-index="2" data-width="1080" data-height="1920" style="z-index:2; opacity:0"></div>
+  <div id="h3" class="scene clip" data-composition-id="s3-story" data-composition-src="compositions/s3-story.html"
+       data-start="8.8" data-duration="5.4" data-track-index="3" data-width="1080" data-height="1920" style="z-index:3; opacity:0"></div>
+  <div id="h4" class="scene clip" data-composition-id="s4-hat" data-composition-src="compositions/s4-hat.html"
+       data-start="13.8" data-duration="2.9" data-track-index="4" data-width="1080" data-height="1920" style="z-index:4; opacity:0"></div>
+  <div id="h5" class="scene clip" data-composition-id="s5-zero" data-composition-src="compositions/s5-zero.html"
+       data-start="16.3" data-duration="3.9" data-track-index="5" data-width="1080" data-height="1920" style="z-index:5; opacity:0"></div>
+  <div id="h6" class="scene clip" data-composition-id="s6-cta" data-composition-src="compositions/s6-cta.html"
+       data-start="19.8" data-duration="4.2" data-track-index="6" data-width="1080" data-height="1920" style="z-index:6; opacity:0"></div>
+
+  <!-- Glitch-Balken + Blitz für die Übergänge -->
+  <div id="glitch">
+    <div class="gbar" id="g0" style="background:#ff0050"></div><div class="gbar" id="g1" style="background:#00f0ff"></div>
+    <div class="gbar" id="g2" style="background:#ffffff"></div><div class="gbar" id="g3" style="background:#ff0050"></div>
+    <div class="gbar" id="g4" style="background:#00f0ff"></div><div class="gbar" id="g5" style="background:#c6ff2e"></div>
+  </div>
+  <div id="cutflash"></div>
+
+  <!-- Ton: Beat + SFX + Sprecher als eine Mischung (make_audio.py) -->
+  <audio id="a_mix" src="audio/mix_vo.wav" data-start="0" data-duration="24" data-volume="1" data-track-index="10"></audio>
+</div>
+
+<script>
+  (function () {
+    const F = (n) => n / 30;                           // Frame -> Sekunde (global)
+    const rng = (s) => () => { s |= 0; s = (s + 0x6D2B79F5) | 0; let t = Math.imul(s ^ (s >>> 15), 1 | s);
+      t = (t + Math.imul(t ^ (t >>> 7), 61 | t)) ^ t; return ((t ^ (t >>> 14)) >>> 0) / 4294967296; };
+    const tl = gsap.timeline({ paused: true });
+
+    // Glitch-Schnitt: 6 Frames vor bis 6 Frames nach dem Schnitt flackern alte/neue Szene, Farbbalken, Versatz
+    function glitchCut(outSel, inSel, cutF, seed) {
+      const r = rng(seed);
+      for (let f = cutF - 6; f < cutF + 6; f++) {
+        const showNew = f >= cutF ? r() > 0.2 : r() > 0.75;
+        tl.set(inSel, { opacity: showNew ? 1 : 0, x: (r() * 2 - 1) * 40 }, F(f));
+        tl.set(outSel, { x: (r() * 2 - 1) * 60 }, F(f));
+        for (let b = 0; b < 6; b++) {
+          tl.set("#g" + b, { y: r() * 1920, height: r() < 0.6 ? 6 + r() * 70 : 0, opacity: 0.85 }, F(f));
+        }
+      }
+      tl.set(inSel, { opacity: 1, x: 0 }, F(cutF + 6));
+      tl.set(outSel, { opacity: 0, x: 0 }, F(cutF + 6));
+      for (let b = 0; b < 6; b++) tl.set("#g" + b, { height: 0, opacity: 0 }, F(cutF + 6));
+    }
+    // Snap-Swoosh nach rechts: alte Szene fliegt rechts raus, neue kommt von links (mit Bewegungsunschärfe)
+    function snapCut(outSel, inSel, cutF) {
+      tl.to(outSel, { x: 1080, duration: F(6), ease: "power3.in" }, F(cutF - 6));
+      tl.set(outSel, { filter: "blur(14px)" }, F(cutF - 4));
+      tl.set(inSel, { opacity: 1, x: -1080, filter: "blur(14px)" }, F(cutF));
+      tl.set(outSel, { opacity: 0, filter: "blur(0px)" }, F(cutF));
+      tl.to(inSel, { x: 0, duration: F(6), ease: "power3.out" }, F(cutF));
+      tl.set(inSel, { filter: "blur(0px)" }, F(cutF + 4));
+    }
+
+    glitchCut("#h1", "#h2", 90, 21);                   // S1 -> S2
+    snapCut("#h2", "#h3", 270);                        // S2 -> S3
+    // S3 -> S4: Blitz + Zoom-Stoß bei Frame 420
+    tl.set("#cutflash", { opacity: 0.85 }, F(419));
+    tl.set("#h4", { opacity: 1, scale: 1.1 }, F(420));
+    tl.set("#h3", { opacity: 0 }, F(420));
+    tl.to("#cutflash", { opacity: 0, duration: F(6), ease: "power2.in" }, F(420));
+    tl.to("#h4", { scale: 1, duration: F(8), ease: "power3.out" }, F(420));
+    snapCut("#h4", "#h5", 495);                        // S4 -> S5
+    glitchCut("#h5", "#h6", 600, 51);                  // S5 -> S6
+
+    window.__timelines = window.__timelines || {};
+    window.__timelines["main"] = tl;
+  })();
+</script>
+</body>
+</html>

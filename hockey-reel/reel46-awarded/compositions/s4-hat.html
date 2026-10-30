@@ -1,0 +1,65 @@
+<template id="s4-hat-template">
+  <!-- S4 HAT TRICK · global 13,8–16,7 s (F414–500), lokal = global − 414. Tor zugesprochen = sein dritter Treffer. -->
+  <div data-composition-id="s4-hat" data-width="1080" data-height="1920" data-duration="2.9">
+    <div class="scn">
+      <div class="cam" id="s4cam" data-layout-allow-overflow>
+        <div class="sky"></div>
+        <svg id="s4pucks" class="pucks" viewBox="0 0 1080 1920" data-layout-ignore><g transform="translate(250 1040)"><g id="s4p1"><ellipse cx="0" cy="40" rx="120" ry="42" fill="#0a0a0f"/><rect x="-120" y="0" width="240" height="40" fill="#0a0a0f"/><ellipse id="s4t1" cx="0" cy="0" rx="120" ry="42" fill="#2a2a33" stroke="#5b6474" stroke-width="6"/></g></g><g transform="translate(540 1040)"><g id="s4p2"><ellipse cx="0" cy="40" rx="120" ry="42" fill="#0a0a0f"/><rect x="-120" y="0" width="240" height="40" fill="#0a0a0f"/><ellipse id="s4t2" cx="0" cy="0" rx="120" ry="42" fill="#2a2a33" stroke="#5b6474" stroke-width="6"/></g></g><g transform="translate(830 1040)"><g id="s4p3"><ellipse cx="0" cy="40" rx="120" ry="42" fill="#0a0a0f"/><rect x="-120" y="0" width="240" height="40" fill="#0a0a0f"/><ellipse id="s4t3" cx="0" cy="0" rx="120" ry="42" fill="#2a2a33" stroke="#5b6474" stroke-width="6"/></g></g>
+          <circle id="s4ring" cx="830" cy="1040" r="120" fill="none" stroke="#c6ff2e" stroke-width="10" opacity="0"/></svg>
+        <div class="vig" data-layout-ignore></div>
+      </div>
+      <div id="s4a" class="t" style="top:200px;font-size:140px;opacity:0">GOAL AWARDED</div>
+      <div id="s4b" class="t lime" style="top:380px;font-size:230px;opacity:0">HAT TRICK</div>
+      <div id="s4flash" class="flash"></div>
+    </div>
+
+    <style>
+      @font-face { font-family: "Anton"; src: url("fonts/Anton.ttf"); }
+      @font-face { font-family: "JBMono"; src: url("fonts/JBMono700.ttf"); }
+      [data-composition-id="s4-hat"] .scn { position: relative; width: 1080px; height: 1920px; overflow: hidden; background: #02040c; }
+      [data-composition-id="s4-hat"] .cam { position: absolute; left: 0; top: 0; width: 1080px; height: 1920px; }
+      [data-composition-id="s4-hat"] .vig { position: absolute; inset: 0; background: radial-gradient(ellipse at center, rgba(0,0,0,0) 55%, rgba(0,0,0,0.75) 100%); }
+      [data-composition-id="s4-hat"] .flash { position: absolute; inset: 0; background: #fff; opacity: 0; }
+      [data-composition-id="s4-hat"] .t { position: absolute; left: 0; width: 1080px; text-align: center; white-space: nowrap;
+        font-family: "Anton", sans-serif; line-height: 1; color: #fff; text-shadow: 0 10px 40px rgba(0,0,0,0.9); }
+      [data-composition-id="s4-hat"] .lime { color: #c6ff2e; text-shadow: 0 0 22px rgba(198,255,46,0.85), 0 10px 40px rgba(0,0,0,0.9); }
+      [data-composition-id="s4-hat"] .cyan { color: #00f0ff; text-shadow: 0 0 22px rgba(0,240,255,0.85), 0 10px 40px rgba(0,0,0,0.9); }
+      [data-composition-id="s4-hat"] .sky { position: absolute; inset: 0;
+        background: radial-gradient(ellipse 80% 40% at 50% 70%, rgba(198,255,46,0.18), rgba(0,0,0,0) 70%), #02040c; }
+      [data-composition-id="s4-hat"] .pucks { position: absolute; left: 0; top: 0; width: 1080px; height: 1920px; }
+    </style>
+
+    <script src="vendor/gsap.min.js"></script>
+    <script>
+      (function () {
+        const OFF = 414;
+        const G = (f) => (f - OFF) / 30;
+        const D = (n) => n / 30;
+        const rng = (s) => () => { s |= 0; s = (s + 0x6D2B79F5) | 0; let t = Math.imul(s ^ (s >>> 15), 1 | s);
+          t = (t + Math.imul(t ^ (t >>> 7), 61 | t)) ^ t; return ((t ^ (t >>> 14)) >>> 0) / 4294967296; };
+        const tl = gsap.timeline({ paused: true });
+        const shake = (el, f0, n, amp, seed) => { const r = rng(seed);
+          for (let i = 0; i < n; i++) { const k = amp * (1 - i / n); tl.set(el, { x: (r() * 2 - 1) * k, y: (r() * 2 - 1) * k }, G(f0 + i)); }
+          tl.set(el, { x: 0, y: 0 }, G(f0 + n)); };
+        const pulse = (el, f, s) => { tl.set(el, { scale: s }, G(f)); tl.to(el, { scale: 1, duration: D(9), ease: "power2.out" }, G(f)); };
+
+        tl.fromTo("#s4a", { opacity: 0, scale: 1.4 }, { opacity: 1, scale: 1, duration: D(6), ease: "power4.out" }, G(422));
+        tl.fromTo("#s4pucks", { y: 300, opacity: 0 }, { y: 0, opacity: 1, duration: D(10), ease: "expo.out" }, G(424));
+        // Pucks 1 und 2 leuchten (F440/447), Puck 3 mit "HAT TRICK" (F459), Ring + Ding nach "complete" (F478)
+        [440, 447, 459].forEach((f, i) => {
+          tl.to("#s4t" + (i + 1), { attr: { fill: "#c6ff2e", stroke: "#f4ffd0" }, duration: D(3), ease: "none" }, G(f));
+          tl.fromTo("#s4p" + (i + 1), { y: -30 }, { y: 0, duration: D(8), ease: "bounce.out" }, G(f));
+        });
+        tl.fromTo("#s4b", { opacity: 0, scale: 1.5 }, { opacity: 1, scale: 1, duration: D(6), ease: "power4.out" }, G(457));
+        tl.set("#s4ring", { opacity: 1, attr: { r: 120 } }, G(478));
+        tl.to("#s4ring", { opacity: 0, attr: { r: 300 }, duration: D(14), ease: "power2.out" }, G(478));
+        pulse("#s4b", 478, 1.06);
+        tl.set("#s4flash", { opacity: 0.2 }, G(478));
+        tl.to("#s4flash", { opacity: 0, duration: D(5), ease: "power2.in" }, G(478));
+
+        window.__timelines = window.__timelines || {};
+        window.__timelines["s4-hat"] = tl;
+      })();
+    </script>
+  </div>
+</template>

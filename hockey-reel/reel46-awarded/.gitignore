@@ -1,0 +1,6 @@
+node_modules/
+renders/
+snapshots/
+.hyperframes/
+node_modules
+audio/music_120bpm.wav
