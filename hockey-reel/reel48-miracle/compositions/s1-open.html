@@ -1,0 +1,107 @@
+<template id="s1-open-template">
+  <!-- S1 COLD OPEN · global 0–5,0 s (F0–149), Schnitt F144. 9.2.1980: 3:10 gegen die UdSSR, 13 Tage später wieder. -->
+  <div data-composition-id="s1-open" data-width="1080" data-height="1920" data-duration="5.0">
+    <div class="scn">
+      <div class="cam" id="s1cam" data-layout-allow-overflow>
+        <div class="bg"></div>
+        <div id="s1beam" class="beam" style="left:190px" data-layout-ignore></div>
+        <div id="s1dust" class="dustbox" data-layout-ignore></div>
+        <div id="s1sb" class="sb" style="top:720px;height:560px"><div class="bolt" style="left:18px;top:18px"></div><div class="bolt" style="left:852px;top:18px"></div><div class="bolt" style="left:18px;top:512px"></div><div class="bolt" style="left:852px;top:512px"></div>
+          <div class="lab" style="left:0;width:888px;text-align:center;top:40px;font-size:46px;color:#ffbf5a">FINAL</div>
+          <div class="divider" style="top:118px"></div>
+          <div class="lab" style="left:70px;top:190px;font-size:96px">USSR</div>
+          <div class="seg red" style="left:470px;top:165px;width:360px;font-size:190px"><span class="gh" aria-hidden="true" data-layout-ignore>88</span><span id="s1v1" class="v" data-layout-allow-overlap>10</span></div>
+          <div class="lab" style="left:70px;top:380px;font-size:96px">USA</div>
+          <div class="seg" style="left:470px;top:355px;width:360px;font-size:190px"><span class="gh" aria-hidden="true" data-layout-ignore>88</span><span id="s1v2" class="v" data-layout-allow-overlap>3</span></div>
+        </div>
+        <div class="vig" data-layout-ignore></div>
+      </div>
+      <div id="s1a" class="c" style="top:380px;font-size:104px">THEY LOST 10–3.</div>
+      <div id="s1b1" class="c" style="top:350px;font-size:92px;opacity:0">13 DAYS LATER,</div>
+      <div id="s1b2" class="c" style="top:470px;font-size:92px;opacity:0">THEY MET AGAIN.</div>
+      <div id="s1date" class="c amber" style="top:1400px;font-size:38px;letter-spacing:6px;opacity:0">FEB 9, 1980 · MADISON SQUARE GARDEN</div>
+      <div id="s1flash" class="flash"></div>
+    </div>
+
+    <style>
+      @font-face { font-family: "Cinzel"; src: url("fonts/Cinzel.woff2") format("woff2"); font-weight: 400 900; }
+      @font-face { font-family: "DSEG7"; src: url("fonts/DSEG7Classic-Bold.woff2") format("woff2"); }
+      @font-face { font-family: "ArchivoX"; src: url("fonts/ArchivoX900.ttf"); }
+      @font-face { font-family: "JBMono"; src: url("fonts/JBMono700.ttf"); }
+      [data-composition-id="s1-open"] .scn { position: relative; width: 1080px; height: 1920px; overflow: hidden; background: #000; }
+      [data-composition-id="s1-open"] .cam { position: absolute; left: 0; top: 0; width: 1080px; height: 1920px; }
+      [data-composition-id="s1-open"] .vig { position: absolute; inset: 0; background: radial-gradient(ellipse 75% 60% at 50% 50%, rgba(0,0,0,0) 45%, rgba(0,0,0,0.85) 100%); }
+      [data-composition-id="s1-open"] .flash { position: absolute; inset: 0; background: #fff; opacity: 0; }
+      [data-composition-id="s1-open"] .c { position: absolute; left: 0; width: 1080px; text-align: center; white-space: nowrap; font-family: "Cinzel", serif; font-weight: 900;
+        line-height: 1.05; color: #f6efe2; letter-spacing: 4px;
+        text-shadow: 0 0 28px rgba(255,190,110,0.32), 0 6px 30px rgba(0,0,0,0.95); }
+      [data-composition-id="s1-open"] .amber { color: #ffbf5a; font-weight: 700; text-shadow: 0 0 18px rgba(255,160,40,0.55), 0 4px 20px rgba(0,0,0,0.9); }
+      [data-composition-id="s1-open"] .gold { background: linear-gradient(180deg, #fff3c4 0%, #f2c45a 45%, #b07a1c 100%); -webkit-background-clip: text; background-clip: text;
+        color: transparent; text-shadow: none; filter: drop-shadow(0 0 22px rgba(255,190,80,0.45)) drop-shadow(0 6px 18px rgba(0,0,0,0.9)); }
+      [data-composition-id="s1-open"] .beam { position: absolute; top: -200px; width: 700px; height: 1700px; transform-origin: 50% 0%;
+        background: linear-gradient(180deg, rgba(255,226,170,0.26) 0%, rgba(255,226,170,0.07) 55%, rgba(255,226,170,0) 85%);
+        clip-path: polygon(42% 0%, 58% 0%, 100% 100%, 0% 100%); filter: blur(14px); }
+      [data-composition-id="s1-open"] .dustbox { position: absolute; inset: 0; }
+      [data-composition-id="s1-open"] .dust { position: absolute; border-radius: 50%; background: #ffe7bd; filter: blur(0.6px); }
+      [data-composition-id="s1-open"] .bg { position: absolute; inset: 0;
+        background: radial-gradient(ellipse 60% 40% at 50% 55%, rgba(40,70,90,0.45), rgba(0,0,0,0) 70%), #030608; }
+      [data-composition-id="s1-open"] .sb { position: absolute; left: 90px; width: 900px; border-radius: 26px; padding: 0;
+        background: linear-gradient(180deg, #1b1d22 0%, #0c0d10 55%, #15161a 100%);
+        border: 6px solid #2e3138; box-shadow: inset 0 0 0 4px #07080a, inset 0 0 60px rgba(0,0,0,0.9), 0 30px 90px rgba(0,0,0,0.9), 0 0 120px rgba(255,170,60,0.08); }
+      [data-composition-id="s1-open"] .bolt { position: absolute; width: 18px; height: 18px; border-radius: 50%;
+        background: radial-gradient(circle at 35% 35%, #8a8f99, #2a2d33 70%); }
+      [data-composition-id="s1-open"] .lab { position: absolute; font-family: "Cinzel", serif; font-weight: 700; color: #d8d2c4; letter-spacing: 6px; }
+      [data-composition-id="s1-open"] .seg { position: absolute; font-family: "DSEG7", monospace; line-height: 1; text-align: right; }
+      [data-composition-id="s1-open"] .seg .gh { position: absolute; right: 0; top: 0; color: #2a1606; }
+      [data-composition-id="s1-open"] .seg .v { position: relative; display: inline-block; transform-origin: 50% 50%; color: #ffb030; text-shadow: 0 0 12px rgba(255,150,30,0.95), 0 0 34px rgba(255,120,20,0.6); }
+      [data-composition-id="s1-open"] .seg.red .v { color: #ff4632; text-shadow: 0 0 12px rgba(255,60,40,0.95), 0 0 34px rgba(255,40,20,0.6); }
+      [data-composition-id="s1-open"] .divider { position: absolute; left: 40px; width: 808px; height: 4px; background: #24262c; }
+    </style>
+
+    <script src="vendor/gsap.min.js"></script>
+    <script>
+      (function () {
+        const OFF = 0;
+        const G = (f) => (f - OFF) / 30;
+        const D = (n) => n / 30;
+        const rng = (s) => () => { s |= 0; s = (s + 0x6D2B79F5) | 0; let t = Math.imul(s ^ (s >>> 15), 1 | s);
+          t = (t + Math.imul(t ^ (t >>> 7), 61 | t)) ^ t; return ((t ^ (t >>> 14)) >>> 0) / 4294967296; };
+        const tl = gsap.timeline({ paused: true });
+        const shake = (el, f0, n, amp, seed) => { const r = rng(seed);
+          for (let i = 0; i < n; i++) { const k = amp * (1 - i / n); tl.set(el, { x: (r() * 2 - 1) * k, y: (r() * 2 - 1) * k }, G(f0 + i)); }
+          tl.set(el, { x: 0, y: 0 }, G(f0 + n)); };
+        const pulse = (el, f, s) => { tl.set(el, { scale: s }, G(f)); tl.to(el, { scale: 1, duration: D(10), ease: "power2.out" }, G(f)); };
+        // Kino-Titel: aus Unschärfe + weiter Laufweite scharf zusammenziehen
+        // (ls0/ls1 = Laufweiten-Gefühl: weite Laufweite -> stärkeres Zusammenziehen über scaleX, ohne Layout-Animation)
+        const reveal = (el, f, n, ls0, ls1) => tl.fromTo(el, { opacity: 0, filter: "blur(14px)", scaleX: 1 + (ls0 - ls1) / 140, scaleY: 1.04 },
+          { opacity: 1, filter: "blur(0px)", scaleX: 1, scaleY: 1, duration: D(n || 18), ease: "power3.out" }, G(f));
+        const hide = (el, f, n) => tl.to(el, { opacity: 0, filter: "blur(10px)", duration: D(n || 8), ease: "power2.in" }, G(f));
+        // Staub im Lichtkegel
+        const dust = (sel, seed, n, f0, f1, x0, x1, y0, y1) => { const box = document.querySelector(sel), r = rng(seed);
+          for (let i = 0; i < n; i++) { const d = document.createElement("div"); d.className = "dust"; const s = 2 + r() * 5;
+            d.style.width = s + "px"; d.style.height = s + "px"; d.style.left = Math.round(x0 + r() * (x1 - x0)) + "px";
+            d.style.top = Math.round(y0 + r() * (y1 - y0)) + "px"; d.style.opacity = (0.25 + r() * 0.6).toFixed(2); box.appendChild(d);
+            tl.fromTo(d, { x: 0, y: 0 }, { x: (r() * 2 - 1) * 60, y: -40 - r() * 120, duration: D(f1 - f0), ease: "none" }, G(f0)); } };
+
+        dust("#s1dust", 11, 46, 0, 150, 260, 820, 300, 1500);
+        // Bild 0: Titel + Tafel stehen; Lampen flackern an (Braam), Kamera schiebt langsam heran
+        tl.fromTo("#s1a", { scaleX: 1.04, scaleY: 1.04 }, { scaleX: 1, scaleY: 1, duration: D(14), ease: "power3.out" }, G(0));
+        [0, 2, 4].forEach((f, i) => { tl.set(["#s1sb", "#s1beam"], { opacity: i % 2 ? 0.35 : 1 }, G(f)); });
+        tl.set(["#s1sb", "#s1beam"], { opacity: 1 }, G(6));
+        tl.fromTo("#s1cam", { scale: 1.0, rotation: -0.4 }, { scale: 1.08, rotation: 0.3, duration: D(150), ease: "none" }, G(0));
+        reveal("#s1date", 14, 20, 20, 6);
+        // F66 Titel wechselt: "13 DAYS LATER," (F69) / "THEY MET AGAIN." (F112)
+        hide("#s1a", 62, 8);
+        reveal("#s1b1", 69, 18, 22, 4);
+        reveal("#s1b2", 96, 16, 22, 4);
+        pulse("#s1v1", 30, 1.06);
+        // Ende: Licht geht aus
+        tl.to(["#s1beam", "#s1date"], { opacity: 0, duration: D(10), ease: "power2.in" }, G(130));
+        tl.to("#s1sb", { filter: "brightness(0.45)", duration: D(10), ease: "power2.in" }, G(132));
+
+        window.__timelines = window.__timelines || {};
+        window.__timelines["s1-open"] = tl;
+      })();
+    </script>
+  </div>
+</template>

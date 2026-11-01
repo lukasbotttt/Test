@@ -1,0 +1,121 @@
+<template id="s2-soviet-template">
+  <!-- S2 SOWJETUNION · global 4,7–8,9 s (F141–266), sichtbar ab F144. Vier Olympiasiege 1964–1976. -->
+  <div data-composition-id="s2-soviet" data-width="1080" data-height="1920" data-duration="4.2">
+    <div class="scn">
+      <div class="cam" id="s2cam" data-layout-allow-overflow>
+        <div class="bg"></div>
+        <div id="s2beam1" class="beam" style="left:-90px;transform:rotate(-12deg)" data-layout-ignore></div>
+        <div id="s2beam2" class="beam" style="left:470px;transform:rotate(12deg)" data-layout-ignore></div>
+        <div id="s2dust" class="dustbox" data-layout-ignore></div>
+        <svg width="0" height="0" style="position:absolute"><defs><radialGradient id="s2gold" cx="0.38" cy="0.32" r="0.8">
+          <stop offset="0" stop-color="#fff6cf"/><stop offset="0.45" stop-color="#f0c049"/><stop offset="1" stop-color="#8a5a10"/></radialGradient></defs></svg>
+        <div class="medals"><div class="mwrap" style="left:90px"><div id="s2m1" class="medal">
+            <svg viewBox="0 0 210 330" width="210" height="330"><path d="M55 0 L105 120 L155 0 L125 0 L105 60 L85 0 Z" fill="#b3121f"/>
+            <path d="M85 0 L105 60 L125 0 Z" fill="#7d0a14"/>
+            <circle cx="105" cy="220" r="100" fill="url(#s2gold)" stroke="#fff1b8" stroke-width="4"/>
+            <circle cx="105" cy="220" r="78" fill="none" stroke="#a0711a" stroke-width="5" opacity="0.8"/>
+            <text x="105" y="237" text-anchor="middle" class="yr">1964</text></svg>
+            <div class="shwrap"><div class="shine"></div></div></div></div><div class="mwrap" style="left:320px"><div id="s2m2" class="medal">
+            <svg viewBox="0 0 210 330" width="210" height="330"><path d="M55 0 L105 120 L155 0 L125 0 L105 60 L85 0 Z" fill="#b3121f"/>
+            <path d="M85 0 L105 60 L125 0 Z" fill="#7d0a14"/>
+            <circle cx="105" cy="220" r="100" fill="url(#s2gold)" stroke="#fff1b8" stroke-width="4"/>
+            <circle cx="105" cy="220" r="78" fill="none" stroke="#a0711a" stroke-width="5" opacity="0.8"/>
+            <text x="105" y="237" text-anchor="middle" class="yr">1968</text></svg>
+            <div class="shwrap"><div class="shine"></div></div></div></div><div class="mwrap" style="left:550px"><div id="s2m3" class="medal">
+            <svg viewBox="0 0 210 330" width="210" height="330"><path d="M55 0 L105 120 L155 0 L125 0 L105 60 L85 0 Z" fill="#b3121f"/>
+            <path d="M85 0 L105 60 L125 0 Z" fill="#7d0a14"/>
+            <circle cx="105" cy="220" r="100" fill="url(#s2gold)" stroke="#fff1b8" stroke-width="4"/>
+            <circle cx="105" cy="220" r="78" fill="none" stroke="#a0711a" stroke-width="5" opacity="0.8"/>
+            <text x="105" y="237" text-anchor="middle" class="yr">1972</text></svg>
+            <div class="shwrap"><div class="shine"></div></div></div></div><div class="mwrap" style="left:780px"><div id="s2m4" class="medal">
+            <svg viewBox="0 0 210 330" width="210" height="330"><path d="M55 0 L105 120 L155 0 L125 0 L105 60 L85 0 Z" fill="#b3121f"/>
+            <path d="M85 0 L105 60 L125 0 Z" fill="#7d0a14"/>
+            <circle cx="105" cy="220" r="100" fill="url(#s2gold)" stroke="#fff1b8" stroke-width="4"/>
+            <circle cx="105" cy="220" r="78" fill="none" stroke="#a0711a" stroke-width="5" opacity="0.8"/>
+            <text x="105" y="237" text-anchor="middle" class="yr">1976</text></svg>
+            <div class="shwrap"><div class="shine"></div></div></div></div></div>
+        <div class="vig" data-layout-ignore></div>
+      </div>
+      <div id="s2a" class="c" style="top:400px;font-size:86px;opacity:0">THE SOVIET UNION</div>
+      <div id="s2b" class="c amber" style="top:1290px;font-size:52px;letter-spacing:6px;opacity:0">4 OLYMPIC GOLDS IN A ROW</div>
+      <div id="s2flash" class="flash"></div>
+    </div>
+
+    <style>
+      @font-face { font-family: "Cinzel"; src: url("fonts/Cinzel.woff2") format("woff2"); font-weight: 400 900; }
+      @font-face { font-family: "DSEG7"; src: url("fonts/DSEG7Classic-Bold.woff2") format("woff2"); }
+      @font-face { font-family: "ArchivoX"; src: url("fonts/ArchivoX900.ttf"); }
+      @font-face { font-family: "JBMono"; src: url("fonts/JBMono700.ttf"); }
+      [data-composition-id="s2-soviet"] .scn { position: relative; width: 1080px; height: 1920px; overflow: hidden; background: #000; }
+      [data-composition-id="s2-soviet"] .cam { position: absolute; left: 0; top: 0; width: 1080px; height: 1920px; }
+      [data-composition-id="s2-soviet"] .vig { position: absolute; inset: 0; background: radial-gradient(ellipse 75% 60% at 50% 50%, rgba(0,0,0,0) 45%, rgba(0,0,0,0.85) 100%); }
+      [data-composition-id="s2-soviet"] .flash { position: absolute; inset: 0; background: #fff; opacity: 0; }
+      [data-composition-id="s2-soviet"] .c { position: absolute; left: 0; width: 1080px; text-align: center; white-space: nowrap; font-family: "Cinzel", serif; font-weight: 900;
+        line-height: 1.05; color: #f6efe2; letter-spacing: 4px;
+        text-shadow: 0 0 28px rgba(255,190,110,0.32), 0 6px 30px rgba(0,0,0,0.95); }
+      [data-composition-id="s2-soviet"] .amber { color: #ffbf5a; font-weight: 700; text-shadow: 0 0 18px rgba(255,160,40,0.55), 0 4px 20px rgba(0,0,0,0.9); }
+      [data-composition-id="s2-soviet"] .gold { background: linear-gradient(180deg, #fff3c4 0%, #f2c45a 45%, #b07a1c 100%); -webkit-background-clip: text; background-clip: text;
+        color: transparent; text-shadow: none; filter: drop-shadow(0 0 22px rgba(255,190,80,0.45)) drop-shadow(0 6px 18px rgba(0,0,0,0.9)); }
+      [data-composition-id="s2-soviet"] .beam { position: absolute; top: -200px; width: 700px; height: 1700px; transform-origin: 50% 0%;
+        background: linear-gradient(180deg, rgba(255,226,170,0.26) 0%, rgba(255,226,170,0.07) 55%, rgba(255,226,170,0) 85%);
+        clip-path: polygon(42% 0%, 58% 0%, 100% 100%, 0% 100%); filter: blur(14px); }
+      [data-composition-id="s2-soviet"] .dustbox { position: absolute; inset: 0; }
+      [data-composition-id="s2-soviet"] .dust { position: absolute; border-radius: 50%; background: #ffe7bd; filter: blur(0.6px); }
+      [data-composition-id="s2-soviet"] .bg { position: absolute; inset: 0;
+        background: radial-gradient(ellipse 70% 45% at 50% 50%, rgba(150,10,20,0.55), rgba(0,0,0,0) 70%), #080102; }
+      [data-composition-id="s2-soviet"] .beam { background: linear-gradient(180deg, rgba(255,120,110,0.26) 0%, rgba(255,90,80,0.06) 55%, rgba(0,0,0,0) 85%); }
+      [data-composition-id="s2-soviet"] .medals { position: absolute; left: 0; top: 800px; width: 1080px; height: 400px; }
+      [data-composition-id="s2-soviet"] .mwrap { position: absolute; top: 0; width: 210px; height: 330px; }
+      [data-composition-id="s2-soviet"] .medal { position: relative; width: 210px; height: 330px; opacity: 0; overflow: hidden;
+        filter: drop-shadow(0 0 22px rgba(255,190,70,0.45)) drop-shadow(0 20px 30px rgba(0,0,0,0.9)); }
+      [data-composition-id="s2-soviet"] .yr { font-family: "Cinzel", serif; font-weight: 900; font-size: 46px; fill: #5a3a08; }
+      [data-composition-id="s2-soviet"] .shwrap { position: absolute; left: 5px; top: 120px; width: 200px; height: 200px; border-radius: 50%; overflow: hidden; }
+      [data-composition-id="s2-soviet"] .shine { position: absolute; left: -150px; top: -20px; width: 90px; height: 240px; transform: rotate(18deg);
+        background: linear-gradient(90deg, rgba(255,255,255,0) 0%, rgba(255,255,255,0.75) 50%, rgba(255,255,255,0) 100%); mix-blend-mode: screen; }
+    </style>
+
+    <script src="vendor/gsap.min.js"></script>
+    <script>
+      (function () {
+        const OFF = 141;
+        const G = (f) => (f - OFF) / 30;
+        const D = (n) => n / 30;
+        const rng = (s) => () => { s |= 0; s = (s + 0x6D2B79F5) | 0; let t = Math.imul(s ^ (s >>> 15), 1 | s);
+          t = (t + Math.imul(t ^ (t >>> 7), 61 | t)) ^ t; return ((t ^ (t >>> 14)) >>> 0) / 4294967296; };
+        const tl = gsap.timeline({ paused: true });
+        const shake = (el, f0, n, amp, seed) => { const r = rng(seed);
+          for (let i = 0; i < n; i++) { const k = amp * (1 - i / n); tl.set(el, { x: (r() * 2 - 1) * k, y: (r() * 2 - 1) * k }, G(f0 + i)); }
+          tl.set(el, { x: 0, y: 0 }, G(f0 + n)); };
+        const pulse = (el, f, s) => { tl.set(el, { scale: s }, G(f)); tl.to(el, { scale: 1, duration: D(10), ease: "power2.out" }, G(f)); };
+        // Kino-Titel: aus Unschärfe + weiter Laufweite scharf zusammenziehen
+        // (ls0/ls1 = Laufweiten-Gefühl: weite Laufweite -> stärkeres Zusammenziehen über scaleX, ohne Layout-Animation)
+        const reveal = (el, f, n, ls0, ls1) => tl.fromTo(el, { opacity: 0, filter: "blur(14px)", scaleX: 1 + (ls0 - ls1) / 140, scaleY: 1.04 },
+          { opacity: 1, filter: "blur(0px)", scaleX: 1, scaleY: 1, duration: D(n || 18), ease: "power3.out" }, G(f));
+        const hide = (el, f, n) => tl.to(el, { opacity: 0, filter: "blur(10px)", duration: D(n || 8), ease: "power2.in" }, G(f));
+        // Staub im Lichtkegel
+        const dust = (sel, seed, n, f0, f1, x0, x1, y0, y1) => { const box = document.querySelector(sel), r = rng(seed);
+          for (let i = 0; i < n; i++) { const d = document.createElement("div"); d.className = "dust"; const s = 2 + r() * 5;
+            d.style.width = s + "px"; d.style.height = s + "px"; d.style.left = Math.round(x0 + r() * (x1 - x0)) + "px";
+            d.style.top = Math.round(y0 + r() * (y1 - y0)) + "px"; d.style.opacity = (0.25 + r() * 0.6).toFixed(2); box.appendChild(d);
+            tl.fromTo(d, { x: 0, y: 0 }, { x: (r() * 2 - 1) * 60, y: -40 - r() * 120, duration: D(f1 - f0), ease: "none" }, G(f0)); } };
+
+        dust("#s2dust", 21, 40, 144, 267, 80, 1000, 300, 1500);
+        tl.fromTo("#s2cam", { scale: 1.06 }, { scale: 1.0, duration: D(123), ease: "power1.out" }, G(144));
+        tl.fromTo("#s2beam1", { rotation: -16 }, { rotation: -8, duration: D(123), ease: "sine.inOut" }, G(144));
+        tl.fromTo("#s2beam2", { rotation: 16 }, { rotation: 8, duration: D(123), ease: "sine.inOut" }, G(144));
+        reveal("#s2a", 148, 20, 26, 4);
+        // vier Goldmedaillen fallen auf die Taiko-Schläge (F194/204/215/225), Glanz läuft drüber
+        [194, 204, 215, 225].forEach((f, i) => {
+          tl.fromTo("#s2m" + (i + 1), { opacity: 0, y: -420, rotation: (i % 2 ? 9 : -9) }, { opacity: 1, y: 0, rotation: 0, duration: D(7), ease: "power3.in" }, G(f - 7));
+          tl.to("#s2m" + (i + 1), { y: -16, duration: D(4), ease: "power2.out", yoyo: true, repeat: 1 }, G(f));
+          tl.fromTo("#s2m" + (i + 1) + " .shine", { x: 0 }, { x: 420, duration: D(14), ease: "power2.inOut" }, G(f + 4));
+        });
+        shake("#s2cam", 194, 4, 6, 3); shake("#s2cam", 225, 5, 9, 4);
+        reveal("#s2b", 196, 18, 22, 6);
+
+        window.__timelines = window.__timelines || {};
+        window.__timelines["s2-soviet"] = tl;
+      })();
+    </script>
+  </div>
+</template>

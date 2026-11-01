@@ -1,0 +1,98 @@
+<template id="s7-cta-template">
+  <!-- S7 FRAGE · global 39,3–44,0 s (F1179–1319), sichtbar ab F1182. DO YOU BELIEVE IN MIRACLES? YES OR NO. -->
+  <div data-composition-id="s7-cta" data-width="1080" data-height="1920" data-duration="4.7">
+    <div class="scn">
+      <div class="cam" id="s7cam" data-layout-allow-overflow>
+        <div class="bg"></div>
+        <div id="s7bokeh" class="bokeh"></div>
+        <div class="vig" data-layout-ignore></div>
+      </div>
+      <div id="s7a" class="c" style="top:560px;font-size:100px;opacity:0">DO YOU BELIEVE</div>
+      <div id="s7b" class="c gold" style="top:690px;font-size:112px;opacity:0">IN MIRACLES?</div>
+      <div id="s7bubble" class="bubble">YES OR NO?</div>
+      <svg id="s7arrow" class="arrow" viewBox="0 0 220 200"><g fill="none" stroke="#ffcf6a" stroke-width="20" stroke-linecap="round" stroke-linejoin="round">
+        <polyline points="30,40 110,120 190,40"/><polyline points="30,100 110,180 190,100" opacity="0.55"/></g></svg>
+      <div class="handle">@BLADESANDPUCKS</div>
+      <div id="s7flash" class="flash"></div>
+    </div>
+
+    <style>
+      @font-face { font-family: "Cinzel"; src: url("fonts/Cinzel.woff2") format("woff2"); font-weight: 400 900; }
+      @font-face { font-family: "DSEG7"; src: url("fonts/DSEG7Classic-Bold.woff2") format("woff2"); }
+      @font-face { font-family: "ArchivoX"; src: url("fonts/ArchivoX900.ttf"); }
+      @font-face { font-family: "JBMono"; src: url("fonts/JBMono700.ttf"); }
+      [data-composition-id="s7-cta"] .scn { position: relative; width: 1080px; height: 1920px; overflow: hidden; background: #000; }
+      [data-composition-id="s7-cta"] .cam { position: absolute; left: 0; top: 0; width: 1080px; height: 1920px; }
+      [data-composition-id="s7-cta"] .vig { position: absolute; inset: 0; background: radial-gradient(ellipse 75% 60% at 50% 50%, rgba(0,0,0,0) 45%, rgba(0,0,0,0.85) 100%); }
+      [data-composition-id="s7-cta"] .flash { position: absolute; inset: 0; background: #fff; opacity: 0; }
+      [data-composition-id="s7-cta"] .c { position: absolute; left: 0; width: 1080px; text-align: center; white-space: nowrap; font-family: "Cinzel", serif; font-weight: 900;
+        line-height: 1.05; color: #f6efe2; letter-spacing: 4px;
+        text-shadow: 0 0 28px rgba(255,190,110,0.32), 0 6px 30px rgba(0,0,0,0.95); }
+      [data-composition-id="s7-cta"] .amber { color: #ffbf5a; font-weight: 700; text-shadow: 0 0 18px rgba(255,160,40,0.55), 0 4px 20px rgba(0,0,0,0.9); }
+      [data-composition-id="s7-cta"] .gold { background: linear-gradient(180deg, #fff3c4 0%, #f2c45a 45%, #b07a1c 100%); -webkit-background-clip: text; background-clip: text;
+        color: transparent; text-shadow: none; filter: drop-shadow(0 0 22px rgba(255,190,80,0.45)) drop-shadow(0 6px 18px rgba(0,0,0,0.9)); }
+      [data-composition-id="s7-cta"] .beam { position: absolute; top: -200px; width: 700px; height: 1700px; transform-origin: 50% 0%;
+        background: linear-gradient(180deg, rgba(255,226,170,0.26) 0%, rgba(255,226,170,0.07) 55%, rgba(255,226,170,0) 85%);
+        clip-path: polygon(42% 0%, 58% 0%, 100% 100%, 0% 100%); filter: blur(14px); }
+      [data-composition-id="s7-cta"] .dustbox { position: absolute; inset: 0; }
+      [data-composition-id="s7-cta"] .dust { position: absolute; border-radius: 50%; background: #ffe7bd; filter: blur(0.6px); }
+      [data-composition-id="s7-cta"] .bg { position: absolute; inset: 0;
+        background: radial-gradient(ellipse 70% 45% at 50% 45%, rgba(90,60,20,0.5), rgba(0,0,0,0) 70%), #040302; }
+      [data-composition-id="s7-cta"] .bokeh { position: absolute; inset: 0; }
+      [data-composition-id="s7-cta"] .bk { position: absolute; border-radius: 50%; }
+      [data-composition-id="s7-cta"] .bubble { position: absolute; left: 215px; top: 1000px; width: 650px; height: 160px; border-radius: 80px; transform: scale(0);
+        background: rgba(30,20,4,0.9); border: 4px solid #ffcf6a; box-shadow: 0 0 40px rgba(255,190,80,0.7), inset 0 0 30px rgba(255,190,80,0.25);
+        font-family: "Cinzel", serif; font-weight: 900; font-size: 66px; line-height: 152px; color: #fff3d6; text-align: center; letter-spacing: 4px; white-space: nowrap;
+        text-shadow: 0 0 18px rgba(255,190,80,0.8); transform-origin: 50% 50%; }
+      [data-composition-id="s7-cta"] .arrow { position: absolute; left: 475px; top: 1200px; width: 130px; height: 118px; opacity: 0;
+        filter: drop-shadow(0 0 14px rgba(255,190,80,0.9)); }
+      [data-composition-id="s7-cta"] .handle { position: absolute; left: 0; top: 1560px; width: 1080px; text-align: center;
+        font-family: "Cinzel", serif; font-weight: 700; font-size: 40px; color: #e9dfc9; letter-spacing: 8px; opacity: 0.85; }
+    </style>
+
+    <script src="vendor/gsap.min.js"></script>
+    <script>
+      (function () {
+        const OFF = 1179;
+        const G = (f) => (f - OFF) / 30;
+        const D = (n) => n / 30;
+        const rng = (s) => () => { s |= 0; s = (s + 0x6D2B79F5) | 0; let t = Math.imul(s ^ (s >>> 15), 1 | s);
+          t = (t + Math.imul(t ^ (t >>> 7), 61 | t)) ^ t; return ((t ^ (t >>> 14)) >>> 0) / 4294967296; };
+        const tl = gsap.timeline({ paused: true });
+        const shake = (el, f0, n, amp, seed) => { const r = rng(seed);
+          for (let i = 0; i < n; i++) { const k = amp * (1 - i / n); tl.set(el, { x: (r() * 2 - 1) * k, y: (r() * 2 - 1) * k }, G(f0 + i)); }
+          tl.set(el, { x: 0, y: 0 }, G(f0 + n)); };
+        const pulse = (el, f, s) => { tl.set(el, { scale: s }, G(f)); tl.to(el, { scale: 1, duration: D(10), ease: "power2.out" }, G(f)); };
+        // Kino-Titel: aus Unschärfe + weiter Laufweite scharf zusammenziehen
+        // (ls0/ls1 = Laufweiten-Gefühl: weite Laufweite -> stärkeres Zusammenziehen über scaleX, ohne Layout-Animation)
+        const reveal = (el, f, n, ls0, ls1) => tl.fromTo(el, { opacity: 0, filter: "blur(14px)", scaleX: 1 + (ls0 - ls1) / 140, scaleY: 1.04 },
+          { opacity: 1, filter: "blur(0px)", scaleX: 1, scaleY: 1, duration: D(n || 18), ease: "power3.out" }, G(f));
+        const hide = (el, f, n) => tl.to(el, { opacity: 0, filter: "blur(10px)", duration: D(n || 8), ease: "power2.in" }, G(f));
+        // Staub im Lichtkegel
+        const dust = (sel, seed, n, f0, f1, x0, x1, y0, y1) => { const box = document.querySelector(sel), r = rng(seed);
+          for (let i = 0; i < n; i++) { const d = document.createElement("div"); d.className = "dust"; const s = 2 + r() * 5;
+            d.style.width = s + "px"; d.style.height = s + "px"; d.style.left = Math.round(x0 + r() * (x1 - x0)) + "px";
+            d.style.top = Math.round(y0 + r() * (y1 - y0)) + "px"; d.style.opacity = (0.25 + r() * 0.6).toFixed(2); box.appendChild(d);
+            tl.fromTo(d, { x: 0, y: 0 }, { x: (r() * 2 - 1) * 60, y: -40 - r() * 120, duration: D(f1 - f0), ease: "none" }, G(f0)); } };
+
+        (function () { const box = document.querySelector("#s7bokeh"), r = rng(91);
+          const cols = ["rgba(255,190,110,0.32)", "rgba(255,230,190,0.25)", "rgba(150,190,255,0.22)"];
+          for (let i = 0; i < 18; i++) { const d = document.createElement("div"); d.className = "bk"; const s = 40 + r() * 140;
+            d.style.width = s + "px"; d.style.height = s + "px"; d.style.left = Math.round(r() * 1080 - 60) + "px"; d.style.top = Math.round(r() * 1920) + "px";
+            d.style.background = cols[i % 3]; d.style.filter = "blur(" + Math.round(8 + r() * 16) + "px)"; box.appendChild(d);
+            tl.fromTo(d, { y: 0 }, { y: -100 - r() * 140, duration: D(141), ease: "none" }, G(1179)); } })();
+        tl.fromTo("#s7cam", { scale: 1.0 }, { scale: 1.06, duration: D(141), ease: "none" }, G(1179));
+        reveal("#s7a", 1190, 18, 24, 4);
+        reveal("#s7b", 1208, 20, 30, 4);
+        tl.fromTo("#s7bubble", { scale: 0 }, { scale: 1, duration: D(10), ease: "back.out(2)" }, G(1248));
+        tl.fromTo("#s7arrow", { opacity: 0, y: -50 }, { opacity: 1, y: 0, duration: D(8), ease: "back.out(2)" }, G(1258));
+        pulse("#s7bubble", 1279, 1.08);
+        shake("#s7cam", 1279, 6, 10, 93);
+        [1290, 1305].forEach((f) => tl.to("#s7arrow", { y: 22, duration: D(5), ease: "power2.out", yoyo: true, repeat: 1 }, G(f)));
+
+        window.__timelines = window.__timelines || {};
+        window.__timelines["s7-cta"] = tl;
+      })();
+    </script>
+  </div>
+</template>

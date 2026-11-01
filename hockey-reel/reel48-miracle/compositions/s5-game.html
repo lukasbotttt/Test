@@ -1,0 +1,175 @@
+<template id="s5-game-template">
+  <!-- S5 DAS SPIEL · global 15,3–33,6 s (F459–1007), sichtbar ab F462. Spielstand-Wechsel, Stille, 4:3, Countdown. -->
+  <div data-composition-id="s5-game" data-width="1080" data-height="1920" data-duration="18.3">
+    <div class="scn">
+      <div class="cam" id="s5cam" data-layout-allow-overflow>
+        <div class="bg"></div>
+        <div id="s5warm" class="warm"></div>
+        <div id="s5beam" class="beam" style="left:190px" data-layout-ignore></div>
+        <div id="s5dust" class="dustbox" data-layout-ignore></div>
+        <div id="s5sb" class="sb" style="top:640px;height:720px"><div class="bolt" style="left:18px;top:18px"></div><div class="bolt" style="left:852px;top:18px"></div><div class="bolt" style="left:18px;top:672px"></div><div class="bolt" style="left:852px;top:672px"></div>
+          <div class="lab" style="left:60px;top:46px;font-size:40px">PERIOD</div>
+          <div class="seg" style="left:270px;top:30px;width:90px;font-size:92px"><span class="gh" aria-hidden="true" data-layout-ignore>8</span><span id="s5per" class="v" data-layout-allow-overlap>1</span></div>
+          <div class="seg" style="left:400px;top:30px;width:440px;font-size:92px"><span class="gh" aria-hidden="true" data-layout-ignore>88:88</span><span id="s5clk" class="v" data-layout-allow-overlap>20:00</span></div>
+          <div class="divider" style="top:170px"></div>
+          <div class="lab" style="left:70px;top:255px;font-size:104px">USA</div>
+          <div class="seg" style="left:560px;top:225px;width:260px;font-size:210px"><span class="gh" aria-hidden="true" data-layout-ignore>8</span><span id="s5usa" class="v" data-layout-allow-overlap>0</span></div>
+          <div class="divider" style="top:460px"></div>
+          <div class="lab" style="left:70px;top:535px;font-size:104px">USSR</div>
+          <div class="seg red" style="left:560px;top:505px;width:260px;font-size:210px"><span class="gh" aria-hidden="true" data-layout-ignore>8</span><span id="s5urs" class="v" data-layout-allow-overlap>0</span></div>
+          <div id="s5rowU" class="rowfx" style="top:190px"></div>
+          <div id="s5rowR" class="rowfx red" style="top:480px"></div>
+        </div>
+        <div id="s5sparks" class="sparks" data-layout-ignore></div>
+        <div id="s5flare" class="flare" data-layout-ignore></div>
+        <div id="s5red" class="redvig" data-layout-ignore></div>
+        <div class="vig" data-layout-ignore></div>
+      </div>
+      <div id="s5cap" class="c amber" style="top:420px;font-size:64px;letter-spacing:12px;opacity:0">THE CAPTAIN</div>
+      <div id="s5mike" class="c" style="top:370px;font-size:98px;opacity:0">MIKE ERUZIONE</div>
+      <div id="s5hold" class="c" style="top:380px;font-size:96px;opacity:0">NOW HOLD ON.</div>
+      <div id="s5cd" class="cd" data-layout-allow-overlap data-layout-allow-overflow><span id="s5cdv" data-layout-allow-overlap>5</span></div>
+      <div id="s5flash" class="flash"></div>
+    </div>
+
+    <style>
+      @font-face { font-family: "Cinzel"; src: url("fonts/Cinzel.woff2") format("woff2"); font-weight: 400 900; }
+      @font-face { font-family: "DSEG7"; src: url("fonts/DSEG7Classic-Bold.woff2") format("woff2"); }
+      @font-face { font-family: "ArchivoX"; src: url("fonts/ArchivoX900.ttf"); }
+      @font-face { font-family: "JBMono"; src: url("fonts/JBMono700.ttf"); }
+      [data-composition-id="s5-game"] .scn { position: relative; width: 1080px; height: 1920px; overflow: hidden; background: #000; }
+      [data-composition-id="s5-game"] .cam { position: absolute; left: 0; top: 0; width: 1080px; height: 1920px; }
+      [data-composition-id="s5-game"] .vig { position: absolute; inset: 0; background: radial-gradient(ellipse 75% 60% at 50% 50%, rgba(0,0,0,0) 45%, rgba(0,0,0,0.85) 100%); }
+      [data-composition-id="s5-game"] .flash { position: absolute; inset: 0; background: #fff; opacity: 0; }
+      [data-composition-id="s5-game"] .c { position: absolute; left: 0; width: 1080px; text-align: center; white-space: nowrap; font-family: "Cinzel", serif; font-weight: 900;
+        line-height: 1.05; color: #f6efe2; letter-spacing: 4px;
+        text-shadow: 0 0 28px rgba(255,190,110,0.32), 0 6px 30px rgba(0,0,0,0.95); }
+      [data-composition-id="s5-game"] .amber { color: #ffbf5a; font-weight: 700; text-shadow: 0 0 18px rgba(255,160,40,0.55), 0 4px 20px rgba(0,0,0,0.9); }
+      [data-composition-id="s5-game"] .gold { background: linear-gradient(180deg, #fff3c4 0%, #f2c45a 45%, #b07a1c 100%); -webkit-background-clip: text; background-clip: text;
+        color: transparent; text-shadow: none; filter: drop-shadow(0 0 22px rgba(255,190,80,0.45)) drop-shadow(0 6px 18px rgba(0,0,0,0.9)); }
+      [data-composition-id="s5-game"] .beam { position: absolute; top: -200px; width: 700px; height: 1700px; transform-origin: 50% 0%;
+        background: linear-gradient(180deg, rgba(255,226,170,0.26) 0%, rgba(255,226,170,0.07) 55%, rgba(255,226,170,0) 85%);
+        clip-path: polygon(42% 0%, 58% 0%, 100% 100%, 0% 100%); filter: blur(14px); }
+      [data-composition-id="s5-game"] .dustbox { position: absolute; inset: 0; }
+      [data-composition-id="s5-game"] .dust { position: absolute; border-radius: 50%; background: #ffe7bd; filter: blur(0.6px); }
+      [data-composition-id="s5-game"] .bg { position: absolute; inset: 0;
+        background: radial-gradient(ellipse 60% 40% at 50% 55%, rgba(30,60,80,0.5), rgba(0,0,0,0) 70%), #020507; }
+      [data-composition-id="s5-game"] .warm { position: absolute; inset: 0; opacity: 0;
+        background: radial-gradient(ellipse 80% 55% at 50% 50%, rgba(255,170,60,0.45), rgba(255,120,30,0.08) 60%, rgba(0,0,0,0) 80%); }
+      [data-composition-id="s5-game"] .rowfx { position: absolute; left: 20px; width: 848px; height: 260px; border-radius: 18px; opacity: 0;
+        background: radial-gradient(ellipse 70% 60% at 70% 50%, rgba(255,255,255,0.55), rgba(255,255,255,0) 70%); mix-blend-mode: screen; }
+      [data-composition-id="s5-game"] .rowfx.red { background: radial-gradient(ellipse 70% 60% at 70% 50%, rgba(255,60,40,0.65), rgba(255,0,0,0) 70%); }
+      [data-composition-id="s5-game"] .sparks { position: absolute; inset: 0; }
+      [data-composition-id="s5-game"] .sp { position: absolute; left: 760px; top: 940px; width: 10px; height: 10px; border-radius: 50%; opacity: 0;
+        background: #ffe2a0; box-shadow: 0 0 12px rgba(255,200,90,0.95); }
+      [data-composition-id="s5-game"] .flare { position: absolute; left: -300px; top: 940px; width: 1680px; height: 8px; opacity: 0; border-radius: 4px;
+        background: linear-gradient(90deg, rgba(120,190,255,0) 0%, rgba(190,225,255,0.95) 50%, rgba(120,190,255,0) 100%);
+        box-shadow: 0 0 30px rgba(150,210,255,0.9); }
+      [data-composition-id="s5-game"] .redvig { position: absolute; inset: 0; opacity: 0;
+        background: radial-gradient(ellipse at center, rgba(120,0,0,0) 45%, rgba(150,0,10,0.55) 100%); }
+      [data-composition-id="s5-game"] #s5cdv { display: inline-block; }
+      [data-composition-id="s5-game"] .cd { position: absolute; left: 0; top: 660px; width: 1080px; height: 600px; text-align: center; opacity: 0;
+        font-family: "DSEG7", monospace; font-size: 470px; line-height: 600px; color: #ffb030;
+        text-shadow: 0 0 30px rgba(255,150,30,0.95), 0 0 90px rgba(255,120,20,0.6); }
+      [data-composition-id="s5-game"] .sb { position: absolute; left: 90px; width: 900px; border-radius: 26px; padding: 0;
+        background: linear-gradient(180deg, #1b1d22 0%, #0c0d10 55%, #15161a 100%);
+        border: 6px solid #2e3138; box-shadow: inset 0 0 0 4px #07080a, inset 0 0 60px rgba(0,0,0,0.9), 0 30px 90px rgba(0,0,0,0.9), 0 0 120px rgba(255,170,60,0.08); }
+      [data-composition-id="s5-game"] .bolt { position: absolute; width: 18px; height: 18px; border-radius: 50%;
+        background: radial-gradient(circle at 35% 35%, #8a8f99, #2a2d33 70%); }
+      [data-composition-id="s5-game"] .lab { position: absolute; font-family: "Cinzel", serif; font-weight: 700; color: #d8d2c4; letter-spacing: 6px; }
+      [data-composition-id="s5-game"] .seg { position: absolute; font-family: "DSEG7", monospace; line-height: 1; text-align: right; }
+      [data-composition-id="s5-game"] .seg .gh { position: absolute; right: 0; top: 0; color: #2a1606; }
+      [data-composition-id="s5-game"] .seg .v { position: relative; display: inline-block; transform-origin: 50% 50%; color: #ffb030; text-shadow: 0 0 12px rgba(255,150,30,0.95), 0 0 34px rgba(255,120,20,0.6); }
+      [data-composition-id="s5-game"] .seg.red .v { color: #ff4632; text-shadow: 0 0 12px rgba(255,60,40,0.95), 0 0 34px rgba(255,40,20,0.6); }
+      [data-composition-id="s5-game"] .divider { position: absolute; left: 40px; width: 808px; height: 4px; background: #24262c; }
+    </style>
+
+    <script src="vendor/gsap.min.js"></script>
+    <script>
+      (function () {
+        const OFF = 459;
+        const G = (f) => (f - OFF) / 30;
+        const D = (n) => n / 30;
+        const rng = (s) => () => { s |= 0; s = (s + 0x6D2B79F5) | 0; let t = Math.imul(s ^ (s >>> 15), 1 | s);
+          t = (t + Math.imul(t ^ (t >>> 7), 61 | t)) ^ t; return ((t ^ (t >>> 14)) >>> 0) / 4294967296; };
+        const tl = gsap.timeline({ paused: true });
+        const shake = (el, f0, n, amp, seed) => { const r = rng(seed);
+          for (let i = 0; i < n; i++) { const k = amp * (1 - i / n); tl.set(el, { x: (r() * 2 - 1) * k, y: (r() * 2 - 1) * k }, G(f0 + i)); }
+          tl.set(el, { x: 0, y: 0 }, G(f0 + n)); };
+        const pulse = (el, f, s) => { tl.set(el, { scale: s }, G(f)); tl.to(el, { scale: 1, duration: D(10), ease: "power2.out" }, G(f)); };
+        // Kino-Titel: aus Unschärfe + weiter Laufweite scharf zusammenziehen
+        // (ls0/ls1 = Laufweiten-Gefühl: weite Laufweite -> stärkeres Zusammenziehen über scaleX, ohne Layout-Animation)
+        const reveal = (el, f, n, ls0, ls1) => tl.fromTo(el, { opacity: 0, filter: "blur(14px)", scaleX: 1 + (ls0 - ls1) / 140, scaleY: 1.04 },
+          { opacity: 1, filter: "blur(0px)", scaleX: 1, scaleY: 1, duration: D(n || 18), ease: "power3.out" }, G(f));
+        const hide = (el, f, n) => tl.to(el, { opacity: 0, filter: "blur(10px)", duration: D(n || 8), ease: "power2.in" }, G(f));
+        // Staub im Lichtkegel
+        const dust = (sel, seed, n, f0, f1, x0, x1, y0, y1) => { const box = document.querySelector(sel), r = rng(seed);
+          for (let i = 0; i < n; i++) { const d = document.createElement("div"); d.className = "dust"; const s = 2 + r() * 5;
+            d.style.width = s + "px"; d.style.height = s + "px"; d.style.left = Math.round(x0 + r() * (x1 - x0)) + "px";
+            d.style.top = Math.round(y0 + r() * (y1 - y0)) + "px"; d.style.opacity = (0.25 + r() * 0.6).toFixed(2); box.appendChild(d);
+            tl.fromTo(d, { x: 0, y: 0 }, { x: (r() * 2 - 1) * 60, y: -40 - r() * 120, duration: D(f1 - f0), ease: "none" }, G(f0)); } };
+
+        dust("#s5dust", 51, 50, 462, 1002, 260, 820, 280, 1600);
+        // Tafel an (Lampen flackern), langsamer Kamera-Push über die ganze Partie
+        [462, 464, 466].forEach((f, i) => tl.set(["#s5sb", "#s5beam"], { opacity: i % 2 ? 0.3 : 1 }, G(f)));
+        tl.fromTo("#s5cam", { scale: 1.0 }, { scale: 1.1, duration: D(325), ease: "none" }, G(462));
+        // Spielstand-Wechsel (exakte Spielzeiten: Restzeit im Drittel)
+        const flip = (id, val, f, row) => { tl.to(id, { scaleY: 0, duration: D(2), ease: "power2.in" }, G(f - 2));
+          tl.set(id, { textContent: val }, G(f)); tl.to(id, { scaleY: 1, duration: D(3), ease: "power2.out" }, G(f));
+          tl.set(row, { opacity: 1 }, G(f)); tl.to(row, { opacity: 0, duration: D(12), ease: "power2.out" }, G(f + 1)); };
+        const clk = (t, f) => tl.set("#s5clk", { textContent: t }, G(f));
+        clk("10:48", 466); flip("#s5urs", "1", 469, "#s5rowR"); shake("#s5cam", 469, 5, 10, 61);         // 0:1 Krutov 9:12
+        clk("2:26", 512); flip("#s5usa", "1", 513, "#s5rowU"); flip("#s5urs", "2", 517, "#s5rowR"); shake("#s5cam", 517, 5, 10, 62);   // 1:2 Makarov 17:34
+        tl.set("#s5per", { textContent: "2" }, G(558)); clk("17:42", 558);
+        flip("#s5usa", "2", 559, "#s5rowU"); flip("#s5urs", "3", 562, "#s5rowR"); shake("#s5cam", 562, 5, 10, 63);  // 2:3 Maltsev 2:18 (2. Drittel)
+        tl.set("#s5per", { textContent: "3" }, G(606)); clk("11:21", 606);
+        flip("#s5usa", "3", 610, "#s5rowU"); shake("#s5cam", 610, 5, 10, 64);                             // 3:3 Johnson 8:39 (3. Drittel)
+        [[11, 20], [10, 50], [10, 20]].forEach(([m, s], i) => clk(m + ":" + String(s).padStart(2, "0"), 660 + i * 9));
+        clk("10:00", 688);
+        [688, 703, 718].forEach((f) => pulse("#s5clk", f, 1.06));
+        // Stille: alles wird dunkel bis auf die Tafel; "THE CAPTAIN" (F720), "MIKE ERUZIONE" (F755)
+        reveal("#s5cap", 718, 16, 24, 12);
+        tl.to("#s5beam", { opacity: 0.25, duration: D(20), ease: "none" }, G(736));
+        tl.to("#s5red", { opacity: 0.5, duration: D(30), ease: "none" }, G(736));
+        hide("#s5cap", 750, 6);
+        reveal("#s5mike", 755, 20, 26, 4);
+        // F787 TOR 4:3: Blitz, Funken, anamorpher Streifen, warmes Licht an, Wackler
+        flip("#s5usa", "4", 787, "#s5rowU");
+        tl.set("#s5flash", { opacity: 0.6 }, G(787)); tl.to("#s5flash", { opacity: 0, duration: D(8), ease: "power2.in" }, G(788));
+        tl.set("#s5red", { opacity: 0 }, G(787));
+        tl.to("#s5warm", { opacity: 1, duration: D(12), ease: "power2.out" }, G(787));
+        tl.to("#s5beam", { opacity: 1, duration: D(6), ease: "none" }, G(787));
+        tl.set("#s5flare", { opacity: 1, scaleX: 0.3 }, G(787)); tl.to("#s5flare", { opacity: 0, scaleX: 1.4, duration: D(22), ease: "power2.out" }, G(788));
+        shake("#s5cam", 787, 14, 30, 65);
+        (function () { const box = document.querySelector("#s5sparks"), r = rng(67);
+          for (let i = 0; i < 46; i++) { const d = document.createElement("div"); d.className = "sp"; box.appendChild(d);
+            const a = r() * Math.PI * 2, sp = 250 + r() * 700, s = 0.4 + r();
+            tl.set(d, { opacity: 1, x: 0, y: 0, scale: s }, G(787));
+            tl.to(d, { x: Math.cos(a) * sp - 220, y: Math.sin(a) * sp * 0.8 + 260, opacity: 0, duration: D(30 + r() * 20), ease: "power3.out" }, G(787)); } })();
+        tl.to("#s5mike", { opacity: 0, filter: "blur(10px)", duration: D(12), ease: "power2.in" }, G(818));
+        // F830 "NOW HOLD ON." (auf "now hold on"); F861–885 Uhr rast 10:00 -> 0:06
+        reveal("#s5hold", 830, 14, 22, 4);
+        for (let f = 861; f <= 885; f++) { const s = Math.round(600 - (594 * (f - 861)) / 24);
+          clk(Math.floor(s / 60) + ":" + String(s % 60).padStart(2, "0"), f); }
+        hide("#s5hold", 880, 6);
+        // Countdown 5..1 (F888/910/933/955/978): riesige Ziffer, Tafel gedimmt, Herzschlag-Vignette
+        tl.to("#s5sb", { opacity: 0.32, filter: "blur(3px)", duration: D(8), ease: "power2.out" }, G(884));
+        tl.to("#s5beam", { opacity: 0.4, duration: D(8), ease: "none" }, G(884));
+        [888, 910, 933, 955, 978].forEach((f, i) => {
+          const n = 5 - i;
+          tl.set("#s5cdv", { textContent: String(n) }, G(f)); clk("0:0" + n, f);
+          tl.set("#s5cd", { opacity: 1, scale: 1.35 }, G(f));
+          tl.to("#s5cd", { opacity: 0.9, scale: 1, duration: D(10), ease: "power3.out" }, G(f));
+          tl.set("#s5red", { opacity: 0.55 }, G(f)); tl.to("#s5red", { opacity: 0.1, duration: D(14), ease: "power2.out" }, G(f));
+          shake("#s5cam", f, 4, 6 + i * 2, 70 + i);
+        });
+        // F999 Schlusssirene: 0:00, Tafel wieder voll, Blitz (Schnitt im Haupt-Timeline)
+        tl.set("#s5cd", { opacity: 0 }, G(998)); clk("0:00", 999);
+        tl.set("#s5sb", { opacity: 1, filter: "blur(0px) brightness(1.4)" }, G(999));
+
+        window.__timelines = window.__timelines || {};
+        window.__timelines["s5-game"] = tl;
+      })();
+    </script>
+  </div>
+</template>

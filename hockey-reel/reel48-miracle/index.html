@@ -1,0 +1,105 @@
+<!doctype html>
+<!--
+  BLADES AND PUCKS · REEL 48 "Miracle on Ice" (Kino-Trailer) · 1080x1920 · 30 fps · 44,0 s (F0–1319)
+  Szenen: S1 Cold Open F0–143 · S2 Sowjetunion F144–260 · S3 College-Kids F261–332 · S4 Lake Placid F333–461
+          S5 Das Spiel (Tafel, Stille, 4:3, Countdown) F462–1001 · S6 Titel + Gold F1002–1181 · S7 Frage F1182–1319
+  Global (diese Datei): Letterbox (öffnet sich beim 4:3, F787), Filmkorn, Lichtlecks, Schwarzblenden, Weißblitz auf die Sirene
+  Ton: eine fertige Mischung (Filmscore + Sounddesign + Sprecher Kokoro am_michael) aus make_audio.py. Frame-Tabelle: SKRIPT.md
+-->
+<html lang="en" data-resolution="portrait">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=1080, height=1920" />
+<title>Blades and Pucks Reel 48</title>
+<script src="vendor/gsap.min.js"></script>
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  html, body { margin: 0; width: 1080px; height: 1920px; overflow: hidden; background: #000; }
+  .scene { position: absolute; top: 0; left: 0; width: 100%; height: 100%; }
+  .ov { position: absolute; left: 0; top: 0; width: 1080px; height: 1920px; pointer-events: none; }
+  /* Lichtlecks: Ebenen deutlich größer als das Bild, damit beim Driften nie eine Kante ins Bild kommt */
+  #leak1, #leak2 { left: -500px; top: -300px; width: 2080px; height: 2520px; }
+  #leak1 { z-index: 40; opacity: 0.16; mix-blend-mode: screen;
+    background: radial-gradient(ellipse 23% 23% at 34% 35%, rgba(255,150,60,0.9), rgba(255,120,40,0) 70%); }
+  #leak2 { z-index: 40; opacity: 0.12; mix-blend-mode: screen;
+    background: radial-gradient(ellipse 26% 27% at 68% 69%, rgba(60,170,220,0.9), rgba(40,120,200,0) 70%); }
+  #grain { z-index: 45; opacity: 0.10; mix-blend-mode: overlay; }
+  #black { z-index: 50; background: #000; opacity: 0; }
+  #wflash { z-index: 51; background: #fff8ea; opacity: 0; }
+  .lb { position: absolute; left: 0; width: 1080px; height: 280px; background: #000; z-index: 60; }
+  #lbT { top: 0; }
+  #lbB { bottom: 0; }
+</style>
+</head>
+<body>
+<div id="root" data-composition-id="main" data-start="0" data-duration="44" data-width="1080" data-height="1920">
+
+  <div id="h1" class="scene clip" data-composition-id="s1-open" data-composition-src="compositions/s1-open.html"
+       data-start="0" data-duration="5.0" data-track-index="1" data-width="1080" data-height="1920" style="z-index:1"></div>
+  <div id="h2" class="scene clip" data-composition-id="s2-soviet" data-composition-src="compositions/s2-soviet.html"
+       data-start="4.7" data-duration="4.2" data-track-index="2" data-width="1080" data-height="1920" style="z-index:2; opacity:0"></div>
+  <div id="h3" class="scene clip" data-composition-id="s3-kids" data-composition-src="compositions/s3-kids.html"
+       data-start="8.6" data-duration="2.7" data-track-index="3" data-width="1080" data-height="1920" style="z-index:3; opacity:0"></div>
+  <div id="h4" class="scene clip" data-composition-id="s4-placid" data-composition-src="compositions/s4-placid.html"
+       data-start="11.0" data-duration="4.6" data-track-index="4" data-width="1080" data-height="1920" style="z-index:4; opacity:0"></div>
+  <div id="h5" class="scene clip" data-composition-id="s5-game" data-composition-src="compositions/s5-game.html"
+       data-start="15.3" data-duration="18.3" data-track-index="5" data-width="1080" data-height="1920" style="z-index:5; opacity:0"></div>
+  <div id="h6" class="scene clip" data-composition-id="s6-title" data-composition-src="compositions/s6-title.html"
+       data-start="33.3" data-duration="6.3" data-track-index="6" data-width="1080" data-height="1920" style="z-index:6; opacity:0"></div>
+  <div id="h7" class="scene clip" data-composition-id="s7-cta" data-composition-src="compositions/s7-cta.html"
+       data-start="39.3" data-duration="4.7" data-track-index="7" data-width="1080" data-height="1920" style="z-index:7; opacity:0"></div>
+
+  <!-- Film-Look über allen Szenen -->
+  <div id="leak1" class="ov" data-layout-ignore></div>
+  <div id="leak2" class="ov" data-layout-ignore></div>
+  <svg id="grain" class="ov" viewBox="0 0 1080 1920" data-layout-ignore>
+    <filter id="gf"><feTurbulence id="turb" type="fractalNoise" baseFrequency="0.85" numOctaves="2" seed="1" stitchTiles="stitch"/>
+      <feColorMatrix type="saturate" values="0"/></filter>
+    <rect width="1080" height="1920" filter="url(#gf)"/>
+  </svg>
+  <div id="black" class="ov"></div>
+  <div id="wflash" class="ov"></div>
+  <div id="lbT" class="lb"></div>
+  <div id="lbB" class="lb"></div>
+
+  <!-- Ton: Filmscore + SFX + Sprecher als eine Mischung (make_audio.py) -->
+  <audio id="a_mix" src="audio/mix_vo.wav" data-start="0" data-duration="44" data-volume="1" data-track-index="10"></audio>
+</div>
+
+<script>
+  (function () {
+    const F = (n) => n / 30;
+    const tl = gsap.timeline({ paused: true });
+
+    // Filmkorn: neues Rauschmuster alle 2 Frames; Lichtlecks driften langsam
+    for (let f = 0; f < 1320; f += 2) tl.set("#turb", { attr: { seed: 1 + (f / 2) % 97 } }, F(f));
+    tl.fromTo("#leak1", { x: -120, y: 0 }, { x: 260, y: 140, duration: F(1320), ease: "sine.inOut" }, 0);
+    tl.fromTo("#leak2", { x: 100, y: 0 }, { x: -220, y: -160, duration: F(1320), ease: "sine.inOut" }, 0);
+
+    // Schnitt über Schwarz: alte Szene blendet ab, Schnitt auf Bild cut, neue Szene blendet auf
+    function dip(outSel, inSel, cut, inN, outN) {
+      tl.to("#black", { opacity: 1, duration: F(inN), ease: "power2.in" }, F(cut - inN));
+      tl.set(outSel, { opacity: 0 }, F(cut));
+      tl.set(inSel, { opacity: 1 }, F(cut));
+      tl.to("#black", { opacity: 0, duration: F(outN), ease: "power2.out" }, F(cut));
+    }
+    dip("#h1", "#h2", 144, 3, 5);       // Braam-Schnitt in die Sowjetunion
+    dip("#h2", "#h3", 261, 3, 6);
+    dip("#h3", "#h4", 333, 7, 10);
+    dip("#h4", "#h5", 462, 10, 2);      // Tafel flackert selbst an
+    // Sirene F999: Weißblitz, Schnitt auf den Titel (F1002)
+    tl.set("#wflash", { opacity: 1 }, F(999));
+    tl.set("#h5", { opacity: 0 }, F(1002));
+    tl.set("#h6", { opacity: 1 }, F(1002));
+    tl.to("#wflash", { opacity: 0, duration: F(14), ease: "power2.out" }, F(1002));
+    dip("#h6", "#h7", 1182, 10, 10);
+
+    // Letterbox öffnet sich beim 4:3 (F787) – ab da Vollbild
+    tl.to(["#lbT", "#lbB"], { height: 0, duration: F(16), ease: "power3.inOut" }, F(787));
+
+    window.__timelines = window.__timelines || {};
+    window.__timelines["main"] = tl;
+  })();
+</script>
+</body>
+</html>

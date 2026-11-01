@@ -1,0 +1,99 @@
+<template id="s4-placid-template">
+  <!-- S4 LAKE PLACID · global 11,0–15,6 s (F330–467), sichtbar ab F333. Titelkarte mit Schnee. -->
+  <div data-composition-id="s4-placid" data-width="1080" data-height="1920" data-duration="4.6">
+    <div class="scn">
+      <div class="cam" id="s4cam" data-layout-allow-overflow>
+        <div class="bg"></div>
+        <div id="s4bokeh" class="bokeh"></div>
+        <div id="s4snow" class="snow" data-layout-ignore></div>
+        <div class="vig" data-layout-ignore></div>
+      </div>
+      <div id="s4a" class="c silver" style="top:650px;font-size:128px;opacity:0">LAKE PLACID</div>
+      <div id="s4sw" class="sweep" data-layout-ignore></div>
+      <div id="s4b" class="c amber" style="top:840px;font-size:62px;letter-spacing:10px;opacity:0">FEBRUARY 22, 1980</div>
+      <div id="s4flash" class="flash"></div>
+    </div>
+
+    <style>
+      @font-face { font-family: "Cinzel"; src: url("fonts/Cinzel.woff2") format("woff2"); font-weight: 400 900; }
+      @font-face { font-family: "DSEG7"; src: url("fonts/DSEG7Classic-Bold.woff2") format("woff2"); }
+      @font-face { font-family: "ArchivoX"; src: url("fonts/ArchivoX900.ttf"); }
+      @font-face { font-family: "JBMono"; src: url("fonts/JBMono700.ttf"); }
+      [data-composition-id="s4-placid"] .scn { position: relative; width: 1080px; height: 1920px; overflow: hidden; background: #000; }
+      [data-composition-id="s4-placid"] .cam { position: absolute; left: 0; top: 0; width: 1080px; height: 1920px; }
+      [data-composition-id="s4-placid"] .vig { position: absolute; inset: 0; background: radial-gradient(ellipse 75% 60% at 50% 50%, rgba(0,0,0,0) 45%, rgba(0,0,0,0.85) 100%); }
+      [data-composition-id="s4-placid"] .flash { position: absolute; inset: 0; background: #fff; opacity: 0; }
+      [data-composition-id="s4-placid"] .c { position: absolute; left: 0; width: 1080px; text-align: center; white-space: nowrap; font-family: "Cinzel", serif; font-weight: 900;
+        line-height: 1.05; color: #f6efe2; letter-spacing: 4px;
+        text-shadow: 0 0 28px rgba(255,190,110,0.32), 0 6px 30px rgba(0,0,0,0.95); }
+      [data-composition-id="s4-placid"] .amber { color: #ffbf5a; font-weight: 700; text-shadow: 0 0 18px rgba(255,160,40,0.55), 0 4px 20px rgba(0,0,0,0.9); }
+      [data-composition-id="s4-placid"] .gold { background: linear-gradient(180deg, #fff3c4 0%, #f2c45a 45%, #b07a1c 100%); -webkit-background-clip: text; background-clip: text;
+        color: transparent; text-shadow: none; filter: drop-shadow(0 0 22px rgba(255,190,80,0.45)) drop-shadow(0 6px 18px rgba(0,0,0,0.9)); }
+      [data-composition-id="s4-placid"] .beam { position: absolute; top: -200px; width: 700px; height: 1700px; transform-origin: 50% 0%;
+        background: linear-gradient(180deg, rgba(255,226,170,0.26) 0%, rgba(255,226,170,0.07) 55%, rgba(255,226,170,0) 85%);
+        clip-path: polygon(42% 0%, 58% 0%, 100% 100%, 0% 100%); filter: blur(14px); }
+      [data-composition-id="s4-placid"] .dustbox { position: absolute; inset: 0; }
+      [data-composition-id="s4-placid"] .dust { position: absolute; border-radius: 50%; background: #ffe7bd; filter: blur(0.6px); }
+      [data-composition-id="s4-placid"] .bg { position: absolute; inset: 0;
+        background: radial-gradient(ellipse 80% 50% at 50% 45%, rgba(40,60,90,0.6), rgba(0,0,0,0) 75%), #02050a; }
+      [data-composition-id="s4-placid"] .bokeh { position: absolute; inset: 0; }
+      [data-composition-id="s4-placid"] .bk { position: absolute; border-radius: 50%; }
+      [data-composition-id="s4-placid"] .snow { position: absolute; inset: 0; }
+      [data-composition-id="s4-placid"] .fl { position: absolute; top: -30px; border-radius: 50%; background: #fff; }
+      [data-composition-id="s4-placid"] .silver { background: linear-gradient(180deg, #ffffff 0%, #d6dde8 50%, #7d8796 100%); -webkit-background-clip: text;
+        background-clip: text; color: transparent; text-shadow: none; filter: drop-shadow(0 0 24px rgba(180,210,255,0.35)) drop-shadow(0 6px 18px rgba(0,0,0,0.9)); }
+      [data-composition-id="s4-placid"] .sweep { position: absolute; left: -300px; top: 600px; width: 160px; height: 260px; opacity: 0; transform: rotate(16deg);
+        background: linear-gradient(90deg, rgba(255,255,255,0) 0%, rgba(255,255,255,0.55) 50%, rgba(255,255,255,0) 100%); mix-blend-mode: screen; filter: blur(4px); }
+    </style>
+
+    <script src="vendor/gsap.min.js"></script>
+    <script>
+      (function () {
+        const OFF = 330;
+        const G = (f) => (f - OFF) / 30;
+        const D = (n) => n / 30;
+        const rng = (s) => () => { s |= 0; s = (s + 0x6D2B79F5) | 0; let t = Math.imul(s ^ (s >>> 15), 1 | s);
+          t = (t + Math.imul(t ^ (t >>> 7), 61 | t)) ^ t; return ((t ^ (t >>> 14)) >>> 0) / 4294967296; };
+        const tl = gsap.timeline({ paused: true });
+        const shake = (el, f0, n, amp, seed) => { const r = rng(seed);
+          for (let i = 0; i < n; i++) { const k = amp * (1 - i / n); tl.set(el, { x: (r() * 2 - 1) * k, y: (r() * 2 - 1) * k }, G(f0 + i)); }
+          tl.set(el, { x: 0, y: 0 }, G(f0 + n)); };
+        const pulse = (el, f, s) => { tl.set(el, { scale: s }, G(f)); tl.to(el, { scale: 1, duration: D(10), ease: "power2.out" }, G(f)); };
+        // Kino-Titel: aus Unschärfe + weiter Laufweite scharf zusammenziehen
+        // (ls0/ls1 = Laufweiten-Gefühl: weite Laufweite -> stärkeres Zusammenziehen über scaleX, ohne Layout-Animation)
+        const reveal = (el, f, n, ls0, ls1) => tl.fromTo(el, { opacity: 0, filter: "blur(14px)", scaleX: 1 + (ls0 - ls1) / 140, scaleY: 1.04 },
+          { opacity: 1, filter: "blur(0px)", scaleX: 1, scaleY: 1, duration: D(n || 18), ease: "power3.out" }, G(f));
+        const hide = (el, f, n) => tl.to(el, { opacity: 0, filter: "blur(10px)", duration: D(n || 8), ease: "power2.in" }, G(f));
+        // Staub im Lichtkegel
+        const dust = (sel, seed, n, f0, f1, x0, x1, y0, y1) => { const box = document.querySelector(sel), r = rng(seed);
+          for (let i = 0; i < n; i++) { const d = document.createElement("div"); d.className = "dust"; const s = 2 + r() * 5;
+            d.style.width = s + "px"; d.style.height = s + "px"; d.style.left = Math.round(x0 + r() * (x1 - x0)) + "px";
+            d.style.top = Math.round(y0 + r() * (y1 - y0)) + "px"; d.style.opacity = (0.25 + r() * 0.6).toFixed(2); box.appendChild(d);
+            tl.fromTo(d, { x: 0, y: 0 }, { x: (r() * 2 - 1) * 60, y: -40 - r() * 120, duration: D(f1 - f0), ease: "none" }, G(f0)); } };
+
+        (function () { const box = document.querySelector("#s4bokeh"), r = rng(41);
+          const cols = ["rgba(255,190,110,0.35)", "rgba(150,190,255,0.3)", "rgba(255,230,190,0.28)"];
+          for (let i = 0; i < 22; i++) { const d = document.createElement("div"); d.className = "bk"; const s = 40 + r() * 150;
+            d.style.width = s + "px"; d.style.height = s + "px"; d.style.left = Math.round(r() * 1080 - 60) + "px"; d.style.top = Math.round(300 + r() * 1300) + "px";
+            d.style.background = cols[i % 3]; d.style.filter = "blur(" + Math.round(8 + r() * 18) + "px)"; box.appendChild(d);
+            tl.fromTo(d, { x: 0 }, { x: (r() * 2 - 1) * 60, duration: D(135), ease: "sine.inOut" }, G(330)); } })();
+        (function () { const box = document.querySelector("#s4snow"), r = rng(43);
+          for (let i = 0; i < 80; i++) { const d = document.createElement("div"); d.className = "fl"; const s = 3 + r() * 10, z = s / 13;
+            d.style.width = s + "px"; d.style.height = s + "px"; d.style.left = Math.round(r() * 1080) + "px";
+            d.style.opacity = (0.3 + z * 0.6).toFixed(2); d.style.filter = "blur(" + (z > 0.7 ? 2 : 0.5) + "px)"; box.appendChild(d);
+            const dur = Math.round(150 - z * 70), start = 330 - Math.floor(r() * dur);
+            tl.fromTo(d, { y: 0, x: 0 }, { y: 2000, x: (r() * 2 - 1) * 120, duration: D(dur), ease: "none" }, G(start));
+            if (start + dur < 466) tl.fromTo(d, { y: 0, x: 0 }, { y: 2000, x: (r() * 2 - 1) * 120, duration: D(dur), ease: "none" }, G(start + dur)); } })();
+        tl.fromTo("#s4cam", { scale: 1.0 }, { scale: 1.07, duration: D(136), ease: "none" }, G(330));
+        // F340 LAKE PLACID (auf "Lake Placid"), Glanz läuft über die Schrift; F378 Datum (auf "February")
+        reveal("#s4a", 340, 24, 30, 4);
+        tl.fromTo("#s4sw", { opacity: 0, x: 0 }, { opacity: 1, x: 1500, duration: D(26), ease: "power2.inOut" }, G(356));
+        reveal("#s4b", 378, 20, 30, 10);
+        tl.to(["#s4a", "#s4b"], { opacity: 0, filter: "blur(12px)", duration: D(14), ease: "power2.in" }, G(448));
+
+        window.__timelines = window.__timelines || {};
+        window.__timelines["s4-placid"] = tl;
+      })();
+    </script>
+  </div>
+</template>
