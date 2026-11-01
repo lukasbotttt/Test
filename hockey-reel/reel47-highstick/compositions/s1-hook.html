@@ -1,0 +1,81 @@
+<template id="s1-hook-template">
+  <!-- S1 HOOK · global 0–2,7 s (F0–80), lokal = global. Puck im Tor, Lampe brennt – dann NO GOAL. -->
+  <div data-composition-id="s1-hook" data-width="1080" data-height="1920" data-duration="2.7">
+    <div class="scn">
+      <div class="cam" id="s1cam" data-layout-allow-overflow>
+        <div class="sky"></div>
+        <div class="floor"></div>
+        <div id="s1lamp" class="lamp"></div>
+        <svg id="s1net" class="net" viewBox="0 0 760 520" data-layout-allow-overflow>
+          <defs><pattern id="s1mesh" width="34" height="34" patternUnits="userSpaceOnUse" patternTransform="rotate(45)">
+            <path d="M0 0 L0 34 M0 0 L34 0" stroke="#dfe9f5" stroke-opacity="0.45" stroke-width="3" fill="none"/></pattern></defs>
+          <rect x="30" y="30" width="700" height="467" fill="#050912"/>
+          <rect x="30" y="30" width="700" height="467" fill="url(#s1mesh)"/>
+          <path d="M30 497 L30 30 L730 30 L730 497" fill="none" stroke="#ff1744" stroke-width="26" stroke-linejoin="round"/>
+          <g transform="translate(470 420)"><path d="M-50 0 L-50 18 A50 16 0 0 0 50 18 L50 0 Z" fill="#111"/>
+            <ellipse cx="0" cy="0" rx="50" ry="16" fill="#2a2a33" stroke="#e8f6ff" stroke-width="3"/></g>
+        </svg>
+        <div class="stampwrap"><div id="s1stamp" class="stamp">NO GOAL</div></div>
+        <div class="vig" data-layout-ignore></div>
+      </div>
+      <div id="s1a" class="t" style="top:150px;font-size:140px">WHY DIDN'T</div>
+      <div id="s1b" class="t lime" style="top:300px;font-size:140px">THIS GOAL COUNT?</div>
+      <div id="s1flash" class="flash"></div>
+    </div>
+
+    <style>
+      @font-face { font-family: "Anton"; src: url("fonts/Anton.ttf"); }
+      @font-face { font-family: "JBMono"; src: url("fonts/JBMono700.ttf"); }
+      [data-composition-id="s1-hook"] .scn { position: relative; width: 1080px; height: 1920px; overflow: hidden; background: #02040c; }
+      [data-composition-id="s1-hook"] .cam { position: absolute; left: 0; top: 0; width: 1080px; height: 1920px; }
+      [data-composition-id="s1-hook"] .vig { position: absolute; inset: 0; background: radial-gradient(ellipse at center, rgba(0,0,0,0) 55%, rgba(0,0,0,0.75) 100%); }
+      [data-composition-id="s1-hook"] .flash { position: absolute; inset: 0; background: #fff; opacity: 0; }
+      [data-composition-id="s1-hook"] .t { position: absolute; left: 0; width: 1080px; text-align: center; white-space: nowrap;
+        font-family: "Anton", sans-serif; line-height: 1; color: #fff; text-shadow: 0 10px 40px rgba(0,0,0,0.9); }
+      [data-composition-id="s1-hook"] .lime { color: #c6ff2e; text-shadow: 0 0 22px rgba(198,255,46,0.85), 0 10px 40px rgba(0,0,0,0.9); }
+      [data-composition-id="s1-hook"] .cyan { color: #00f0ff; text-shadow: 0 0 22px rgba(0,240,255,0.85), 0 10px 40px rgba(0,0,0,0.9); }
+      [data-composition-id="s1-hook"] .sky { position: absolute; inset: 0;
+        background: radial-gradient(ellipse 70% 35% at 50% 58%, rgba(255,23,68,0.22), rgba(0,0,0,0) 70%), #03040c; }
+      [data-composition-id="s1-hook"] .floor { position: absolute; left: 0; top: 1400px; width: 1080px; height: 520px;
+        background: linear-gradient(180deg, #0d2547 0%, #071426 100%); border-top: 8px solid #ff1744; box-shadow: 0 -6px 30px rgba(255,23,68,0.6); }
+      [data-composition-id="s1-hook"] .lamp { position: absolute; left: 480px; top: 790px; width: 120px; height: 70px; border-radius: 60px 60px 8px 8px;
+        background: #ff1744; border: 4px solid #ff8aa0; box-shadow: 0 0 60px 20px rgba(255,23,68,0.9); }
+      [data-composition-id="s1-hook"] .net { position: absolute; left: 160px; top: 900px; width: 760px; height: 520px; filter: drop-shadow(0 0 18px rgba(255,23,68,0.7)); }
+      [data-composition-id="s1-hook"] .stampwrap { position: absolute; left: 140px; top: 1020px; width: 800px; height: 260px; transform: rotate(-9deg); }
+      [data-composition-id="s1-hook"] .stamp { width: 800px; height: 260px; border: 14px solid #ff1744; border-radius: 30px; opacity: 0;
+        font-family: "Anton", sans-serif; font-size: 190px; line-height: 232px; text-align: center; color: #ff1744; background: rgba(20,0,6,0.75);
+        text-shadow: 0 0 26px rgba(255,23,68,0.9); box-shadow: 0 0 40px rgba(255,23,68,0.8); }
+    </style>
+
+    <script src="vendor/gsap.min.js"></script>
+    <script>
+      (function () {
+        const OFF = 0;
+        const G = (f) => (f - OFF) / 30;
+        const D = (n) => n / 30;
+        const rng = (s) => () => { s |= 0; s = (s + 0x6D2B79F5) | 0; let t = Math.imul(s ^ (s >>> 15), 1 | s);
+          t = (t + Math.imul(t ^ (t >>> 7), 61 | t)) ^ t; return ((t ^ (t >>> 14)) >>> 0) / 4294967296; };
+        const tl = gsap.timeline({ paused: true });
+        const shake = (el, f0, n, amp, seed) => { const r = rng(seed);
+          for (let i = 0; i < n; i++) { const k = amp * (1 - i / n); tl.set(el, { x: (r() * 2 - 1) * k, y: (r() * 2 - 1) * k }, G(f0 + i)); }
+          tl.set(el, { x: 0, y: 0 }, G(f0 + n)); };
+        const pulse = (el, f, s) => { tl.set(el, { scale: s }, G(f)); tl.to(el, { scale: 1, duration: D(9), ease: "power2.out" }, G(f)); };
+
+        // Bild 0: Puck liegt im Tor, Torlampe brennt (pulsiert); F44 NO-GOAL-Stempel, Lampe geht aus
+        tl.fromTo(["#s1a", "#s1b"], { scale: 1.05 }, { scale: 1, duration: D(6), ease: "power3.out" }, G(0));
+        tl.fromTo("#s1cam", { scale: 1.12 }, { scale: 1, duration: D(81), ease: "power2.out" }, G(0));
+        [0, 15, 30].forEach((f) => { tl.set("#s1lamp", { boxShadow: "0 0 90px 34px rgba(255,23,68,1)" }, G(f));
+          tl.to("#s1lamp", { boxShadow: "0 0 40px 10px rgba(255,23,68,0.6)", duration: D(12), ease: "power2.out" }, G(f)); });
+        tl.fromTo("#s1stamp", { opacity: 0, scale: 2.4 }, { opacity: 1, scale: 1, duration: D(5), ease: "power4.in" }, G(39));
+        tl.set("#s1lamp", { backgroundColor: "#3a0610", boxShadow: "0 0 0px 0px rgba(255,23,68,0)" }, G(44));
+        shake("#s1cam", 44, 8, 22, 11);
+        tl.set("#s1flash", { opacity: 0.25 }, G(44));
+        tl.to("#s1flash", { opacity: 0, duration: D(5), ease: "power2.in" }, G(44));
+        pulse("#s1b", 25, 1.05);
+
+        window.__timelines = window.__timelines || {};
+        window.__timelines["s1-hook"] = tl;
+      })();
+    </script>
+  </div>
+</template>

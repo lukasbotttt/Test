@@ -1,0 +1,90 @@
+<template id="s5-cta-template">
+  <!-- S5 CTA · global 17,3–21,0 s (F519–629), lokal = global − 519. FAIR RULE? -> YES OR NO. -->
+  <div data-composition-id="s5-cta" data-width="1080" data-height="1920" data-duration="3.7">
+    <div class="scn">
+      <div class="cam" id="s5cam" data-layout-allow-overflow>
+        <div class="sky"></div>
+        <div id="s5bokeh" class="bokeh"></div>
+        <svg class="side" viewBox="0 0 1080 1920" data-layout-ignore>
+          <line id="s5dash" x1="60" y1="760" x2="1020" y2="760" stroke="#c6ff2e" stroke-width="8" stroke-dasharray="30 18" opacity="0.8"/>
+          <text x="540" y="730" text-anchor="middle" class="lab">CROSSBAR</text></svg>
+        <div class="vig" data-layout-ignore></div>
+      </div>
+      <div id="s5a" class="t lime" style="top:300px;font-size:250px;opacity:0">FAIR RULE?</div>
+      <div id="s5bubble" class="bubble">YES OR NO?</div>
+      <svg id="s5arrow" class="arrow" viewBox="0 0 220 200"><g fill="none" stroke="#c6ff2e" stroke-width="22" stroke-linecap="round" stroke-linejoin="round">
+        <polyline points="30,40 110,120 190,40"/><polyline points="30,100 110,180 190,100" opacity="0.55"/></g></svg>
+      <div class="handle">@BLADESANDPUCKS</div>
+      <div id="s5flash" class="flash"></div>
+    </div>
+
+    <style>
+      @font-face { font-family: "Anton"; src: url("fonts/Anton.ttf"); }
+      @font-face { font-family: "JBMono"; src: url("fonts/JBMono700.ttf"); }
+      @font-face { font-family: "ArchivoX"; src: url("fonts/ArchivoX900.ttf"); }
+      [data-composition-id="s5-cta"] .scn { position: relative; width: 1080px; height: 1920px; overflow: hidden; background: #02040c; }
+      [data-composition-id="s5-cta"] .cam { position: absolute; left: 0; top: 0; width: 1080px; height: 1920px; }
+      [data-composition-id="s5-cta"] .vig { position: absolute; inset: 0; background: radial-gradient(ellipse at center, rgba(0,0,0,0) 55%, rgba(0,0,0,0.75) 100%); }
+      [data-composition-id="s5-cta"] .flash { position: absolute; inset: 0; background: #fff; opacity: 0; }
+      [data-composition-id="s5-cta"] .t { position: absolute; left: 0; width: 1080px; text-align: center; white-space: nowrap;
+        font-family: "Anton", sans-serif; line-height: 1; color: #fff; text-shadow: 0 10px 40px rgba(0,0,0,0.9); }
+      [data-composition-id="s5-cta"] .lime { color: #c6ff2e; text-shadow: 0 0 22px rgba(198,255,46,0.85), 0 10px 40px rgba(0,0,0,0.9); }
+      [data-composition-id="s5-cta"] .cyan { color: #00f0ff; text-shadow: 0 0 22px rgba(0,240,255,0.85), 0 10px 40px rgba(0,0,0,0.9); }
+      [data-composition-id="s5-cta"] .sky { position: absolute; inset: 0;
+        background: radial-gradient(ellipse 60% 40% at 25% 30%, rgba(198,255,46,0.18), rgba(0,0,0,0) 70%),
+                    radial-gradient(ellipse 60% 40% at 80% 60%, rgba(0,180,255,0.24), rgba(0,0,0,0) 70%), #03060f; }
+      [data-composition-id="s5-cta"] .bokeh { position: absolute; inset: 0; }
+      [data-composition-id="s5-cta"] .bk { position: absolute; border-radius: 50%; }
+      [data-composition-id="s5-cta"] .side { position: absolute; left: 0; top: 0; width: 1080px; height: 1920px; }
+      [data-composition-id="s5-cta"] .lab { font-family: "JBMono", monospace; font-size: 40px; fill: #c6ff2e; letter-spacing: 4px; }
+      [data-composition-id="s5-cta"] .bubble { position: absolute; left: 190px; top: 1040px; width: 700px; height: 170px; border-radius: 85px;
+        background: rgba(12,20,0,0.9); border: 5px solid #c6ff2e; box-shadow: 0 0 40px rgba(198,255,46,0.9), inset 0 0 40px rgba(198,255,46,0.3);
+        font-family: "ArchivoX", sans-serif; font-size: 72px; line-height: 170px; color: #fff; text-align: center; white-space: nowrap;
+        text-shadow: 0 0 20px rgba(198,255,46,0.95), 0 0 50px rgba(198,255,46,0.6); transform-origin: 50% 50%; }
+      [data-composition-id="s5-cta"] .arrow { position: absolute; left: 470px; top: 1250px; width: 140px; height: 128px; opacity: 0;
+        filter: drop-shadow(0 0 16px rgba(198,255,46,0.9)); }
+      [data-composition-id="s5-cta"] .handle { position: absolute; left: 0; top: 1720px; width: 1080px; text-align: center;
+        font-family: "JBMono", monospace; font-size: 40px; color: #ffffff; letter-spacing: 4px; opacity: 0.85; }
+    </style>
+
+    <script src="vendor/gsap.min.js"></script>
+    <script>
+      (function () {
+        const OFF = 519;
+        const G = (f) => (f - OFF) / 30;
+        const D = (n) => n / 30;
+        const rng = (s) => () => { s |= 0; s = (s + 0x6D2B79F5) | 0; let t = Math.imul(s ^ (s >>> 15), 1 | s);
+          t = (t + Math.imul(t ^ (t >>> 7), 61 | t)) ^ t; return ((t ^ (t >>> 14)) >>> 0) / 4294967296; };
+        const tl = gsap.timeline({ paused: true });
+        const shake = (el, f0, n, amp, seed) => { const r = rng(seed);
+          for (let i = 0; i < n; i++) { const k = amp * (1 - i / n); tl.set(el, { x: (r() * 2 - 1) * k, y: (r() * 2 - 1) * k }, G(f0 + i)); }
+          tl.set(el, { x: 0, y: 0 }, G(f0 + n)); };
+        const pulse = (el, f, s) => { tl.set(el, { scale: s }, G(f)); tl.to(el, { scale: 1, duration: D(9), ease: "power2.out" }, G(f)); };
+
+        (function () { const box = document.querySelector("#s5bokeh"), r = rng(29);
+          const cols = ["rgba(0,240,255,0.3)", "rgba(198,255,46,0.24)", "rgba(255,23,68,0.24)"];
+          for (let i = 0; i < 14; i++) {
+            const d = document.createElement("div"); d.className = "bk";
+            const s = 30 + r() * 110; d.style.width = s + "px"; d.style.height = s + "px";
+            d.style.left = Math.round(r() * 1080) + "px"; d.style.top = Math.round(r() * 1920) + "px";
+            d.style.background = cols[i % 3]; d.style.filter = "blur(" + Math.round(4 + r() * 10) + "px)";
+            box.appendChild(d);
+            tl.fromTo(d, { y: 0 }, { y: -120 - r() * 160, duration: D(111), ease: "none" }, G(519));
+          } })();
+        tl.fromTo("#s5a", { opacity: 0, scale: 1.5 }, { opacity: 1, scale: 1, duration: D(6), ease: "power4.out" }, G(529));
+        tl.fromTo("#s5dash", { attr: { x2: 60 } }, { attr: { x2: 1020 }, duration: D(14), ease: "power2.out" }, G(526));
+        tl.fromTo("#s5bubble", { scale: 0 }, { scale: 1, duration: D(8), ease: "back.out(2.2)" }, G(556));
+        tl.fromTo("#s5arrow", { opacity: 0, y: -60 }, { opacity: 1, y: 0, duration: D(6), ease: "back.out(2)" }, G(564));
+        pulse("#s5bubble", 587, 1.1);
+        tl.set("#s5flash", { opacity: 0.22 }, G(587));
+        tl.to("#s5flash", { opacity: 0, duration: D(5), ease: "power2.in" }, G(587));
+        shake("#s5cam", 587, 6, 14, 61);
+        [600, 615].forEach((f) => tl.to("#s5arrow", { y: 26, duration: D(5), ease: "power2.out", yoyo: true, repeat: 1 }, G(f)));
+        pulse("#s5a", 545, 1.04);
+
+        window.__timelines = window.__timelines || {};
+        window.__timelines["s5-cta"] = tl;
+      })();
+    </script>
+  </div>
+</template>
