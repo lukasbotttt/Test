@@ -1,0 +1,109 @@
+<template id="s3-double-template">
+  <!-- S3 DOUBLE MINOR · global 5,3–11,7 s (F159–350), lokal = global − 159. Verletzung (Blut) = 2 + 2 = 4 Minuten (Regel 60.3). -->
+  <div data-composition-id="s3-double" data-width="1080" data-height="1920" data-duration="6.4">
+    <div class="scn">
+      <div class="cam" id="s3cam" data-layout-allow-overflow>
+        <div class="sky"></div>
+        <svg class="side" viewBox="0 0 1080 1920" data-layout-ignore>
+          <line id="s3sl" x1="40" y1="1110" x2="1040" y2="1110" stroke="#c6ff2e" stroke-width="6" stroke-dasharray="26 16" opacity="0.85"/>
+          <text x="1040" y="1165" text-anchor="end" class="lab">SHOULDERS</text>
+          <g id="s3helm">
+            <path d="M600 1000 L600 900 Q600 790 720 790 Q850 790 860 900 L860 1000 Z" fill="#1f6fe0" stroke="#bfe0ff" stroke-width="6"/>
+            <path d="M600 930 L700 930 L700 975 L600 975 Z" fill="rgba(190,230,255,0.55)" stroke="#e8f6ff" stroke-width="4"/>
+            <path d="M610 1000 L860 1000" stroke="#0b2e66" stroke-width="10"/>
+            <circle cx="790" cy="900" r="16" fill="#0b2e66"/>
+          </g>
+          <g id="s3drop" opacity="0"><path d="M560 960 Q560 925 575 900 Q590 925 590 960 A15 15 0 0 1 560 960 Z" fill="#ff1f3d"/>
+            <path d="M567 952 Q568 935 573 925" stroke="#ffb3be" stroke-width="4" fill="none"/></g>
+          <path id="s3stick" d="M200 1560 L200 890 Q200 860 230 860 L330 860" fill="none" stroke="#ff1744" stroke-width="28" stroke-linecap="round" stroke-linejoin="round"/>
+          <circle id="s3hit" cx="575" cy="930" r="30" fill="none" stroke="#ffffff" stroke-width="8" opacity="0"/>
+        </svg>
+        <div id="s3pens" class="pens">
+          <div id="s3pa" class="pen" style="left:70px;top:330px;width:400px;height:210px" ><div class="pl">PENALTY</div><div class="pc" style="font-size:110px"><span class="gh" aria-hidden="true" data-layout-ignore>8:88</span><span id="s3pav" class="v" data-layout-allow-overlap>2:00</span></div></div>
+          <div id="s3plus" class="plus">+</div>
+          <div id="s3pb" class="pen" style="left:610px;top:330px;width:400px;height:210px" ><div class="pl">PENALTY</div><div class="pc" style="font-size:110px"><span class="gh" aria-hidden="true" data-layout-ignore>8:88</span><span id="s3pbv" class="v" data-layout-allow-overlap>2:00</span></div></div>
+        </div>
+        <div id="s3p4" class="pen" style="left:220px;top:300px;width:640px;height:275px" ><div class="pl">PENALTY</div><div class="pc" style="font-size:170px"><span class="gh" aria-hidden="true" data-layout-ignore>8:88</span><span id="s3p4v" class="v" data-layout-allow-overlap>4:00</span></div></div>
+        <div id="s3red" class="redv" data-layout-ignore></div>
+        <div class="vig" data-layout-ignore></div>
+      </div>
+      <div id="s3a" class="t" style="top:140px;font-size:150px;opacity:0;color:#ff2b55;text-shadow:0 0 22px rgba(255,23,68,0.8),0 10px 40px rgba(0,0,0,0.9)">INJURY?</div>
+      <div id="s3b" class="t lime" style="top:140px;font-size:140px;opacity:0">DOUBLE MINOR</div>
+      <div id="s3flash" class="flash"></div>
+    </div>
+
+    <style>
+      @font-face { font-family: "Anton"; src: url("fonts/Anton.ttf"); }
+      @font-face { font-family: "JBMono"; src: url("fonts/JBMono700.ttf"); }
+      [data-composition-id="s3-double"] .scn { position: relative; width: 1080px; height: 1920px; overflow: hidden; background: #02040c; }
+      [data-composition-id="s3-double"] .cam { position: absolute; left: 0; top: 0; width: 1080px; height: 1920px; }
+      [data-composition-id="s3-double"] .vig { position: absolute; inset: 0; background: radial-gradient(ellipse at center, rgba(0,0,0,0) 55%, rgba(0,0,0,0.75) 100%); }
+      [data-composition-id="s3-double"] .flash { position: absolute; inset: 0; background: #fff; opacity: 0; }
+      [data-composition-id="s3-double"] .t { position: absolute; left: 0; width: 1080px; text-align: center; white-space: nowrap;
+        font-family: "Anton", sans-serif; line-height: 1; color: #fff; text-shadow: 0 10px 40px rgba(0,0,0,0.9); }
+      [data-composition-id="s3-double"] .lime { color: #c6ff2e; text-shadow: 0 0 22px rgba(198,255,46,0.85), 0 10px 40px rgba(0,0,0,0.9); }
+      [data-composition-id="s3-double"] .cyan { color: #00f0ff; text-shadow: 0 0 22px rgba(0,240,255,0.85), 0 10px 40px rgba(0,0,0,0.9); }
+      [data-composition-id="s3-double"] .sky { position: absolute; inset: 0;
+        background: radial-gradient(ellipse 80% 45% at 50% 60%, rgba(255,30,50,0.20), rgba(0,0,0,0) 70%), #03050b; }
+      @font-face { font-family: "DSEG7"; src: url("fonts/DSEG7Classic-Bold.woff2") format("woff2"); }
+      [data-composition-id="s3-double"] .pen { position: absolute; border-radius: 30px; background: linear-gradient(180deg, #14161b 0%, #07080a 100%);
+        border: 5px solid #2b2f37; box-shadow: inset 0 0 40px rgba(0,0,0,0.9), 0 25px 60px rgba(0,0,0,0.85), 0 0 50px rgba(255,60,40,0.18); }
+      [data-composition-id="s3-double"] .pl { position: absolute; left: 0; top: 22px; width: 100%; text-align: center; font-family: "JBMono", monospace; font-size: 38px;
+        letter-spacing: 12px; color: #ff5a46; text-shadow: 0 0 12px rgba(255,60,40,0.8); }
+      [data-composition-id="s3-double"] .pc { position: absolute; left: 0; bottom: 18px; width: 100%; text-align: center; font-family: "DSEG7", monospace; line-height: 1; }
+      [data-composition-id="s3-double"] .pc .gh { position: absolute; left: 0; width: 100%; color: #2a1206; }
+      [data-composition-id="s3-double"] .pc .v { position: relative; display: inline-block; color: #ffb030; text-shadow: 0 0 14px rgba(255,150,30,0.95), 0 0 40px rgba(255,110,20,0.55); }
+      [data-composition-id="s3-double"] .side { position: absolute; left: 0; top: 0; width: 1080px; height: 1920px;
+        filter: drop-shadow(0 0 10px rgba(0,200,255,0.35)); }
+      [data-composition-id="s3-double"] .lab { font-family: "JBMono", monospace; font-size: 40px; fill: #c6ff2e; letter-spacing: 4px; }
+      [data-composition-id="s3-double"] .pens { position: absolute; left: 0; top: 0; width: 1080px; height: 700px; }
+      [data-composition-id="s3-double"] .plus { position: absolute; left: 470px; top: 360px; width: 140px; text-align: center; opacity: 0;
+        font-family: "Anton", sans-serif; font-size: 140px; line-height: 1; color: #fff; }
+      [data-composition-id="s3-double"] .redv { position: absolute; inset: 0; opacity: 0; background: radial-gradient(ellipse at 52% 48%, rgba(255,0,30,0.0) 40%, rgba(255,0,30,0.45) 100%); }
+      [data-composition-id="s3-double"] #s3pa, [data-composition-id="s3-double"] #s3pb, [data-composition-id="s3-double"] #s3p4 { opacity: 0; }
+    </style>
+
+    <script src="vendor/gsap.min.js"></script>
+    <script>
+      (function () {
+        const OFF = 159;
+        const G = (f) => (f - OFF) / 30;
+        const D = (n) => n / 30;
+        const rng = (s) => () => { s |= 0; s = (s + 0x6D2B79F5) | 0; let t = Math.imul(s ^ (s >>> 15), 1 | s);
+          t = (t + Math.imul(t ^ (t >>> 7), 61 | t)) ^ t; return ((t ^ (t >>> 14)) >>> 0) / 4294967296; };
+        const tl = gsap.timeline({ paused: true });
+        const shake = (el, f0, n, amp, seed) => { const r = rng(seed);
+          for (let i = 0; i < n; i++) { const k = amp * (1 - i / n); tl.set(el, { x: (r() * 2 - 1) * k, y: (r() * 2 - 1) * k }, G(f0 + i)); }
+          tl.set(el, { x: 0, y: 0 }, G(f0 + n)); };
+        const pulse = (el, f, s) => { tl.set(el, { scale: s }, G(f)); tl.to(el, { scale: 1, duration: D(9), ease: "power2.out" }, G(f)); };
+
+        tl.fromTo("#s3stick", { rotation: -75, svgOrigin: "200 1560" }, { rotation: 22, svgOrigin: "200 1560", duration: D(7), ease: "power3.in" }, G(162));
+        tl.to("#s3stick", { rotation: 8, svgOrigin: "200 1560", duration: D(16), ease: "power2.out" }, G(169));
+        tl.set("#s3hit", { opacity: 1, attr: { r: 30 } }, G(169)); tl.to("#s3hit", { opacity: 0, attr: { r: 110 }, duration: D(12), ease: "power2.out" }, G(169));
+        tl.to("#s3helm", { x: 26, rotation: 6, svgOrigin: "730 1000", duration: D(4), ease: "power3.out", yoyo: true, repeat: 1 }, G(169));
+        // F176 INJURY? · Blutstropfen am Visier (F183), er tropft auf "drawing blood" (F216)
+        tl.fromTo("#s3a", { opacity: 0, scale: 1.4 }, { opacity: 1, scale: 1, duration: D(6), ease: "power4.out" }, G(176));
+        tl.fromTo("#s3drop", { opacity: 0, scale: 0.3 }, { opacity: 1, scale: 1.8, svgOrigin: "575 960", duration: D(6), ease: "back.out(2)" }, G(183));
+        tl.to("#s3drop", { y: 70, duration: D(20), ease: "power2.in" }, G(216));
+        tl.set("#s3red", { opacity: 1 }, G(183)); tl.to("#s3red", { opacity: 0.25, duration: D(20), ease: "power2.out" }, G(183));
+        // F256 DOUBLE MINOR ersetzt INJURY?
+        tl.to("#s3a", { opacity: 0, y: -50, duration: D(5), ease: "power2.in" }, G(250));
+        tl.fromTo("#s3b", { opacity: 0, scale: 1.4 }, { opacity: 1, scale: 1, duration: D(6), ease: "power4.out" }, G(255));
+        // F288 2:00 + F298 + F303 2:00 ("two plus two"), F316 werden zu 4:00 ("four minutes")
+        tl.fromTo("#s3pa", { opacity: 0, x: -300 }, { opacity: 1, x: 0, duration: D(8), ease: "expo.out" }, G(287));
+        tl.fromTo("#s3plus", { opacity: 0, scale: 0.3 }, { opacity: 1, scale: 1, duration: D(6), ease: "back.out(2)" }, G(296));
+        tl.fromTo("#s3pb", { opacity: 0, x: 300 }, { opacity: 1, x: 0, duration: D(8), ease: "expo.out" }, G(300));
+        tl.to("#s3pa", { x: 230, opacity: 0, duration: D(7), ease: "power3.in" }, G(311));
+        tl.to("#s3pb", { x: -230, opacity: 0, duration: D(7), ease: "power3.in" }, G(311));
+        tl.to("#s3plus", { opacity: 0, scale: 0.4, duration: D(5), ease: "power2.in" }, G(311));
+        tl.fromTo("#s3p4", { opacity: 0, scale: 0.4 }, { opacity: 1, scale: 1, duration: D(8), ease: "back.out(2.2)" }, G(316));
+        tl.set("#s3flash", { opacity: 0.25 }, G(318)); tl.to("#s3flash", { opacity: 0, duration: D(5), ease: "power2.in" }, G(318));
+        shake("#s3cam", 318, 6, 16, 31);
+        tl.fromTo("#s3cam", { scale: 1.0 }, { scale: 1.05, duration: D(186), ease: "none" }, G(159));
+
+        window.__timelines = window.__timelines || {};
+        window.__timelines["s3-double"] = tl;
+      })();
+    </script>
+  </div>
+</template>

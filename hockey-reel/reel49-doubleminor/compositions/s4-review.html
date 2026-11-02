@@ -1,0 +1,99 @@
+<template id="s4-review-template">
+  <!-- S4 REVIEW · global 11,3–18,5 s (F339–555), lokal = global − 339. Seit 2019 Videobeweis: Mitspieler-Schläger = keine Strafe. -->
+  <div data-composition-id="s4-review" data-width="1080" data-height="1920" data-duration="7.2">
+    <div class="scn">
+      <div class="cam" id="s4cam" data-layout-allow-overflow>
+        <div class="sky"></div>
+        <div class="tv"><div class="tvhead"><i id="s4rec"></i>REFEREE REVIEW</div>
+          <svg class="tvsvg" viewBox="380 760 720 860" data-layout-ignore>
+            <path d="M600 1000 L600 900 Q600 790 720 790 Q850 790 860 900 L860 1000 Z" fill="#1f6fe0" stroke="#bfe0ff" stroke-width="6"/>
+            <path d="M600 930 L700 930 L700 975 L600 975 Z" fill="rgba(190,230,255,0.55)" stroke="#e8f6ff" stroke-width="4"/>
+            <path id="s4stick" d="M200 1560 L200 890 Q200 860 230 860 L330 860" fill="none" stroke="#ff1744" stroke-width="28" stroke-linecap="round" stroke-linejoin="round" transform="rotate(22 200 1560)"/>
+          </svg>
+          <div id="s4scan" class="scan" data-layout-ignore></div>
+        </div>
+        <div id="s4pen" class="pen" style="left:240px;top:1240px;width:600px;height:254px" ><div class="pl">PENALTY</div><div class="pc" style="font-size:150px"><span class="gh" aria-hidden="true" data-layout-ignore>8:88</span><span id="s4penv" class="v" data-layout-allow-overlap>4:00</span></div></div>
+        <div class="stampwrap" data-layout-allow-overlap><div id="s4stamp" class="stamp" data-layout-allow-overlap>NO PENALTY</div></div>
+        <div class="vig" data-layout-ignore></div>
+      </div>
+      <div id="s4a" class="t cyan" style="top:140px;font-size:110px;opacity:0">SINCE 2019:</div>
+      <div id="s4b" class="t" style="top:270px;font-size:130px;opacity:0">VIDEO REVIEW</div>
+      <div id="s4same" class="t lime" style="top:1120px;font-size:72px;opacity:0">SAME TEAM'S STICK</div>
+      <div id="s4flash" class="flash"></div>
+    </div>
+
+    <style>
+      @font-face { font-family: "Anton"; src: url("fonts/Anton.ttf"); }
+      @font-face { font-family: "JBMono"; src: url("fonts/JBMono700.ttf"); }
+      [data-composition-id="s4-review"] .scn { position: relative; width: 1080px; height: 1920px; overflow: hidden; background: #02040c; }
+      [data-composition-id="s4-review"] .cam { position: absolute; left: 0; top: 0; width: 1080px; height: 1920px; }
+      [data-composition-id="s4-review"] .vig { position: absolute; inset: 0; background: radial-gradient(ellipse at center, rgba(0,0,0,0) 55%, rgba(0,0,0,0.75) 100%); }
+      [data-composition-id="s4-review"] .flash { position: absolute; inset: 0; background: #fff; opacity: 0; }
+      [data-composition-id="s4-review"] .t { position: absolute; left: 0; width: 1080px; text-align: center; white-space: nowrap;
+        font-family: "Anton", sans-serif; line-height: 1; color: #fff; text-shadow: 0 10px 40px rgba(0,0,0,0.9); }
+      [data-composition-id="s4-review"] .lime { color: #c6ff2e; text-shadow: 0 0 22px rgba(198,255,46,0.85), 0 10px 40px rgba(0,0,0,0.9); }
+      [data-composition-id="s4-review"] .cyan { color: #00f0ff; text-shadow: 0 0 22px rgba(0,240,255,0.85), 0 10px 40px rgba(0,0,0,0.9); }
+      [data-composition-id="s4-review"] .sky { position: absolute; inset: 0;
+        background: radial-gradient(ellipse 80% 45% at 50% 60%, rgba(0,180,255,0.20), rgba(0,0,0,0) 70%), #03050b; }
+      @font-face { font-family: "DSEG7"; src: url("fonts/DSEG7Classic-Bold.woff2") format("woff2"); }
+      [data-composition-id="s4-review"] .pen { position: absolute; border-radius: 30px; background: linear-gradient(180deg, #14161b 0%, #07080a 100%);
+        border: 5px solid #2b2f37; box-shadow: inset 0 0 40px rgba(0,0,0,0.9), 0 25px 60px rgba(0,0,0,0.85), 0 0 50px rgba(255,60,40,0.18); }
+      [data-composition-id="s4-review"] .pl { position: absolute; left: 0; top: 22px; width: 100%; text-align: center; font-family: "JBMono", monospace; font-size: 38px;
+        letter-spacing: 12px; color: #ff5a46; text-shadow: 0 0 12px rgba(255,60,40,0.8); }
+      [data-composition-id="s4-review"] .pc { position: absolute; left: 0; bottom: 18px; width: 100%; text-align: center; font-family: "DSEG7", monospace; line-height: 1; }
+      [data-composition-id="s4-review"] .pc .gh { position: absolute; left: 0; width: 100%; color: #2a1206; }
+      [data-composition-id="s4-review"] .pc .v { position: relative; display: inline-block; color: #ffb030; text-shadow: 0 0 14px rgba(255,150,30,0.95), 0 0 40px rgba(255,110,20,0.55); }
+      [data-composition-id="s4-review"] .tv { position: absolute; left: 110px; top: 450px; width: 860px; height: 640px; border-radius: 28px; overflow: hidden;
+        background: #050912; border: 8px solid #2b3445; box-shadow: 0 0 0 4px #0b0f18, 0 30px 70px rgba(0,0,0,0.85), 0 0 50px rgba(0,180,255,0.25); }
+      [data-composition-id="s4-review"] .tvhead { position: absolute; left: 0; top: 0; width: 100%; height: 74px; background: #0d1422; border-bottom: 3px solid #233049;
+        font-family: "JBMono", monospace; font-size: 38px; line-height: 74px; letter-spacing: 6px; color: #e8f1ff; padding-left: 70px; }
+      [data-composition-id="s4-review"] .tvhead i { position: absolute; left: 26px; top: 22px; width: 28px; height: 28px; border-radius: 50%; background: #ff1f3d;
+        box-shadow: 0 0 14px rgba(255,30,60,0.9); }
+      [data-composition-id="s4-review"] .tvsvg { position: absolute; left: 0; top: 74px; width: 844px; height: 550px; }
+      [data-composition-id="s4-review"] .scan { position: absolute; left: 0; top: 74px; width: 100%; height: 556px; opacity: 0;
+        background: repeating-linear-gradient(180deg, rgba(255,255,255,0.10) 0 3px, rgba(0,0,0,0) 3px 14px); }
+      [data-composition-id="s4-review"] .stampwrap { position: absolute; left: 150px; top: 1250px; width: 780px; height: 220px; transform: rotate(-8deg); }
+      [data-composition-id="s4-review"] .stamp { width: 780px; height: 220px; border: 12px solid #c6ff2e; border-radius: 26px; opacity: 0;
+        font-family: "Anton", sans-serif; font-size: 150px; line-height: 196px; text-align: center; color: #c6ff2e; background: rgba(10,16,0,0.85);
+        text-shadow: 0 0 22px rgba(198,255,46,0.8); box-shadow: 0 0 40px rgba(198,255,46,0.6); }
+    </style>
+
+    <script src="vendor/gsap.min.js"></script>
+    <script>
+      (function () {
+        const OFF = 339;
+        const G = (f) => (f - OFF) / 30;
+        const D = (n) => n / 30;
+        const rng = (s) => () => { s |= 0; s = (s + 0x6D2B79F5) | 0; let t = Math.imul(s ^ (s >>> 15), 1 | s);
+          t = (t + Math.imul(t ^ (t >>> 7), 61 | t)) ^ t; return ((t ^ (t >>> 14)) >>> 0) / 4294967296; };
+        const tl = gsap.timeline({ paused: true });
+        const shake = (el, f0, n, amp, seed) => { const r = rng(seed);
+          for (let i = 0; i < n; i++) { const k = amp * (1 - i / n); tl.set(el, { x: (r() * 2 - 1) * k, y: (r() * 2 - 1) * k }, G(f0 + i)); }
+          tl.set(el, { x: 0, y: 0 }, G(f0 + n)); };
+        const pulse = (el, f, s) => { tl.set(el, { scale: s }, G(f)); tl.to(el, { scale: 1, duration: D(9), ease: "power2.out" }, G(f)); };
+
+        tl.fromTo("#s4cam", { scale: 1.04 }, { scale: 1, duration: D(204), ease: "power1.out" }, G(345));
+        [345, 360, 375, 390, 405, 420, 435, 450, 465, 480, 495, 510, 525, 540].forEach((f, i) => tl.set("#s4rec", { opacity: i % 2 ? 0.25 : 1 }, G(f)));
+        // F353 SINCE 2019, F393 VIDEO REVIEW (auf "check the video"), Rückspulen (F405–420)
+        tl.fromTo("#s4a", { opacity: 0, y: -50 }, { opacity: 1, y: 0, duration: D(6), ease: "power3.out" }, G(353));
+        tl.fromTo("#s4b", { opacity: 0, scale: 1.3 }, { opacity: 1, scale: 1, duration: D(6), ease: "power4.out" }, G(392));
+        tl.set("#s4scan", { opacity: 1 }, G(405));
+        tl.to("#s4stick", { rotation: -75, svgOrigin: "200 1560", duration: D(12), ease: "none" }, G(405));
+        tl.set("#s4scan", { opacity: 0 }, G(418));
+        // Wiederholung: der Schläger ist BLAU = Mitspieler (F462 Schwung, F470 Färbung, "teammate's stick")
+        tl.to("#s4stick", { attr: { stroke: "#1f6fe0" }, duration: D(6), ease: "none" }, G(440));
+        tl.to("#s4stick", { rotation: 22, svgOrigin: "200 1560", duration: D(7), ease: "power3.in" }, G(455));
+        tl.fromTo("#s4same", { opacity: 0, y: 30 }, { opacity: 1, y: 0, duration: D(6), ease: "power2.out" }, G(466));
+        // Strafuhr erscheint (F445), läuft auf 0:00 (F505–515), Stempel NO PENALTY (F520, nach "gone")
+        tl.fromTo("#s4pen", { opacity: 0 }, { opacity: 1, duration: D(8), ease: "none" }, G(430));
+        ["3:00", "2:00", "1:00", "0:00"].forEach((v, i) => tl.set("#s4penv", { textContent: v }, G(505 + i * 3)));
+        tl.to("#s4same", { opacity: 0, duration: D(6), ease: "none" }, G(512));
+        tl.fromTo("#s4stamp", { opacity: 0, scale: 2.2 }, { opacity: 1, scale: 1, duration: D(5), ease: "power4.in" }, G(522));
+        shake("#s4cam", 527, 6, 14, 41);
+
+        window.__timelines = window.__timelines || {};
+        window.__timelines["s4-review"] = tl;
+      })();
+    </script>
+  </div>
+</template>

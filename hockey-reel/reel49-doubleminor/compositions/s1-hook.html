@@ -1,0 +1,70 @@
+<template id="s1-hook-template">
+  <!-- S1 HOOK · global 0–2,7 s (F0–80), lokal = global. Frage ab Bild 0, Strafuhr 4:00 blinkt. -->
+  <div data-composition-id="s1-hook" data-width="1080" data-height="1920" data-duration="2.7">
+    <div class="scn">
+      <div class="cam" id="s1cam" data-layout-allow-overflow>
+        <div class="sky"></div>
+        <div id="s1pen" class="pen" style="left:100px;top:760px;width:880px;height:340px" ><div class="pl">PENALTY</div><div class="pc" style="font-size:230px"><span class="gh" aria-hidden="true" data-layout-ignore>8:88</span><span id="s1penv" class="v" data-layout-allow-overlap>4:00</span></div></div>
+        <div id="s1siren" class="siren" data-layout-ignore></div>
+        <div class="vig" data-layout-ignore></div>
+      </div>
+      <div id="s1a" class="t" style="top:150px;font-size:130px">WHY IS THIS</div>
+      <div id="s1b" class="t lime" style="top:300px;font-size:210px">4 MINUTES?</div>
+      <div id="s1sub" class="t" style="top:1260px;font-size:64px;color:#ff5a46">HIGH-STICKING</div>
+      <div id="s1flash" class="flash"></div>
+    </div>
+
+    <style>
+      @font-face { font-family: "Anton"; src: url("fonts/Anton.ttf"); }
+      @font-face { font-family: "JBMono"; src: url("fonts/JBMono700.ttf"); }
+      [data-composition-id="s1-hook"] .scn { position: relative; width: 1080px; height: 1920px; overflow: hidden; background: #02040c; }
+      [data-composition-id="s1-hook"] .cam { position: absolute; left: 0; top: 0; width: 1080px; height: 1920px; }
+      [data-composition-id="s1-hook"] .vig { position: absolute; inset: 0; background: radial-gradient(ellipse at center, rgba(0,0,0,0) 55%, rgba(0,0,0,0.75) 100%); }
+      [data-composition-id="s1-hook"] .flash { position: absolute; inset: 0; background: #fff; opacity: 0; }
+      [data-composition-id="s1-hook"] .t { position: absolute; left: 0; width: 1080px; text-align: center; white-space: nowrap;
+        font-family: "Anton", sans-serif; line-height: 1; color: #fff; text-shadow: 0 10px 40px rgba(0,0,0,0.9); }
+      [data-composition-id="s1-hook"] .lime { color: #c6ff2e; text-shadow: 0 0 22px rgba(198,255,46,0.85), 0 10px 40px rgba(0,0,0,0.9); }
+      [data-composition-id="s1-hook"] .cyan { color: #00f0ff; text-shadow: 0 0 22px rgba(0,240,255,0.85), 0 10px 40px rgba(0,0,0,0.9); }
+      [data-composition-id="s1-hook"] .sky { position: absolute; inset: 0;
+        background: radial-gradient(ellipse 80% 45% at 50% 60%, rgba(255,40,40,0.22), rgba(0,0,0,0) 70%), #03050b; }
+      @font-face { font-family: "DSEG7"; src: url("fonts/DSEG7Classic-Bold.woff2") format("woff2"); }
+      [data-composition-id="s1-hook"] .pen { position: absolute; border-radius: 30px; background: linear-gradient(180deg, #14161b 0%, #07080a 100%);
+        border: 5px solid #2b2f37; box-shadow: inset 0 0 40px rgba(0,0,0,0.9), 0 25px 60px rgba(0,0,0,0.85), 0 0 50px rgba(255,60,40,0.18); }
+      [data-composition-id="s1-hook"] .pl { position: absolute; left: 0; top: 22px; width: 100%; text-align: center; font-family: "JBMono", monospace; font-size: 38px;
+        letter-spacing: 12px; color: #ff5a46; text-shadow: 0 0 12px rgba(255,60,40,0.8); }
+      [data-composition-id="s1-hook"] .pc { position: absolute; left: 0; bottom: 18px; width: 100%; text-align: center; font-family: "DSEG7", monospace; line-height: 1; }
+      [data-composition-id="s1-hook"] .pc .gh { position: absolute; left: 0; width: 100%; color: #2a1206; }
+      [data-composition-id="s1-hook"] .pc .v { position: relative; display: inline-block; color: #ffb030; text-shadow: 0 0 14px rgba(255,150,30,0.95), 0 0 40px rgba(255,110,20,0.55); }
+      [data-composition-id="s1-hook"] .siren { position: absolute; inset: 0; opacity: 0;
+        background: radial-gradient(ellipse 70% 40% at 50% 55%, rgba(255,30,30,0.35), rgba(0,0,0,0) 70%); }
+    </style>
+
+    <script src="vendor/gsap.min.js"></script>
+    <script>
+      (function () {
+        const OFF = 0;
+        const G = (f) => (f - OFF) / 30;
+        const D = (n) => n / 30;
+        const rng = (s) => () => { s |= 0; s = (s + 0x6D2B79F5) | 0; let t = Math.imul(s ^ (s >>> 15), 1 | s);
+          t = (t + Math.imul(t ^ (t >>> 7), 61 | t)) ^ t; return ((t ^ (t >>> 14)) >>> 0) / 4294967296; };
+        const tl = gsap.timeline({ paused: true });
+        const shake = (el, f0, n, amp, seed) => { const r = rng(seed);
+          for (let i = 0; i < n; i++) { const k = amp * (1 - i / n); tl.set(el, { x: (r() * 2 - 1) * k, y: (r() * 2 - 1) * k }, G(f0 + i)); }
+          tl.set(el, { x: 0, y: 0 }, G(f0 + n)); };
+        const pulse = (el, f, s) => { tl.set(el, { scale: s }, G(f)); tl.to(el, { scale: 1, duration: D(9), ease: "power2.out" }, G(f)); };
+
+        tl.fromTo(["#s1a", "#s1b"], { scale: 1.05 }, { scale: 1, duration: D(6), ease: "power3.out" }, G(0));
+        tl.fromTo("#s1pen", { scale: 1.25, y: 120 }, { scale: 1, y: 0, duration: D(8), ease: "power3.out" }, G(0));
+        tl.fromTo("#s1cam", { scale: 1 }, { scale: 1.05, duration: D(81), ease: "none" }, G(8));
+        // Strafuhr blinkt rot/amber, Sirenen-Licht pulsiert auf den Beats
+        [0, 15, 30, 45, 60].forEach((f) => { tl.set("#s1siren", { opacity: 1 }, G(f)); tl.to("#s1siren", { opacity: 0, duration: D(12), ease: "power2.out" }, G(f));
+          tl.set("#s1penv", { opacity: 0.35 }, G(f + 9)); tl.set("#s1penv", { opacity: 1 }, G(f + 12)); });
+        pulse("#s1b", 20, 1.06);
+        tl.fromTo("#s1sub", { opacity: 0, y: 30 }, { opacity: 1, y: 0, duration: D(8), ease: "power2.out" }, G(10));
+
+        window.__timelines = window.__timelines || {};
+        window.__timelines["s1-hook"] = tl;
+      })();
+    </script>
+  </div>
+</template>

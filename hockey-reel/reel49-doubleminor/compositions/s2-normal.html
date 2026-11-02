@@ -1,0 +1,83 @@
+<template id="s2-normal-template">
+  <!-- S2 NORMAL · global 2,3–5,7 s (F69–170), lokal = global − 69. Hoher Stock = normalerweise 2 Minuten. -->
+  <div data-composition-id="s2-normal" data-width="1080" data-height="1920" data-duration="3.4">
+    <div class="scn">
+      <div class="cam" id="s2cam" data-layout-allow-overflow>
+        <div class="sky"></div>
+        <svg class="side" viewBox="0 0 1080 1920" data-layout-ignore>
+          <line id="s2sl" x1="40" y1="1110" x2="1040" y2="1110" stroke="#c6ff2e" stroke-width="6" stroke-dasharray="26 16" opacity="0.85"/>
+          <text x="1040" y="1165" text-anchor="end" class="lab">SHOULDERS</text>
+          <g id="s2helm">
+            <path d="M600 1000 L600 900 Q600 790 720 790 Q850 790 860 900 L860 1000 Z" fill="#1f6fe0" stroke="#bfe0ff" stroke-width="6"/>
+            <path d="M600 930 L700 930 L700 975 L600 975 Z" fill="rgba(190,230,255,0.55)" stroke="#e8f6ff" stroke-width="4"/>
+            <path d="M610 1000 L860 1000" stroke="#0b2e66" stroke-width="10"/>
+            <circle cx="790" cy="900" r="16" fill="#0b2e66"/>
+          </g>
+          <g id="s2drop" opacity="0"><path d="M560 960 Q560 925 575 900 Q590 925 590 960 A15 15 0 0 1 560 960 Z" fill="#ff1f3d"/>
+            <path d="M567 952 Q568 935 573 925" stroke="#ffb3be" stroke-width="4" fill="none"/></g>
+          <path id="s2stick" d="M200 1560 L200 890 Q200 860 230 860 L330 860" fill="none" stroke="#ff1744" stroke-width="28" stroke-linecap="round" stroke-linejoin="round"/>
+          <circle id="s2hit" cx="575" cy="930" r="30" fill="none" stroke="#ffffff" stroke-width="8" opacity="0"/>
+        </svg>
+        <div id="s2pen" class="pen" style="left:260px;top:330px;width:560px;height:243px" ><div class="pl">PENALTY</div><div class="pc" style="font-size:140px"><span class="gh" aria-hidden="true" data-layout-ignore>8:88</span><span id="s2penv" class="v" data-layout-allow-overlap>0:00</span></div></div>
+        <div class="vig" data-layout-ignore></div>
+      </div>
+      <div id="s2a" class="t" style="top:140px;font-size:150px;opacity:0">HIGH STICK</div>
+      <div id="s2flash" class="flash"></div>
+    </div>
+
+    <style>
+      @font-face { font-family: "Anton"; src: url("fonts/Anton.ttf"); }
+      @font-face { font-family: "JBMono"; src: url("fonts/JBMono700.ttf"); }
+      [data-composition-id="s2-normal"] .scn { position: relative; width: 1080px; height: 1920px; overflow: hidden; background: #02040c; }
+      [data-composition-id="s2-normal"] .cam { position: absolute; left: 0; top: 0; width: 1080px; height: 1920px; }
+      [data-composition-id="s2-normal"] .vig { position: absolute; inset: 0; background: radial-gradient(ellipse at center, rgba(0,0,0,0) 55%, rgba(0,0,0,0.75) 100%); }
+      [data-composition-id="s2-normal"] .flash { position: absolute; inset: 0; background: #fff; opacity: 0; }
+      [data-composition-id="s2-normal"] .t { position: absolute; left: 0; width: 1080px; text-align: center; white-space: nowrap;
+        font-family: "Anton", sans-serif; line-height: 1; color: #fff; text-shadow: 0 10px 40px rgba(0,0,0,0.9); }
+      [data-composition-id="s2-normal"] .lime { color: #c6ff2e; text-shadow: 0 0 22px rgba(198,255,46,0.85), 0 10px 40px rgba(0,0,0,0.9); }
+      [data-composition-id="s2-normal"] .cyan { color: #00f0ff; text-shadow: 0 0 22px rgba(0,240,255,0.85), 0 10px 40px rgba(0,0,0,0.9); }
+      [data-composition-id="s2-normal"] .sky { position: absolute; inset: 0;
+        background: radial-gradient(ellipse 80% 45% at 50% 60%, rgba(0,140,255,0.22), rgba(0,0,0,0) 70%), #03050b; }
+      @font-face { font-family: "DSEG7"; src: url("fonts/DSEG7Classic-Bold.woff2") format("woff2"); }
+      [data-composition-id="s2-normal"] .pen { position: absolute; border-radius: 30px; background: linear-gradient(180deg, #14161b 0%, #07080a 100%);
+        border: 5px solid #2b2f37; box-shadow: inset 0 0 40px rgba(0,0,0,0.9), 0 25px 60px rgba(0,0,0,0.85), 0 0 50px rgba(255,60,40,0.18); }
+      [data-composition-id="s2-normal"] .pl { position: absolute; left: 0; top: 22px; width: 100%; text-align: center; font-family: "JBMono", monospace; font-size: 38px;
+        letter-spacing: 12px; color: #ff5a46; text-shadow: 0 0 12px rgba(255,60,40,0.8); }
+      [data-composition-id="s2-normal"] .pc { position: absolute; left: 0; bottom: 18px; width: 100%; text-align: center; font-family: "DSEG7", monospace; line-height: 1; }
+      [data-composition-id="s2-normal"] .pc .gh { position: absolute; left: 0; width: 100%; color: #2a1206; }
+      [data-composition-id="s2-normal"] .pc .v { position: relative; display: inline-block; color: #ffb030; text-shadow: 0 0 14px rgba(255,150,30,0.95), 0 0 40px rgba(255,110,20,0.55); }
+      [data-composition-id="s2-normal"] .side { position: absolute; left: 0; top: 0; width: 1080px; height: 1920px;
+        filter: drop-shadow(0 0 10px rgba(0,200,255,0.35)); }
+      [data-composition-id="s2-normal"] .lab { font-family: "JBMono", monospace; font-size: 40px; fill: #c6ff2e; letter-spacing: 4px; }
+    </style>
+
+    <script src="vendor/gsap.min.js"></script>
+    <script>
+      (function () {
+        const OFF = 69;
+        const G = (f) => (f - OFF) / 30;
+        const D = (n) => n / 30;
+        const rng = (s) => () => { s |= 0; s = (s + 0x6D2B79F5) | 0; let t = Math.imul(s ^ (s >>> 15), 1 | s);
+          t = (t + Math.imul(t ^ (t >>> 7), 61 | t)) ^ t; return ((t ^ (t >>> 14)) >>> 0) / 4294967296; };
+        const tl = gsap.timeline({ paused: true });
+        const shake = (el, f0, n, amp, seed) => { const r = rng(seed);
+          for (let i = 0; i < n; i++) { const k = amp * (1 - i / n); tl.set(el, { x: (r() * 2 - 1) * k, y: (r() * 2 - 1) * k }, G(f0 + i)); }
+          tl.set(el, { x: 0, y: 0 }, G(f0 + n)); };
+        const pulse = (el, f, s) => { tl.set(el, { scale: s }, G(f)); tl.to(el, { scale: 1, duration: D(9), ease: "power2.out" }, G(f)); };
+
+        tl.fromTo("#s2stick", { rotation: -75, svgOrigin: "200 1560" }, { rotation: 22, svgOrigin: "200 1560", duration: D(7), ease: "power3.in" }, G(70));
+        tl.to("#s2stick", { rotation: 8, svgOrigin: "200 1560", duration: D(16), ease: "power2.out" }, G(77));
+        tl.set("#s2hit", { opacity: 1, attr: { r: 30 } }, G(77)); tl.to("#s2hit", { opacity: 0, attr: { r: 110 }, duration: D(12), ease: "power2.out" }, G(77));
+        tl.to("#s2helm", { x: 26, rotation: 6, svgOrigin: "730 1000", duration: D(4), ease: "power3.out", yoyo: true, repeat: 1 }, G(77));
+        tl.fromTo("#s2a", { opacity: 0, scale: 1.4 }, { opacity: 1, scale: 1, duration: D(6), ease: "power4.out" }, G(80));
+        tl.fromTo("#s2pen", { opacity: 0, y: -40 }, { opacity: 1, y: 0, duration: D(8), ease: "power3.out" }, G(100));
+        tl.set("#s2penv", { textContent: "2:00" }, G(124));
+        pulse("#s2penv", 124, 1.15);
+        tl.fromTo("#s2cam", { scale: 1.05 }, { scale: 1, duration: D(96), ease: "power1.out" }, G(69));
+
+        window.__timelines = window.__timelines || {};
+        window.__timelines["s2-normal"] = tl;
+      })();
+    </script>
+  </div>
+</template>
