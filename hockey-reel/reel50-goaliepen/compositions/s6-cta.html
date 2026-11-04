@@ -1,0 +1,110 @@
+<template id="s6-cta-template">
+  <!-- S6 CTA · global 18,7–23,0 s (F561–689), lokal = global − 561. SHOULD THE GOALIE SIT IN THE BOX? YES OR NO. -->
+  <div data-composition-id="s6-cta" data-width="1080" data-height="1920" data-duration="4.3">
+    <div class="scn">
+      <div class="cam" id="s6cam" data-layout-allow-overflow>
+        <div class="sky"></div>
+        <div id="s6box" class="grp" data-layout-allow-overflow>
+        <svg id="s6bb" class="booth" style="left:190px;top:600px;width:700px;height:490px" viewBox="0 0 600 420" data-layout-ignore>
+          <defs><radialGradient id="s6bg" cx="0.5" cy="0.35" r="0.8"><stop offset="0" stop-color="#3a0d18"/><stop offset="1" stop-color="#090b14"/></radialGradient></defs>
+          <rect x="8" y="8" width="584" height="404" rx="22" fill="#060b16" stroke="#33445f" stroke-width="10"/>
+          <rect x="22" y="22" width="556" height="250" fill="url(#s6bg)"/>
+          <rect x="22" y="226" width="556" height="46" fill="#3b2a1c"/>
+        </svg>
+          <div id="s6g" class="chip g" data-layout-allow-overlap style="left:455px;top:776px;width:170px;height:170px;font-size:82px;line-height:154px;">G</div>
+        <svg id="s6bf" class="booth" style="left:190px;top:600px;width:700px;height:490px" viewBox="0 0 600 420" data-layout-ignore>
+          <g fill="rgba(140,210,255,0.06)" stroke="#9fd8ff" stroke-opacity="0.55" stroke-width="4">
+            <rect x="22" y="22" width="178" height="250"/><rect x="211" y="22" width="178" height="250"/><rect x="400" y="22" width="178" height="250"/></g>
+          <g stroke="#ffffff" stroke-opacity="0.13" stroke-width="12" stroke-linecap="round">
+            <line x1="44" y1="250" x2="150" y2="44"/><line x1="92" y1="250" x2="182" y2="80"/><line x1="424" y1="250" x2="540" y2="44"/></g>
+          <rect x="8" y="268" width="584" height="144" fill="#0e1626" stroke="#33445f" stroke-width="8"/>
+          <rect x="8" y="268" width="584" height="14" fill="#dbe4f0"/>
+          <rect x="8" y="388" width="584" height="20" fill="#ffd400" opacity="0.85"/>
+          <text x="300" y="352" text-anchor="middle" class="btxt">PENALTY BOX</text>
+        </svg>
+        </div>
+        <div class="vig" data-layout-ignore></div>
+      </div>
+      <div id="s6a" class="t" style="top:170px;font-size:120px;opacity:0">SHOULD THE GOALIE</div>
+      <div id="s6b" class="t lime" style="top:310px;font-size:150px;opacity:0">SIT IN THE BOX?</div>
+      <div id="s6bubble" class="bubble">YES OR NO?</div>
+      <svg id="s6arrow" class="arrow" viewBox="0 0 220 200"><g fill="none" stroke="#c6ff2e" stroke-width="22" stroke-linecap="round" stroke-linejoin="round">
+        <polyline points="30,40 110,120 190,40"/><polyline points="30,100 110,180 190,100" opacity="0.55"/></g></svg>
+      <div class="handle">@BLADESANDPUCKS</div>
+      <div id="s6flash" class="flash"></div>
+    </div>
+
+    <style>
+      @font-face { font-family: "Anton"; src: url("fonts/Anton.ttf"); }
+      @font-face { font-family: "JBMono"; src: url("fonts/JBMono700.ttf"); }
+      @font-face { font-family: "ArchivoX"; src: url("fonts/ArchivoX900.ttf"); }
+      [data-composition-id="s6-cta"] .scn { position: relative; width: 1080px; height: 1920px; overflow: hidden; background: #02040c; }
+      [data-composition-id="s6-cta"] .cam { position: absolute; left: 0; top: 0; width: 1080px; height: 1920px; }
+      [data-composition-id="s6-cta"] .vig { position: absolute; inset: 0; background: radial-gradient(ellipse at center, rgba(0,0,0,0) 55%, rgba(0,0,0,0.75) 100%); }
+      [data-composition-id="s6-cta"] .flash { position: absolute; inset: 0; background: #fff; opacity: 0; }
+      [data-composition-id="s6-cta"] .t { position: absolute; left: 0; width: 1080px; text-align: center; white-space: nowrap;
+        font-family: "Anton", sans-serif; line-height: 1; color: #fff; text-shadow: 0 10px 40px rgba(0,0,0,0.9); }
+      [data-composition-id="s6-cta"] .lime { color: #c6ff2e; text-shadow: 0 0 22px rgba(198,255,46,0.85), 0 10px 40px rgba(0,0,0,0.9); }
+      [data-composition-id="s6-cta"] .cyan { color: #00f0ff; text-shadow: 0 0 22px rgba(0,240,255,0.85), 0 10px 40px rgba(0,0,0,0.9); }
+      @font-face { font-family: "DSEG7"; src: url("fonts/DSEG7Classic-Bold.woff2") format("woff2"); }
+      [data-composition-id="s6-cta"] .pen { position: absolute; border-radius: 26px; background: linear-gradient(180deg, #14161b 0%, #07080a 100%);
+        border: 5px solid #2b2f37; box-shadow: inset 0 0 40px rgba(0,0,0,0.9), 0 25px 60px rgba(0,0,0,0.85), 0 0 50px rgba(255,60,40,0.18); }
+      [data-composition-id="s6-cta"] .pl { position: absolute; left: 0; top: 20px; width: 100%; text-align: center; font-family: "JBMono", monospace; font-size: 34px;
+        letter-spacing: 10px; color: #ff5a46; text-shadow: 0 0 12px rgba(255,60,40,0.8); }
+      [data-composition-id="s6-cta"] .pc { position: absolute; left: 0; bottom: 16px; width: 100%; text-align: center; font-family: "DSEG7", monospace; line-height: 1; }
+      [data-composition-id="s6-cta"] .pc .gh { position: absolute; left: 0; width: 100%; color: #2a1206; }
+      [data-composition-id="s6-cta"] .pc .v { position: relative; display: inline-block; color: #ffb030; text-shadow: 0 0 14px rgba(255,150,30,0.95), 0 0 40px rgba(255,110,20,0.55); }
+      [data-composition-id="s6-cta"] .sky { position: absolute; inset: 0;
+        background: radial-gradient(ellipse 80% 45% at 50% 58%, rgba(255,176,48,0.16), rgba(0,0,0,0) 70%), #03050b; }
+      [data-composition-id="s6-cta"] .booth { position: absolute; filter: drop-shadow(0 0 14px rgba(0,200,255,0.35)); }
+      [data-composition-id="s6-cta"] .btxt { font-family: "JBMono", monospace; font-size: 40px; letter-spacing: 8px; fill: #ff5a46; }
+      [data-composition-id="s6-cta"] .net { position: absolute; filter: drop-shadow(0 0 18px rgba(255,23,68,0.6)); }
+      [data-composition-id="s6-cta"] .chip { position: absolute; border-radius: 50%; border: 8px solid #ffffff; font-family: "Anton", sans-serif; text-align: center; color: #fff;
+        background: radial-gradient(circle at 35% 30%, #4aa3ff 0%, #1257c4 70%); box-shadow: 0 0 30px rgba(0,150,255,0.9), 0 18px 30px rgba(0,0,0,0.6); }
+      [data-composition-id="s6-cta"] .chip.g { background: radial-gradient(circle at 35% 30%, #ffffff 0%, #c9d6e6 75%); color: #0b3a80; border-color: #ffb030;
+        box-shadow: 0 0 34px rgba(255,176,48,0.95), 0 18px 30px rgba(0,0,0,0.6); }
+      [data-composition-id="s6-cta"] .ring { position: absolute; border-radius: 50%; border: 10px solid #ff1744; opacity: 0; }
+      [data-composition-id="s6-cta"] .floor { position: absolute; left: 0; width: 1080px; background: linear-gradient(180deg, #0d2547 0%, #071426 100%); }
+      [data-composition-id="s6-cta"] .amber { color: #ffb030; text-shadow: 0 0 22px rgba(255,150,30,0.8), 0 10px 40px rgba(0,0,0,0.9); }
+      [data-composition-id="s6-cta"] .grp { position: absolute; inset: 0; }
+      [data-composition-id="s6-cta"] .bubble { position: absolute; left: 190px; top: 1200px; width: 700px; height: 170px; border-radius: 85px; transform: scale(0);
+        background: rgba(12,20,0,0.9); border: 5px solid #c6ff2e; box-shadow: 0 0 40px rgba(198,255,46,0.9), inset 0 0 40px rgba(198,255,46,0.3);
+        font-family: "ArchivoX", sans-serif; font-size: 72px; line-height: 170px; color: #fff; text-align: center; white-space: nowrap;
+        text-shadow: 0 0 20px rgba(198,255,46,0.95), 0 0 50px rgba(198,255,46,0.6); transform-origin: 50% 50%; }
+      [data-composition-id="s6-cta"] .arrow { position: absolute; left: 470px; top: 1400px; width: 140px; height: 128px; opacity: 0;
+        filter: drop-shadow(0 0 16px rgba(198,255,46,0.9)); }
+      [data-composition-id="s6-cta"] .handle { position: absolute; left: 0; top: 1720px; width: 1080px; text-align: center;
+        font-family: "JBMono", monospace; font-size: 40px; color: #ffffff; letter-spacing: 4px; opacity: 0.85; }
+    </style>
+
+    <script src="vendor/gsap.min.js"></script>
+    <script>
+      (function () {
+        const OFF = 561;
+        const G = (f) => (f - OFF) / 30;
+        const D = (n) => n / 30;
+        const rng = (s) => () => { s |= 0; s = (s + 0x6D2B79F5) | 0; let t = Math.imul(s ^ (s >>> 15), 1 | s);
+          t = (t + Math.imul(t ^ (t >>> 7), 61 | t)) ^ t; return ((t ^ (t >>> 14)) >>> 0) / 4294967296; };
+        const tl = gsap.timeline({ paused: true });
+        const shake = (el, f0, n, amp, seed) => { const r = rng(seed);
+          for (let i = 0; i < n; i++) { const k = amp * (1 - i / n); tl.set(el, { x: (r() * 2 - 1) * k, y: (r() * 2 - 1) * k }, G(f0 + i)); }
+          tl.set(el, { x: 0, y: 0 }, G(f0 + n)); };
+        const pulse = (el, f, s) => { tl.set(el, { scale: s }, G(f)); tl.to(el, { scale: 1, duration: D(9), ease: "power2.out" }, G(f)); };
+
+        tl.fromTo("#s6cam", { scale: 1.0 }, { scale: 1.05, duration: D(128), ease: "none" }, G(561));
+        tl.fromTo("#s6a", { opacity: 0, x: -500 }, { opacity: 1, x: 0, duration: D(8), ease: "expo.out" }, G(574));
+        tl.fromTo("#s6b", { opacity: 0, scale: 1.5 }, { opacity: 1, scale: 1, duration: D(6), ease: "power4.out" }, G(594));
+        [585, 600, 615, 630, 645, 660, 675].forEach((f) => pulse("#s6g", f, 1.07));
+        tl.fromTo("#s6bubble", { scale: 0 }, { scale: 1, duration: D(8), ease: "back.out(2.2)" }, G(628));
+        tl.fromTo("#s6arrow", { opacity: 0, y: -60 }, { opacity: 1, y: 0, duration: D(6), ease: "back.out(2)" }, G(636));
+        pulse("#s6bubble", 662, 1.1);
+        tl.set("#s6flash", { opacity: 0.22 }, G(662)); tl.to("#s6flash", { opacity: 0, duration: D(5), ease: "power2.in" }, G(662));
+        shake("#s6cam", 662, 6, 14, 61);
+        [672, 684].forEach((f) => tl.to("#s6arrow", { y: 24, duration: D(4), ease: "power2.out", yoyo: true, repeat: 1 }, G(f)));
+
+        window.__timelines = window.__timelines || {};
+        window.__timelines["s6-cta"] = tl;
+      })();
+    </script>
+  </div>
+</template>
